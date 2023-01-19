@@ -11,3 +11,14 @@ class Log(models.Model):
     Nota_equipamento=models.ForeignKey(Nota_equipamento,on_delete=models.DO_NOTHING,null=True)
     alteracao=models.CharField(max_length=30)
     
+    def __str__(self):
+        retorno= self.transacao
+        if self.usuario:
+            retorno+="."+self.usuario
+        if self.equipamento:
+            retorno+="."+self.equipamento
+        if self.Nota_equipamento:
+            retorno+="."+self.Nota_equipamento
+        if self.alteracao:
+            retorno+="."+self.alteracao
+        return  retorno
