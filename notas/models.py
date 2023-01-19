@@ -18,14 +18,15 @@ class Modo_falha_equipamento(models.Model):
     equipamento=models.ForeignKey(Equipamento, on_delete=models.DO_NOTHING)
     def __str__(self):
         return f"{self.modo_falha}.{self.equipamento}"
+        
 """ cadastra o material utilizado na nota_equipamento"""    
 class Nota_material(models.Model):
-    material=models.ManyToManyField(Material_consumo)
+    material=models.ForeignKey(Material_consumo, on_delete=models.DO_NOTHING)
     quantidade=models.DecimalField(max_digits=12, decimal_places=2)
+    
     def __str__(self):
         return f"{self.material}.{self.quantidade}"
-
-    
+   
      
 """ cadastra a nota do equipamento contendo a descrição do nota,equipamento, modo de falha,data do cadastro, se houve falha, calibração e lubrificação"""    
 class Nota_equipamento(models.Model):
@@ -39,6 +40,6 @@ class Nota_equipamento(models.Model):
     falha=models.BooleanField()
     calibracao=models.BooleanField()
     lubrificao=models.BooleanField()
-    usuario=models.ForeignKey( Usuario ,on_delete=models.DO_NOTHING)
+    usuario=models.ForeignKey( Usuario ,on_delete=models.SET_NULL,null=True, blank=True)
     def __str__(self):
         return str(self.titulo)

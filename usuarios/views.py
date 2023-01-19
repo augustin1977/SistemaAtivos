@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Usuario,Tipos,Familia
+from .models import Usuario,Tipo
 from django.shortcuts import redirect 
 from hashlib import sha256
 import re
@@ -23,9 +23,10 @@ def valida_cadastro(request):
     nome=request.POST.get('nome')
     email=request.POST.get('email')
     senha=request.POST.get('senha')
-    tipo=Tipos.objects.get(tipo="user")
+    chapa=request.POST.get("chapa")
+    tipo=Tipo.objects.get(tipo="user")
     usuario= Usuario.objects.filter(email=email)
-    familia=Familia.objects.get(nomeFamilia="Sem_Familia")
+    
     if len(usuario)>0:
         return redirect('/auth/cadastrar/?status=1') # retorna erro de usuario ja existente
     usuario= Usuario.objects.filter(nome=nome)
@@ -33,6 +34,8 @@ def valida_cadastro(request):
         return redirect('/auth/cadastrar/?status=1') # retorna erro de usuario ja existente
     if len(nome.strip())==0 or len(email.strip())==0 :
         return redirect('/auth/cadastrar/?status=2') # retorna erro valor nulo
+    if len(usuario)>0:
+        return redirect('/auth/cadastrar/?status=2') # chapa nula
     regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'    
     if not(re.search(regex,email)): 
         return redirect('/auth/cadastrar/?status=4') # email invalido   
@@ -42,7 +45,7 @@ def valida_cadastro(request):
         return redirect('/auth/cadastrar/?status=3') # Senha invalida
     try:
         senha= sha256(senha.encode()).hexdigest() # recuperando senha e codificando num hash sha256
-        usuario=Usuario(nome=nome, senha=senha, email=email, tipo=tipo, nomeFamilia=familia) # cria um objeto usuário com as informações recebidas do fomulario
+        usuario=Usuario(nome=nome, senha=senha, email=email, tipo=tipo, chapa=chapa) # cria um objeto usuário com as informações recebidas do fomulario
         usuario.save() # salva o objeto usuário no banco de dados
         return redirect('/auth/login/?status=0') # retorna sem erro
     except:

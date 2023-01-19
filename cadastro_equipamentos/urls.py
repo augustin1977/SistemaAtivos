@@ -16,14 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
-
-from django.conf import settings
 from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('notas/', include('notas.urls')),
     path('equipamentos/', include('equipamentos.urls')),
+    path('auth/', include('usuarios.urls')),
 ]
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL,

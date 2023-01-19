@@ -38,6 +38,18 @@ class Tipo_equipamento(models.Model):
     def __str__(self):
         return str(self.nome_tipo)
 
+
+class Material_consumo(models.Model):
+    nome_material=models.CharField(max_length=50)
+    fornecedor=models.ForeignKey(Fabricante,on_delete=models.SET_NULL, null=True, blank=True)
+    especificacao_material=models.TextField(null=True, blank=True)
+    unidade_material=models.CharField(max_length=10)
+    simbolo_unidade_material=models.CharField(max_length=5)
+    def __str__(self):
+        return self.nome_material
+
+
+
 class Equipamento(models.Model):
     nome_equipamento=models.CharField(max_length=80)
     modelo=models.CharField(max_length=80,null=True, blank=True)
@@ -46,26 +58,20 @@ class Equipamento(models.Model):
     tipo_equipamento=models.ForeignKey(Tipo_equipamento, on_delete=models.DO_NOTHING)
     data_compra=models.DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True)
     data_ultima_calibracao=models.DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True)
-    usuario=models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
+    usuario=models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True)
     data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False)
     patrimonio=models.CharField(max_length=30)
+    material_consumo=models.ManyToManyField(Material_consumo, null=True, blank=True)
     def __str__(self):
         return str(self.nome_equipamento)
     
-class Material_consumo(models.Model):
-    nome_material=models.CharField(max_length=50)
-    fornecedor=models.ForeignKey(Fabricante,on_delete=models.DO_NOTHING, null=True, blank=True)
-    especificacao_material=models.TextField(null=True, blank=True)
-    unidade_material=models.CharField(max_length=10)
-    simbolo_unidade_material=models.CharField(max_length=5)
-    def __str__(self):
-        return str(self.nome_material)
 
 
 class Media(models.Model):
 
     nome=models.CharField(max_length=50)
-    media=models.ImageField(upload_to ='')
+    media=models.ImageField(upload_to ='',null=True, blank=True)
+    documentos= models.FileField(upload_to ='',null=True, blank=True)
     equipamento=models.ForeignKey(Equipamento,on_delete=models.DO_NOTHING, null=False, blank=False)
 
     def __str__(self):
