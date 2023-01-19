@@ -15,7 +15,7 @@ class Modo_falha_equipamento(models.Model):
 
 """ cadastra o material utilizado na nota_equipamento"""    
 class Nota_material(models.Model):
-    Material=models.ForeignKey(Material_consumo, on_delete=models.DO_NOTHING)
+    Material=models.ManyToManyField(Material_consumo)
     Quantidade=models.DecimalField(max_digits=12, decimal_places=2)
     
      
@@ -24,7 +24,7 @@ class Nota_equipamento(models.Model):
     descricao=models.TextField()
     equipamento=models.ForeignKey( Equipamento, on_delete=models.DO_NOTHING)
     modo_Falha_equipamento=models.ForeignKey(Modo_falha_equipamento, on_delete=models.DO_NOTHING)
-    material=models.ManyToManyField(Nota_material,null=True,blank=True)
+    material=models.ManyToManyField(Nota_material)
     data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False)
     data_ocorrencia=models.DateField(auto_now=False, auto_now_add=False)
     falha=models.BooleanField()

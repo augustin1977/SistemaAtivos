@@ -42,3 +42,8 @@ class Material_consumo(models.Model):
     especificacao_material=models.TextField(null=True, blank=True)
     unidade_material=models.CharField(max_length=10)
     simbolo_unidade_material=models.CharField(max_length=5)
+
+
+class media(models.Model):
+    media=models.ImageField(upload_to ='images/')
+    equipamento=models.ForeignKey(Equipamento,on_delete=models.DO_NOTHING, null=False, blank=False)
