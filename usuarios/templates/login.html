@@ -1,0 +1,36 @@
+{% extends 'base.html'%}
+{% block 'titulo'%} Login {% endblock %}
+{% block 'conteudo'%} 
+<div class ='container'>
+  <h1>Login</h1>
+    {% if status == '0'%}
+    <div class="alert alert-danger" role="alert">
+        Cadastro realizado com sucesso, pode seguir com o login
+      </div>
+    {% endif %}
+    {% if status == '1'%}
+    <div class="alert alert-danger" role="alert">
+        Senha ou email incorretos!
+      </div>
+    {% endif %}
+    {% if status == '2'%}
+    <div class="alert alert-danger" role="alert">
+        Usuario não logado, favor fazer o login!
+      </div>
+    {% endif %}
+    <form method ="POST" action="{% url 'validar_login'%}"> {% csrf_token %}  
+        <label> Email de Recuperação</label>
+        <input name="email" class="form-control" type="text" placeholder="nome@servidor.com">
+        <br>
+        <label>  senha </label>
+        <input name="senha" class="form-control" type="password" placeholder="">
+        <br>
+        <input class="btn btn-info btn-blue"type="submit" value="enviar">
+        <a href="{% url 'cadastrar' %}"class="btn btn-warning btn-mg"> Cadastrar </a>
+    </form>
+
+    
+</div>
+    
+{% endblock %}
+<br>By Eric Augustin
