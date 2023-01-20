@@ -24,6 +24,7 @@ urlpatterns = [
     path('notas/', include('notas.urls')),
     path('equipamentos/', include('equipamentos.urls')),
     path('auth/', include('usuarios.urls')),
+    path('home/', include('equipamentos.urls')),
 ]
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL,

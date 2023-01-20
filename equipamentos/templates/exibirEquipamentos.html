@@ -1,0 +1,42 @@
+
+{% extends 'base.html'%}
+{% block 'titulo'%} Inicio {% endblock %}
+{% block 'menu' %} 
+<a class="navbar-brand" href="{% url 'sair' %}">Notas</a>
+<a class="navbar-brand" href="{% url 'listar_equipamentos' %}">Equipamentos</a>
+<a class="navbar-brand" href="{% url 'sair' %}">Locais Instalação</a>
+<a class="navbar-brand" href="{% url 'sair' %}">Fornecedores</a>
+<a class="navbar-brand" href="{% url 'sair' %}">Relatórios</a>
+{% endblock %}
+{% block 'conteudo'%} 
+<div class ='container'>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Equipamentos</th>
+            <th scope="col">Modelo</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Local Instalação</th>
+            <th scope="col">Ver detalhes</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for equipamento in equipamentos %}
+            <tr>
+            
+            <th scope="row">{{equipamento.nome_equipamento}}</th>
+            <td>{{equipamento.modelo}}</td>
+            <td>{{equipamento.tipo_equipamento}}</td>
+            <td>{{equipamento.local}}</td>
+            <td><a href="{% url 'sair' %}?equipamento={{ equipamento.id }}">Link</a><td>
+            
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    
+        
+</div>
+
+{% endblock %}
+<br>By Eric Augustin

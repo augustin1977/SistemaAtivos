@@ -64,7 +64,7 @@ def validar_login(request):
         return redirect('/auth/login/?status=1')
     else:
         request.session['usuario']= usuario[0].id
-        return redirect(f'/receita/home/')
+        return redirect(f'/home/?status=0')
     
 def sair(request):
     request.session.flush() # sair do usuário
