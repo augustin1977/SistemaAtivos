@@ -28,7 +28,7 @@
             <td>{{equipamento.modelo}}</td>
             <td>{{equipamento.tipo_equipamento}}</td>
             <td>{{equipamento.local}}</td>
-            <td><a href="{% url 'sair' %}?equipamento={{ equipamento.id }}">Link</a><td>
+            <td><a href="{% url 'exibirDetalheEquipamento' %}?id={{ equipamento.id }}">Link</a><td>
             
           </tr>
           {% endfor %}
