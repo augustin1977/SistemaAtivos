@@ -63,6 +63,8 @@ class Equipamento(models.Model):
     patrimonio=models.CharField(max_length=30)
     material_consumo=models.ManyToManyField(Material_consumo, null=True, blank=True)
     codigo=models.CharField(max_length=40)
+    class Meta:
+        ordering = ['nome_equipamento']
     def __str__(self):
         return str(self.nome_equipamento)
     
