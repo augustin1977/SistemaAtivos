@@ -12,6 +12,8 @@ class Fabricante(models.Model):
     dados_adicionais=models.TextField(null=True, blank=True)
     def __str__(self):
         return str(self.nome_fabricante)
+    class Meta:
+        ordering = ['nome_fabricante']
 
 class Local_instalacao(models.Model):
     predio=models.CharField(max_length=30)
@@ -31,13 +33,16 @@ class Local_instalacao(models.Model):
         if self.prateleira:
             retorno+="."+self.prateleira
         return  retorno
+    class Meta:
+        ordering = ['predio','piso','sala','armario','prateleira']
     
 class Tipo_equipamento(models.Model):
     nome_tipo=models.CharField(max_length=50)
     descricao_tipo=models.TextField(null=True, blank=True)    
     def __str__(self):
         return str(self.nome_tipo)
-
+    class Meta:
+        ordering = ['nome_tipo']
 
 class Material_consumo(models.Model):
     nome_material=models.CharField(max_length=70)
@@ -47,7 +52,8 @@ class Material_consumo(models.Model):
     simbolo_unidade_material=models.CharField(max_length=5)
     def __str__(self):
         return self.nome_material
-
+    class Meta:
+        ordering = ['nome_material']
 
 
 class Equipamento(models.Model):

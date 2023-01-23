@@ -9,4 +9,5 @@ urlpatterns = [path("",views.home, name="home"),
                path('listarFornecedores/',views.listarFornecedores,name="listarFornecedores"),
                path('editarFornecedor/',views.editarFornecedor,name="editarFornecedor"),
                path('exibirDetalheFornecedor/',views.exibirDetalheFornecedor,name="exibirDetalheFornecedor"),
+               path('cadastrarLocal/',views.cadastrarLocal,name="cadastrarLocal"),
 ]

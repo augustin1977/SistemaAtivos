@@ -9,6 +9,7 @@ from django.http import HttpResponse, Http404
 from os import path
 import mimetypes
 import re
+from .forms import *
 def home(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -204,3 +205,9 @@ def editarFornecedor(request):
         
     
     return redirect('/equipamentos/listarFornecedores/')
+
+
+def cadastrarLocal(request):
+    
+    form=localForm
+    return render(request, "cadastrarLocal.html", {'form':form})
