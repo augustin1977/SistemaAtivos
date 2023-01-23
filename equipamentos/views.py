@@ -150,14 +150,6 @@ def editarFornecedor(request):
     if id:
         if request.method=="GET":
             fornecedor=Fabricante.objects.get(id=id)
-            print(fornecedor.nome_fabricante)
-            print(fornecedor.endereco_fabricante)
-            print(fornecedor.nome_contato_fabricante)
-            print(fornecedor.email_contato_fabricante)
-            print(fornecedor.site_Fabricante)
-            print(fornecedor.telefone_contato)
-            print(fornecedor.dados_adicionais)
-
             return render(request, "editarFornecedor.html",{"fornecedor":fornecedor})
     if request.method=="POST":
         post_id=request.POST.get('id')
