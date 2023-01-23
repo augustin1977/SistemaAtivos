@@ -14,11 +14,11 @@ class Fabricante(models.Model):
         return str(self.nome_fabricante)
 
 class Local_instalacao(models.Model):
-    predio=models.CharField(max_length=10)
-    piso=models.CharField(max_length=10)
-    sala=models.CharField(max_length=10,null=True, blank=True)
-    armario=models.CharField(max_length=10,null=True, blank=True)
-    prateleira=models.CharField(max_length=10,null=True, blank=True)
+    predio=models.CharField(max_length=30)
+    piso=models.CharField(max_length=15)
+    sala=models.CharField(max_length=15,null=True, blank=True)
+    armario=models.CharField(max_length=15,null=True, blank=True)
+    prateleira=models.CharField(max_length=15,null=True, blank=True)
     apelido_local=models.CharField(max_length=50,null=True, blank=True)
     def __str__(self):
         retorno= self.predio
@@ -40,7 +40,7 @@ class Tipo_equipamento(models.Model):
 
 
 class Material_consumo(models.Model):
-    nome_material=models.CharField(max_length=50)
+    nome_material=models.CharField(max_length=70)
     fornecedor=models.ForeignKey(Fabricante,on_delete=models.SET_NULL, null=True, blank=True)
     especificacao_material=models.TextField(null=True, blank=True)
     unidade_material=models.CharField(max_length=10)
@@ -62,6 +62,7 @@ class Equipamento(models.Model):
     data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False)
     patrimonio=models.CharField(max_length=30)
     material_consumo=models.ManyToManyField(Material_consumo, null=True, blank=True)
+    codigo=models.CharField(max_length=40)
     def __str__(self):
         return str(self.nome_equipamento)
     

@@ -1,0 +1,43 @@
+
+{% extends 'base.html'%}
+{% block 'titulo'%} Detalhes Fornecedor {{fornecedor.nome_fabricante}} {% endblock %}
+{% block 'menu' %} 
+<a class="navbar-brand" href="{% url 'sair' %}">Notas</a>
+<a class="navbar-brand" href="{% url 'listar_equipamentos' %}">Equipamentos</a>
+<a class="navbar-brand" href="{% url 'sair' %}">Locais Instalação</a>
+<a class="navbar-brand" href="{% url 'listarFornecedores' %}">Fornecedores</a>
+<a class="navbar-brand" href="{% url 'sair' %}">Relatórios</a>
+{% endblock %}
+{% block 'conteudo'%} 
+<div class ='container'>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Item </th>
+            <th scope="col">Valor </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr> 
+            <th scope="row">Nome</th>
+            <td> {{ fornecedor.nome_fabricante }}</td></tr>      
+            <th scope="row">Endereço</th>
+            <td> {{ fornecedor.endereco_fabricante }}</td></tr>
+            <th scope="row">Nome Contato</th>
+            <td> {{fornecedor.nome_contato_fabricante}}</td></tr>
+            <th scope="row">Telefone Contato</th>
+            <td> {{fornecedor.telefone_contato}}</td></tr>
+            <th scope="row">Email Contato</th>
+            <td> {{fornecedor.email_contato_fabricante}}</td></tr>
+            <th scope="row">Site Fabricante</th>
+            <td> {{fornecedor.site_Fabricante}}</td></tr>
+            <th scope="row">Dados Adicionais</th>
+            <td> {{fornecedor.dados_adicionais}}</td></tr>
+          </tr>
+        </tbody>
+      </table>
+    
+        
+</div>
+
+{% endblock %}

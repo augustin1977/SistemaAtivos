@@ -4,6 +4,8 @@ from .models import Usuario,Tipo
 from django.shortcuts import redirect 
 from hashlib import sha256
 import re
+def vazio(request):
+    return redirect('/auth/cadastrar/') 
 def login(request):
     # cria a view do login do usuário
     status=str(request.GET.get('status'))
@@ -64,7 +66,7 @@ def validar_login(request):
         return redirect('/auth/login/?status=1')
     else:
         request.session['usuario']= usuario[0].id
-        return redirect(f'/home/?status=0')
+        return redirect(f'/equipamentos/?status=0')
     
 def sair(request):
     request.session.flush() # sair do usuário

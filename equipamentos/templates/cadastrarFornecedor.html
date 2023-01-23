@@ -1,0 +1,89 @@
+
+{% extends 'base.html'%}
+{% block 'titulo'%} Cadastro de Fornecedor {% endblock %}
+{% block 'menu' %} 
+<a class="navbar-brand" href="{% url 'sair' %}">Notas</a>
+<a class="navbar-brand" href="{% url 'listar_equipamentos' %}">Equipamentos</a>
+<a class="navbar-brand" href="{% url 'sair' %}">Locais Instalação</a>
+<a class="navbar-brand" href="{% url 'listarFornecedores' %}">Fornecedores</a>
+<a class="navbar-brand" href="{% url 'sair' %}">Relatórios</a>
+{% endblock %}
+{% block 'conteudo'%} 
+<div class ='container'>
+  {% if status == 0 %}
+  <div class="alert alert-success" role="alert">
+      Fornecedor cadastrado com sucesso
+    </div>
+  {% endif %}
+    {% if status == 1 %}
+    <div class="alert alert-danger" role="alert">
+        Forncedor ja cadastrado
+      </div>
+    {% endif %}
+
+    {% if status == 2 %}
+    <div class="alert alert-danger" role="alert">
+        Campo obrigatório com valor nulo, varifique o formulário
+      </div>
+    {% endif %}
+
+    {% if status ==  3 %}
+    <div class="alert alert-danger" role="alert">
+        Email com erro de digitação:
+      </div>
+    {% endif %}
+
+    {% if status ==  99 %}
+    <div class="alert alert-danger" role="alert">
+        Erro Geral no cadastro de Forncedores
+      </div>
+    {% endif %}
+    <div class='row'>
+    <div class='col-md-3'></div>
+    <div class="col-md">
+    <h1>  Cadastro Fornecedores</h1>
+    <hr>
+    <form method ="POST" action="{% url 'cadastrarFornecedor' %}"> {% csrf_token %}
+      {% if status == 1  or status == 2 %}
+        <div class="text-danger">
+        <label> Nome</label>
+        </div>
+      {% else %}
+        <label> Nome</label>
+      {% endif %}
+        <input name="nome_fabricante" class="form-control" type="text" placeholder="nome_fabricante">
+        <br> 
+        <label> Endereço</label>
+        <input name="endereco_fabricante" class="form-control" type="text" placeholder="endereco_fabricante"> 
+        <br>    
+        <label> Nome do Contato</label>
+        <input name="nome_contato_fabricante" class="form-control" type="text" placeholder="nome@servidor.com">
+        <br>
+        {% if status == 3 %}
+        <div class="text-danger">
+          <label>  Email de Contato </label>
+        </div>
+      {% else %}
+        <label>  Email de Contato </label>
+      {% endif %}
+        
+        <input name="email_contato_fabricante" class="form-control" type="text" placeholder="">
+        <br>
+        <label>  Site </label>
+        <input name="site_Fabricante" class="form-control" type="text" placeholder="">
+        <br>
+        <label>  Dados Adicionais </label>
+        <textarea name="dados_adicionais" class="form-control" type="text" placeholder=""></textarea>
+        <br>
+        <input class="btn btn-info btn-blue"type="submit" value="gravar">
+        <a href="{% url 'home' %}"class="btn btn-warning btn-mg"> cancelar </a>
+    </form>
+    </hr>
+
+    </div>
+    <div class='col-md-3'></div>
+    
+</div>
+
+{% endblock %}
+

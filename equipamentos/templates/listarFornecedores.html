@@ -1,0 +1,44 @@
+{% extends 'base.html'%}
+{% block 'titulo'%} Fornecedores {% endblock %}
+{% block 'menu' %} 
+<a class="navbar-brand" href="{% url 'sair' %}">Notas</a>
+<a class="navbar-brand" href="{% url 'listar_equipamentos' %}">Equipamentos</a>
+<a class="navbar-brand" href="{% url 'sair' %}">Locais Instalação</a>
+<a class="navbar-brand" href="{% url 'listarFornecedores' %}">Fornecedores</a>
+<a class="navbar-brand" href="{% url 'cadastrarFornecedor' %}">Cadastrar Fornecedor</a>
+<a class="navbar-brand" href="{% url 'sair' %}">Relatórios</a>
+{% endblock %}
+{% block 'conteudo'%} 
+<div class ='container'>
+    {% if status == 10 %}
+  <div class="alert alert-success" role="alert">
+      Fornecedor Editado com sucesso
+    </div>
+  {% endif %}
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Fornecedor</th>
+            <th scope="col">Contato</th>
+            <th scope="col">Ver detalhes</th>
+            <th scope="col">Editar detalhes</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for fornecedor in fornecedores %}
+            <tr>
+            
+            <th scope="row">{{fornecedor.nome_fabricante}}</th>
+            <td>{{fornecedor.nome_contato_fabricante}}</td>
+            <td><a href="{% url 'exibirDetalheFornecedor' %}?id={{ fornecedor.id }}">Visualizar {{ fornecedor.id }}</a></td>
+            <td><a href="{% url 'editarFornecedor' %}?id={{ fornecedor.id }}">Editar</a></td>
+            
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    
+        
+</div>
+
+{% endblock %}

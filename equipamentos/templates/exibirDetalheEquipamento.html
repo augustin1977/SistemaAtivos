@@ -5,7 +5,7 @@
 <a class="navbar-brand" href="{% url 'sair' %}">Notas</a>
 <a class="navbar-brand" href="{% url 'listar_equipamentos' %}">Equipamentos</a>
 <a class="navbar-brand" href="{% url 'sair' %}">Locais Instalação</a>
-<a class="navbar-brand" href="{% url 'sair' %}">Fornecedores</a>
+<a class="navbar-brand" href="{% url 'listarFornecedores' %}">Fornecedores</a>
 <a class="navbar-brand" href="{% url 'sair' %}">Relatórios</a>
 {% endblock %}
 {% block 'conteudo'%} 
@@ -18,7 +18,9 @@
             </tr>
         </thead>
         <tbody>
-            <tr>       
+            <tr> 
+            <th scope="row">Codigo Equipamento</th>
+            <td> {{equipamento.codigo}}</td></tr>      
             <th scope="row">Nome Equipamento</th>
             <td> {{equipamento.nome_equipamento}}</td></tr>
             <th scope="row">Modelo</th>
@@ -39,6 +41,17 @@
             <td>
             {% for material in materiais %}   
                 {{material}} <br>
+            {% endfor %}
+            </td> </tr>
+            <th scope="row">Arquivos</th>
+            <td>
+            {% for arquivo in media %}   
+                {% if arquivo.documentos %}
+                  <a href='{{ arquivo.documentos }}'>{{arquivo}}</a>' <br>
+                {% endif %}
+                {% if arquivo.media %}
+                  <a href="{% url 'download' %}?filename={{ arquivo.media }}">{{arquivo}}</a> <br>
+                {% endif %}
             {% endfor %}
 
             </td> 
