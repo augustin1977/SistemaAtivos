@@ -209,5 +209,22 @@ def editarFornecedor(request):
 
 def cadastrarLocal(request):
     
-    form=localForm
-    return render(request, "cadastrarLocal.html", {'form':form})
+    if request.method=="GET":
+        form=localForm
+        print(form)
+        #form.predio.attrs.update({'class': 'form-control'})
+        return render(request, "cadastrarLocal.html", {'form':form,'status':0})
+    else:
+        details = localForm(request.POST)
+        if details.is_valid():
+            details.save()
+            form=localForm
+            
+            
+            return render(request, "cadastrarLocal.html", {'form':form,'status':1})
+        else:
+            return render(request, "cadastrarLocal.html", {'form':details}) 
+
+
+
+
