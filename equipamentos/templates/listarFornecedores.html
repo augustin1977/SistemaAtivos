@@ -3,7 +3,7 @@
 {% block 'menu' %} 
 <a class="navbar-brand" href="{% url 'sair' %}">Notas</a>
 <a class="navbar-brand" href="{% url 'listar_equipamentos' %}">Equipamentos</a>
-<a class="navbar-brand" href="{% url 'sair' %}">Locais Instalação</a>
+<a class="navbar-brand" href="{% url 'listarLocais' %}">Locais Instalação</a>
 <a class="navbar-brand" href="{% url 'listarFornecedores' %}">Fornecedores</a>
 <a class="navbar-brand" href="{% url 'cadastrarFornecedor' %}">Cadastrar Fornecedor</a>
 <a class="navbar-brand" href="{% url 'sair' %}">Relatórios</a>
@@ -11,7 +11,9 @@
 {% block 'conteudo'%} 
 <div class ='container'>
     <div class='row'>
-        <div class='col-md-3'></div>
+        <div class='col-md-3'>
+
+        </div>
         <div class="col-md">
     {% if status == 10 %}
   <div class="alert alert-success" role="alert">
@@ -40,8 +42,10 @@
           {% endfor %}
         </tbody>
       </table>
-    
-        
+        </div>
+    </div>
+</div>
+
 </div>
 
 {% endblock %}

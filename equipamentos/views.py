@@ -226,5 +226,6 @@ def cadastrarLocal(request):
             return render(request, "cadastrarLocal.html", {'form':details}) 
 
 
-
+def listarLocais(request):
+    return render(request, "listarLocais.html", {'status':0}) 
 
