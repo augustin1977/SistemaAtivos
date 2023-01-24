@@ -32,6 +32,8 @@ def exibirDetalheEquipamento(request):
     arquivos= Media.objects.filter(equipamento__id=id)
     return render(request, "exibirDetalheEquipamento.html", {'equipamento':equipamento, 'materiais':materiais, 'media':arquivos})
 
+
+
 def download_view(request):
     objeto=request.GET.get('filename')
     local=settings.MEDIA_ROOT[:-1]
@@ -61,8 +63,20 @@ def download_view(request):
 def editarEquipamento(request):
     pass
 
-def cadastrarEquipamentos(request):
-    pass
+def cadastrarEquipamento(request):
+    
+    if request.method=="GET":
+        form=equipamentoCadastrarForm
+
+        return render(request, "cadastrarEquipamento.html", {'form':form,'status':0})
+    else:
+        details = equipamentoCadastrarForm(request.POST)
+        if details.is_valid():
+            details.save()
+            form=localFormCadastro
+            return render(request, "cadastrarEquipamento.html", {'form':form,'status':1})
+        else:
+            return render(request, "cadastrarEquipamento.html", {'form':details}) 
 
 def listarFornecedores(request):
     if not request.session.get('usuario'):
@@ -121,7 +135,6 @@ def cadastrarFornecedor(request):
         nome=Fabricante.objects.filter(nome_fabricante=post_nome_fabricante).first()
         site=Fabricante.objects.filter(site_Fabricante=post_site_Fabricante).first()
         email=Fabricante.objects.filter(email_contato_fabricante=post_email_contato_fabricante).first()
-        print(post_nome_fabricante)
         # verifica se forncedor ja existe
         if nome and site and email: 
             return render(request, "cadastrarFornecedor.html", {'status':1}) # fornecedor ja cadastrado
@@ -147,7 +160,7 @@ def editarFornecedor(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     id=request.GET.get('id')
-    print(id)
+
     if id:
         if request.method=="GET":
             fornecedor=Fabricante.objects.get(id=id)
@@ -179,7 +192,7 @@ def editarFornecedor(request):
         nome=Fabricante.objects.filter(nome_fabricante=post_nome_fabricante).first()
         site=Fabricante.objects.filter(site_Fabricante=post_site_Fabricante).first()
         email=Fabricante.objects.filter(email_contato_fabricante=post_email_contato_fabricante).first()
-        print(post_nome_fabricante)
+        #print(post_nome_fabricante)
         # verifica se forncedor ja existe
         if (nome and nome.id!=fornecedor.id) and site and email: 
             return render(request, "editarFornecedor.html", {'fornecedor':fornecedor,'status':1}) # fornecedor ja cadastrado
@@ -188,9 +201,9 @@ def editarFornecedor(request):
             return render(request, "editarFornecedor.html", {'fornecedor':fornecedor,'status':2}) # campos obrigatórios não preenchidos
         # verfica digitação do email e do telefone
         regex_email= '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
-        if post_email_contato_fabricante:
-            if not (re.search(regex_email, post_email_contato_fabricante)):
-                return render(request, "editarFornecedor.html", {'fornecedor':fornecedor,'status':3}) # email com digitação incorreta
+        #if post_email_contato_fabricante:
+            #if not (re.search(regex_email, post_email_contato_fabricante)):
+                #return render(request, "editarFornecedor.html", {'fornecedor':fornecedor,'status':3}) # email com digitação incorreta
         
         
         fornecedor.nome_fabricante=post_nome_fabricante
@@ -211,7 +224,7 @@ def cadastrarLocal(request):
     
     if request.method=="GET":
         form=localFormCadastro
-        print(form)
+        #print(form)
         #form.predio.attrs.update({'class': 'form-control'})
         return render(request, "cadastrarLocal.html", {'form':form,'status':0})
     else:

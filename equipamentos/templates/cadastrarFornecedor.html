@@ -2,11 +2,11 @@
 {% extends 'base.html'%}
 {% block 'titulo'%} Cadastro de Fornecedor {% endblock %}
 {% block 'menu' %} 
-<a class="navbar-brand" href="{% url 'sair' %}">Notas</a>
+<a class="navbar-brand" href="{% url 'home' %}">Notas</a>
 <a class="navbar-brand" href="{% url 'listar_equipamentos' %}">Equipamentos</a>
 <a class="navbar-brand" href="{% url 'listarLocais' %}">Locais Instalação</a>
 <a class="navbar-brand" href="{% url 'listarFornecedores' %}">Fornecedores</a>
-<a class="navbar-brand" href="{% url 'sair' %}">Relatórios</a>
+<a class="navbar-brand" href="{% url 'home' %}">Relatórios</a>
 {% endblock %}
 {% block 'conteudo'%} 
 <div class ='container'>

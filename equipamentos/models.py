@@ -51,7 +51,7 @@ class Material_consumo(models.Model):
     unidade_material=models.CharField(max_length=10)
     simbolo_unidade_material=models.CharField(max_length=5)
     def __str__(self):
-        return self.nome_material
+        return self.nome_material + "-"+ self.especificacao_material
     class Meta:
         ordering = ['nome_material']
 
@@ -62,8 +62,8 @@ class Equipamento(models.Model):
     fabricante=models.ForeignKey(Fabricante, on_delete=models.DO_NOTHING,null=True, blank=True)
     local=models.ForeignKey(Local_instalacao, on_delete=models.DO_NOTHING,null=True, blank=True)
     tipo_equipamento=models.ForeignKey(Tipo_equipamento, on_delete=models.DO_NOTHING)
-    data_compra=models.DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True)
-    data_ultima_calibracao=models.DateTimeField(auto_now=True, auto_now_add=False, null=True, blank=True)
+    data_compra=models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
+    data_ultima_calibracao=models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
     usuario=models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True)
     data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False)
     patrimonio=models.CharField(max_length=30)

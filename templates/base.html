@@ -18,7 +18,7 @@
 
   <body>
     <nav class="navbar navbar-dark bg-dark">
-        <a class="navbar-brand" href='{% url 'home' %}'>Inicio</a>
+        <a class="navbar-brand" href="{% url 'home' %}"">Inicio</a>
         {% block 'menu' %} {% endblock %}
         <a class="navbar-brand" href="{% url 'sair' %}">Sair</a>
       

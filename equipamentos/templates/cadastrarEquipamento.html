@@ -1,5 +1,5 @@
 {% extends 'base.html'%}
-{% block 'titulo'%} Local Instalação {% endblock %}
+{% block 'titulo'%} Equipamento {% endblock %}
 {% block 'menu' %} 
 <a class="navbar-brand" href="{% url 'home' %}">Notas</a>
 <a class="navbar-brand" href="{% url 'listar_equipamentos' %}">Equipamentos</a>
@@ -13,12 +13,12 @@
     <div class='row'>
         <div class='col-md-3'></div>
         <div class="col-md">
-            <h1>  Cadastro Locais de Instalação</h1><hr>
+            <h1>  Cadastro Equipamentos</h1><hr>
             
             {% if status == 1 %}
                 <div class="alert alert-success" role="alert">Fomulario cadatrados com sucesso</div>    
             {% endif %}
-            <form method ="POST" action="{% url 'cadastrarLocal' %}"> {% csrf_token %}
+            <form method ="POST" action="{% url 'cadastrarEquipamento' %}"> {% csrf_token %}
 
                 {% for campo in form %}
                 {{ campo.label_tag }}<br>
