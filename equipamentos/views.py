@@ -210,15 +210,15 @@ def editarFornecedor(request):
 def cadastrarLocal(request):
     
     if request.method=="GET":
-        form=localForm
+        form=localFormCadastro
         print(form)
         #form.predio.attrs.update({'class': 'form-control'})
         return render(request, "cadastrarLocal.html", {'form':form,'status':0})
     else:
-        details = localForm(request.POST)
+        details = localFormCadastro(request.POST)
         if details.is_valid():
             details.save()
-            form=localForm
+            form=localFormCadastro
             
             
             return render(request, "cadastrarLocal.html", {'form':form,'status':1})
@@ -227,5 +227,8 @@ def cadastrarLocal(request):
 
 
 def listarLocais(request):
-    return render(request, "listarLocais.html", {'status':0}) 
+ 
+    if request.method=="GET":
+        form = Local_instalacao.objects.all()
+        return render(request, "listarLocais.html", {'form':form,'status':0}) 
 

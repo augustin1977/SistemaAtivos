@@ -34,7 +34,7 @@ class Local_instalacao(models.Model):
             retorno+="."+self.prateleira
         return  retorno
     class Meta:
-        ordering = ['predio','piso','sala','armario','prateleira']
+        ordering = ['-predio','piso','-sala','-armario','prateleira']
     
 class Tipo_equipamento(models.Model):
     nome_tipo=models.CharField(max_length=50)
@@ -67,7 +67,7 @@ class Equipamento(models.Model):
     usuario=models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True)
     data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False)
     patrimonio=models.CharField(max_length=30)
-    material_consumo=models.ManyToManyField(Material_consumo, null=True, blank=True)
+    material_consumo=models.ManyToManyField(Material_consumo,  blank=True)
     codigo=models.CharField(max_length=40)
     class Meta:
         ordering = ['nome_equipamento']

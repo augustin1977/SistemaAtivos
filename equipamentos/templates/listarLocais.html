@@ -15,8 +15,38 @@
         <div class='col-md-3'>
         </div>
         <div class="col-md">
-            <h1>  Listas Locais de Instalação</h1><hr>
+            <h1>  Listas Locais de Instalação</h1>
         </div>
+            
+            <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Predio</th>
+                    <th scope="col">Andar</th>
+                    <th scope="col">Piso</th>
+                    <th scope="col">Armario </th>
+                    <th scope="col">Prateleira </th>
+                    <th scope="col">Apelido </th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr>
+            
+          </tr>
+          {% for local in form %}
+          <tr>
+          
+          <th scope="row">{{local.predio}}</th>
+          <td>{{local.piso}}</td>
+          <td>{{local.sala}}</td>
+          <td>{{local.armario}}</td>
+          <td>{{local.prateleira}}</td>
+          <td>{{local.apelido_local}}</td>
+               
+        </tr>
+        {% endfor %}
+        </tbody>    
+        </table>
      </div>
  </div>
         

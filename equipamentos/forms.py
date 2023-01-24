@@ -1,10 +1,9 @@
 from django import forms
 from django.forms import *
 from .models import *
+from django.forms import modelform_factory
 
-class localForm(ModelForm):
-    
-    
+class localFormCadastro(ModelForm):
     class Meta:
         model = Local_instalacao
         fields = '__all__'
@@ -19,4 +18,8 @@ class localForm(ModelForm):
         }
         def clean(self):
             super().clean()
-        
+class  localFormlista(ModelForm):
+     ListaLocais = modelformset_factory(Local_instalacao, fields=('__all__'))
+     class Meta:
+        model = Local_instalacao
+        fields = '__all__' 
