@@ -81,9 +81,9 @@ class Equipamento(models.Model):
         #self.data_compra=utc.localize( self.data_compra)
         if self.data_compra>self.data_cadastro:
             raise ValidationError('Data Compra invalida: a data de compra deve ser anterior a data de cadastro')
-        tipo=str(self.tipo_equipamento)[:3]
+        tipo=Tipo_equipamento.objects.get(id=self.tipo_equipamento.id)
         numero=len(Equipamento.objects.filter(tipo_equipamento=self.tipo_equipamento.id))+1
-        self.codigo=f'{tipo}{numero:03d}'
+        self.codigo=f'{tipo.sigla.upper()}{numero:03d}'
         
         
     
