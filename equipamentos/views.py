@@ -64,16 +64,18 @@ def editarEquipamento(request):
     pass
 
 def cadastrarEquipamento(request):
-    
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
     if request.method=="GET":
-        form=equipamentoCadastrarForm
+        form=equipamentoCadastrarForm(initial={'usuario':request.session.get('usuario')})      
 
         return render(request, "cadastrarEquipamento.html", {'form':form,'status':0})
     else:
         details = equipamentoCadastrarForm(request.POST)
+
         if details.is_valid():
             details.save()
-            form=localFormCadastro
+            form=equipamentoCadastrarForm(initial={'usuario':request.session.get('usuario')}) 
             return render(request, "cadastrarEquipamento.html", {'form':form,'status':1})
         else:
             return render(request, "cadastrarEquipamento.html", {'form':details}) 

@@ -1,6 +1,9 @@
 from django.db import models
 from usuarios.models import *
 from equipamentos.models import *
+import datetime
+from django.forms import ValidationError 
+import pytz
 
 class Fabricante(models.Model):
     nome_fabricante=models.CharField(max_length=80)
@@ -62,13 +65,34 @@ class Equipamento(models.Model):
     fabricante=models.ForeignKey(Fabricante, on_delete=models.DO_NOTHING,null=True, blank=True)
     local=models.ForeignKey(Local_instalacao, on_delete=models.DO_NOTHING,null=True, blank=True)
     tipo_equipamento=models.ForeignKey(Tipo_equipamento, on_delete=models.DO_NOTHING)
-    data_compra=models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
+    data_compra=models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True,)
     data_ultima_calibracao=models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
     usuario=models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True)
     data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False)
     patrimonio=models.CharField(max_length=30)
     material_consumo=models.ManyToManyField(Material_consumo,  blank=True)
     codigo=models.CharField(max_length=40)
+    
+    def clean(self):
+        super().clean()
+        utc=pytz.UTC
+        self.data_cadastro=utc.localize( datetime.datetime.now())
+        #self.data_compra=utc.localize( self.data_compra)
+        if self.data_compra>self.data_cadastro:
+            raise ValidationError('Data Compra invalida: a data de compra deve ser anterior a data de cadastro')
+        tipo=str(self.tipo_equipamento)[:3]
+        numero=len(Equipamento.objects.filter(tipo_equipamento=self.tipo_equipamento.id))+1
+        self.codigo=f'{tipo}{numero:03d}'
+        
+        
+    
+    def clean_data_compra(self):
+        
+        return self.cleaned_data
+
+        
+        
+
     class Meta:
         ordering = ['nome_equipamento']
     def __str__(self):
