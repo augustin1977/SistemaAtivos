@@ -41,6 +41,7 @@ class Local_instalacao(models.Model):
     
 class Tipo_equipamento(models.Model):
     nome_tipo=models.CharField(max_length=50)
+    sigla=models.CharField(max_length=3,unique=True)
     descricao_tipo=models.TextField(null=True, blank=True)    
     def __str__(self):
         return str(self.nome_tipo)

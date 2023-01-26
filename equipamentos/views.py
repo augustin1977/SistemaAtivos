@@ -145,9 +145,9 @@ def cadastrarFornecedor(request):
             return render(request, "cadastrarFornecedor.html", {'status':2}) # campos obrigatórios não preenchidos
         # verfica digitação do email e do telefone
         regex_email= '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
-        if post_email_contato_fabricante:
-            if not (re.search(regex_email, post_email_contato_fabricante)):
-                return render(request, "cadastrarFornecedor.html", {'status':3}) # email com digitação incorreta
+        #if post_email_contato_fabricante:
+        #    if not (re.search(regex_email, post_email_contato_fabricante)):
+        #        return render(request, "cadastrarFornecedor.html", {'status':3}) # email com digitação incorreta
         fabricante= Fabricante(nome_fabricante=post_nome_fabricante,
                                 endereco_fabricante=post_endereco_fabricante,
                                 nome_contato_fabricante=post_nome_contato_fabricante,
