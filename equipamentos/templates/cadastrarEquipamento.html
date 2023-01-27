@@ -19,12 +19,7 @@
                 <div class="alert alert-success" role="alert">Fomulario cadatrados com sucesso</div>    
             {% endif %}
             <form method ="POST" action="{% url 'cadastrarEquipamento' %}"> {% csrf_token %}
-
-                {% for campo in form %}
-                {{ campo.label_tag }}<br>
-                   {{ campo }}<br>
-                {% endfor %}
-
+                {{ form }}
         <button class="btn btn-primary">Enviar</button>
             </form>
             </hr>
