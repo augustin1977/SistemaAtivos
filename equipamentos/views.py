@@ -61,7 +61,42 @@ def download_view(request):
     return response
 
 def editarEquipamento(request):
-    pass
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    if request.method=="GET":
+        equipamento=request.GET.get("equipamento")
+        dados=Equipamento.objects.get(id=equipamento)
+        dados_paraformulario=dados.dados_para_form()
+        form=equipamentoEditarForm(initial=dados_paraformulario) 
+        print(dados_paraformulario)
+        return render(request, "editarEquipamento.html", {'form':form})
+    else:
+        details = equipamentoEditarForm(request.POST)
+        if details.is_valid():
+            e=Equipamento.objects.get(id=details.cleaned_data['id'])
+            e.nome_equipamento=details.cleaned_data['nome_equipamento']
+            e.modelo=details.cleaned_data['modelo']
+            e.fabricante=details.cleaned_data['fabricante']
+            e.local=details.cleaned_data['local']
+            e.tipo_equipamento=details.cleaned_data['tipo_equipamento']
+            e.data_compra=details.cleaned_data['data_compra']
+            e.data_ultima_calibracao=details.cleaned_data['data_ultima_calibracao']
+            e.data_cadastro=details.cleaned_data['data_cadastro']
+            e.patrimonio=details.cleaned_data['patrimonio']
+
+            e.codigo=details.cleaned_data['codigo']
+            e.save()
+            lista_materiais=Material_consumo.objects.filter(equipamento__id=details.cleaned_data['id'])
+            for material in details.cleaned_data['material_consumo']:
+                if material not in lista_materiais:
+                    e.material_consumo.add(material)
+            for material in lista_materiais:
+                if material not in details.cleaned_data['material_consumo']:
+                    e.material_consumo.remove(material)
+            
+    fornecedores=Fabricante.objects.all()
+    return render(request, "listarFornecedores.html", {'fornecedores':fornecedores})
+
 
 def cadastrarEquipamento(request):
     if not request.session.get('usuario'):
@@ -92,12 +127,10 @@ def cadastrarEquipamento(request):
             e.save()
 
             for material in material_consumo:
-                print(material)
                 e.material_consumo.add(material)
             
             form=equipamentoCadastrarForm(initial={'usuario':request.session.get('usuario')}) 
             return render(request, "cadastrarEquipamento.html", {'form':form,'status':1})
-            #return render(request, "cadastrarEquipamento.html", {'form':details})
         else:
             return render(request, "cadastrarEquipamento.html", {'form':details}) 
 

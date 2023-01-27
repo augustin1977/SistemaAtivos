@@ -1,0 +1,29 @@
+{% extends 'base.html'%}
+{% block 'titulo'%} Editar Equipamento {% endblock %}
+{% block 'menu' %} 
+<a class="navbar-brand" href="{% url 'home' %}">Notas</a>
+<a class="navbar-brand" href="{% url 'listar_equipamentos' %}">Equipamentos</a>
+<a class="navbar-brand" href="{% url 'listarLocais' %}">Locais Instalação</a>
+<a class="navbar-brand" href="{% url 'listarFornecedores' %}">Fornecedores</a>
+<a class="navbar-brand" href="{% url 'cadastrarFornecedor' %}">Cadastrar Fornecedor</a>
+<a class="navbar-brand" href="{% url 'home' %}">Relatórios</a>
+{% endblock %}
+{% block 'conteudo'%} 
+<div class ='container'>
+    <div class='row'>
+        <div class='col-md-3'></div>
+        <div class="col-md">
+            <h1>  Editar Dados Equipamentos</h1><hr>
+            {% if status == 1 %}
+                <div class="alert alert-success" role="alert">Fomulario Editado com sucesso</div>    
+            {% endif %}
+            <form method ="POST" action="{% url 'editarEquipamento' %}"> {% csrf_token %}
+                {{ form }}
+        <button class="btn btn-primary">Enviar</button>
+            </form>
+            </hr>
+</div>
+<div class='col-md-3'></div>
+</div>   
+</div>
+{% endblock %}

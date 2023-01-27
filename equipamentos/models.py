@@ -73,8 +73,12 @@ class Equipamento(models.Model):
     patrimonio=models.CharField(max_length=30)
     material_consumo=models.ManyToManyField(Material_consumo,  blank=True)
     codigo=models.CharField(max_length=40)
-    
-        
+
+    def dados_para_form(self):
+        return {"id":self.id,"nome_equipamento":self.nome_equipamento,"modelo":self.modelo,"fabricante":self.fabricante,
+        "local":self.local,"tipo_equipamento":self.tipo_equipamento,"data_compra":self.data_compra,
+        "data_ultima_calibracao":self.data_ultima_calibracao,"usuario":self.usuario,"patrimonio":self.patrimonio,"codigo":self.codigo,
+        "material_consumo":Material_consumo.objects.filter(equipamento__id=self.id) }
 
     class Meta:
         ordering = ['nome_equipamento']
