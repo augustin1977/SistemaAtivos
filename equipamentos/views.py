@@ -74,9 +74,30 @@ def cadastrarEquipamento(request):
         details = equipamentoCadastrarForm(request.POST)
 
         if details.is_valid():
-            details.save()
+            nome_equipamento=details.cleaned_data['nome_equipamento']
+            modelo=details.cleaned_data['modelo']
+            fabricante=details.cleaned_data['fabricante']
+            local=details.cleaned_data['local']
+            tipo_equipamento=details.cleaned_data['tipo_equipamento']
+            data_compra=details.cleaned_data['data_compra']
+            data_ultima_calibracao=details.cleaned_data['data_ultima_calibracao']
+            data_cadastro=details.cleaned_data['data_cadastro']
+            patrimonio=details.cleaned_data['patrimonio']
+            material_consumo=details.cleaned_data['material_consumo']
+            usuario=details.cleaned_data['usuario']
+            codigo=details.cleaned_data['codigo']
+            e= Equipamento(nome_equipamento=nome_equipamento,modelo=modelo,fabricante=fabricante,local=local,tipo_equipamento=tipo_equipamento,
+                            data_cadastro=data_cadastro,data_compra=data_compra,data_ultima_calibracao=data_ultima_calibracao,patrimonio=patrimonio,
+                            usuario=Usuario.objects.get(id=usuario),codigo=codigo)
+            e.save()
+
+            for material in material_consumo:
+                print(material)
+                e.material_consumo.add(material)
+            
             form=equipamentoCadastrarForm(initial={'usuario':request.session.get('usuario')}) 
             return render(request, "cadastrarEquipamento.html", {'form':form,'status':1})
+            #return render(request, "cadastrarEquipamento.html", {'form':details})
         else:
             return render(request, "cadastrarEquipamento.html", {'form':details}) 
 

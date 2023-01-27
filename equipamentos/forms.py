@@ -55,7 +55,7 @@ class equipamentoCadastrarForm(Form):
     data_compra=DateTimeField(widget=SelectDateWidget(years=tuple(range(1900,anoAtual+1)),attrs={'class': "form-control"}))
     data_ultima_calibracao=DateTimeField(widget=SelectDateWidget(years=tuple(range(1900,anoAtual+1)),attrs={'class': "form-control"}))
     patrimonio=CharField(widget= TextInput(attrs={'class': "form-control"}))
-    material_consumo=ModelMultipleChoiceField(queryset= Material_consumo.objects.all(),widget=SelectMultiple(attrs={'class': "form-control"}))
+    material_consumo=ModelMultipleChoiceField(required=False,blank=True,queryset= Material_consumo.objects.all(),widget=SelectMultiple(attrs={'class': "form-control"}))
     usuario=CharField(label="",widget=HiddenInput())
 
     
@@ -63,23 +63,16 @@ class equipamentoCadastrarForm(Form):
         super().clean()
         utc=pytz.UTC
         cd=self.cleaned_data
-        print(cd)
         cd['data_cadastro']=utc.localize( datetime.datetime.now())
         data_compra=cd["data_compra"]
         data_cadastro=cd["data_cadastro"]
         if data_compra>data_cadastro:
-            print(KeyError)
             raise ValidationError('Data Compra invalida: a data de compra deve ser anterior a data de hoje')
         tipo_equipamento=cd["tipo_equipamento"]
         tipo=Tipo_equipamento.objects.get(id=tipo_equipamento.id)
         numero=len(Equipamento.objects.filter(tipo_equipamento=tipo_equipamento.id))+1
         cd['codigo']=f'{tipo.sigla.upper()}{numero:03d}'
         return cd
-
-
-
-    
-    
 
     
    
