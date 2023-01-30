@@ -8,6 +8,7 @@ from cadastro_equipamentos import settings
 from django.http import HttpResponse, Http404
 from os import path
 import mimetypes
+from django.utils.encoding import smart_str
 import re
 from .forms import *
 def home(request):
@@ -31,34 +32,6 @@ def exibirDetalheEquipamento(request):
     materiais=Material_consumo.objects.filter(equipamento__id=id)
     arquivos= Media.objects.filter(equipamento__id=id)
     return render(request, "exibirDetalheEquipamento.html", {'equipamento':equipamento, 'materiais':materiais, 'media':arquivos})
-
-
-
-def download_view(request):
-    objeto=request.GET.get('filename')
-    local=settings.MEDIA_ROOT[:-1]
-    caminho=path.join(local,objeto)
-    print(local," | ",objeto," | ",caminho)
-    
-    if not (path.exists(caminho)):
-        raise Http404()
-
-    mimetype, encoding = mimetypes.guess_type(caminho)
-    
-    if mimetype is None:
-        mimetype = 'application/force-download'
-
-    file = caminho.split("/")[-1]
-    
-    response = HttpResponse()
-    response['Content-Type'] = mimetype
-    response['Pragma'] = 'public'
-    response['Expires'] = '0'
-    response['Cache-Control'] = 'must-revalidate, post-check=0, pre-check=0'
-    response['Content-Disposition'] = 'attachment; filename=%s' % objeto
-    response['Content-Transfer-Encoding'] = 'binary'
-    response['Content-Length'] = str(path.getsize(caminho))
-    return response
 
 def editarEquipamento(request):
     if not request.session.get('usuario'):
@@ -96,7 +69,6 @@ def editarEquipamento(request):
             
     fornecedores=Fabricante.objects.all()
     return render(request, "listarFornecedores.html", {'fornecedores':fornecedores})
-
 
 def cadastrarEquipamento(request):
     if not request.session.get('usuario'):
@@ -275,7 +247,6 @@ def editarFornecedor(request):
     
     return redirect('/equipamentos/listarFornecedores/')
 
-
 def cadastrarLocal(request):
     
     if request.method=="GET":
@@ -294,10 +265,38 @@ def cadastrarLocal(request):
         else:
             return render(request, "cadastrarLocal.html", {'form':details}) 
 
-
 def listarLocais(request):
  
     if request.method=="GET":
         form = Local_instalacao.objects.all()
         return render(request, "listarLocais.html", {'form':form,'status':0}) 
 
+def download_view(request):
+    objeto=request.GET.get('filename')
+    local=settings.MEDIA_ROOT[:-1]
+    
+    caminho=path.join(local,objeto)
+    print(local," | ",objeto," | ",caminho)
+    
+    if not (path.exists(caminho)):
+        raise Http404()
+
+    mimetype, encoding = mimetypes.guess_type(caminho)
+    
+    if mimetype is None:
+        mimetype = 'application/force-download'
+
+
+
+
+
+      
+    response = HttpResponse()
+    response['Content-Type'] = mimetype
+    response['Pragma'] = 'public'
+    response['Expires'] = '100'
+    response['Cache-Control'] = 'must-revalidate, post-check=0, pre-check=0'
+    response['Content-Disposition'] = f'attachment; filename={caminho}'
+    #response['Content-Transfer-Encoding'] = 'binary'
+    #response['Content-Length'] = str(path.getsize(caminho))
+    return response

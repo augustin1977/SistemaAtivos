@@ -19,6 +19,7 @@ MEDIA_URL = "/images/"
 MEDIA_ROOT=os.path.join(BASE_DIR,"images/")
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -28,7 +29,7 @@ SECRET_KEY = "django-insecure-v9c%xo1#yue!c*b8i13(42@-jhz^burrb@foq^q_ixmowch=mm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["10.3.10.20"]
+ALLOWED_HOSTS = ["10.3.10.20","10.11.39.220"]
 
 
 # Application definition
@@ -126,6 +127,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
