@@ -35,7 +35,7 @@
             <tr>
             <th scope="row">{{fornecedor.nome_fabricante}}</th>
             <td>{{fornecedor.nome_contato_fabricante}}</td>
-            <td><a href="{% url 'exibirDetalheFornecedor' %}?id={{ fornecedor.id }}">Visualizar {{ fornecedor.id }}</a></td>
+            <td><a href="{% url 'exibirDetalheFornecedor' %}?id={{ fornecedor.id }}">Visualizar</a></td>
             <td><a href="{% url 'editarFornecedor' %}?id={{ fornecedor.id }}">Editar</a></td>
           </tr>
           {% endfor %}
