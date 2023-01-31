@@ -21,14 +21,14 @@ def home(request):
 def lista_equipamentos(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{request.session.get('usuario')} acessou Lista Equipamentos")
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Lista Equipamentos")
     equipamentos=Equipamento.objects.all()
     return render(request, "exibirEquipamentos.html", {'equipamentos':equipamentos})
 
 def exibirDetalheEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{request.session.get('usuario')} acessou Detalhe Equipamentos")
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Detalhe Equipamentos")
     id=str(request.GET.get('id'))
     equipamento=Equipamento.objects.get(id=id)
     materiais=Material_consumo.objects.filter(equipamento__id=id)
