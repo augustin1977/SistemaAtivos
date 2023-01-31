@@ -261,18 +261,17 @@ def cadastrarLocal(request):
     print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro local")
     if request.method=="GET":
         form=localFormCadastro
-        #print(form)
-        #form.predio.attrs.update({'class': 'form-control'})
         return render(request, "cadastrarLocal.html", {'form':form,'status':0})
     else:
         details = localFormCadastro(request.POST)
         if details.is_valid():
+            print('valido')
             details.save()
             form=localFormCadastro
-            
-            
+                        
             return render(request, "cadastrarLocal.html", {'form':form,'status':1})
         else:
+            print('invalido')
             return render(request, "cadastrarLocal.html", {'form':details}) 
 
 def listarLocais(request):
@@ -282,7 +281,32 @@ def listarLocais(request):
     if request.method=="GET":
         form = Local_instalacao.objects.all()
         return render(request, "listarLocais.html", {'form':form,'status':0}) 
+def editarLocal(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Editar local")
+    if request.method=="GET":
+        dados = Local_instalacao.objects.get(id=request.GET.get("id")).dados_para_form()
 
+        form=localFormEditar(initial=dados) 
+        return render(request, "editarLocal.html", {'form':form,'id':request.GET.get("id"),'status':0}) 
+    else:
+        form = Local_instalacao.objects.all()        
+        details = localFormEditar(request.POST)
+        if details.is_valid():
+
+            e=Local_instalacao.objects.get(id=details.cleaned_data['id'])
+            e.predio=details.cleaned_data['predio']
+            e.piso=details.cleaned_data['piso']
+            e.sala=details.cleaned_data['sala']
+            e.armario=details.cleaned_data['armario']
+            e.prateleira=details.cleaned_data['prateleira']
+            e.apelido_local=details.cleaned_data['apelido_local']
+            e.save()
+            
+            return render(request, "listarLocais.html", {'form':form,'status':1}) 
+        else:
+            return render(request, "listarLocais.html", {'form':form,'status':2})
 def download_view(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')

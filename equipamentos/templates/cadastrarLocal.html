@@ -20,10 +20,7 @@
             {% endif %}
             <form method ="POST" action="{% url 'cadastrarLocal' %}"> {% csrf_token %}
 
-                {% for campo in form %}
-                {{ campo.label_tag }}<br>
-                   {{ campo }}<br>
-                {% endfor %}
+                {{ form }}
 
         <button class="btn btn-primary">Enviar</button>
             </form>

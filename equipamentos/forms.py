@@ -18,6 +18,21 @@ class localFormCadastro(ModelForm):
             'apelido_local':TextInput (attrs={'class': "form-control"}),
 
         }
+class localFormEditar(ModelForm):
+    id=CharField(label="",widget=HiddenInput())
+    class Meta:
+        model = Local_instalacao
+        fields = '__all__'
+        widgets = {
+            'id': HiddenInput(),
+            'predio': TextInput (attrs={'class': "form-control"}),
+            'piso':TextInput (attrs={'class': "form-control"}),
+            'sala':TextInput (attrs={'class': "form-control"}),
+            'armario':TextInput (attrs={'class': "form-control"}),
+            'prateleira':TextInput (attrs={'class': "form-control"}),
+            'apelido_local':TextInput (attrs={'class': "form-control"}),
+
+        }
 class  localFormlista(ModelForm):
     ListaLocais = modelformset_factory(Local_instalacao, fields=('__all__'))
     class Meta:

@@ -17,7 +17,16 @@
         <div class="col-md">
             <h1>  Listas Locais de Instalação</h1>
         </div>
-            
+        {% if status == 1 %}
+        <div class="alert alert-sucess" role="alert">
+            Ddos Fornecedor Atualizados com sucesso 
+        </div>
+        {% endif %}
+        {% if status == 2 %}
+        <div class="alert alert-danger" role="alert">
+            Erro ao gravar dados Fornecedor 
+        </div>
+        {% endif %}
             <table class="table table-hover">
                 <thead>
                   <tr>
@@ -43,6 +52,7 @@
           <td>{{local.armario}}</td>
           <td>{{local.prateleira}}</td>
           <td>{{local.apelido_local}}</td>
+          <td><a href="{% url 'editarLocal' %}?id={{ local.id }}">Editar</a></td>
                
         </tr>
         {% endfor %}

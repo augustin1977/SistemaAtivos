@@ -26,6 +26,8 @@ class Local_instalacao(models.Model):
     armario=models.CharField(max_length=15,null=True, blank=True)
     prateleira=models.CharField(max_length=15,null=True, blank=True)
     apelido_local=models.CharField(max_length=50,null=True, blank=True)
+    class Meta:
+        ordering = ['predio','piso','-sala','-armario','prateleira']
     def __str__(self):
         retorno= self.predio
         if self.piso:
@@ -37,8 +39,11 @@ class Local_instalacao(models.Model):
         if self.prateleira:
             retorno+="."+self.prateleira
         return  retorno
-    class Meta:
-        ordering = ['-predio','piso','-sala','-armario','prateleira']
+    def dados_para_form(self):
+        return {'id':self.id, 'predio':self.predio,"piso":self.piso,"sala":self.sala,
+        "armario":self.armario,'prateleira':self.prateleira}
+
+    
     
 class Tipo_equipamento(models.Model):
     nome_tipo=models.CharField(max_length=50)
