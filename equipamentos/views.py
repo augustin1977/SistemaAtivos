@@ -38,12 +38,13 @@ def exibirDetalheEquipamento(request):
 def editarEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Edição Equipamentos")
     if request.method=="GET":
         equipamento=request.GET.get("equipamento")
         dados=Equipamento.objects.get(id=equipamento)
         dados_paraformulario=dados.dados_para_form()
         form=equipamentoEditarForm(initial=dados_paraformulario) 
-        print(dados_paraformulario)
+        
         return render(request, "editarEquipamento.html", {'form':form})
     else:
         details = equipamentoEditarForm(request.POST)
@@ -75,6 +76,7 @@ def editarEquipamento(request):
 def cadastrarEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Cadastro Equipamentos")
     if request.method=="GET":
         form=equipamentoCadastrarForm(initial={'usuario':request.session.get('usuario')})      
 
@@ -111,12 +113,14 @@ def cadastrarEquipamento(request):
 def listarFornecedores(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Lista Fornecedores")
     fornecedores=Fabricante.objects.all()
     return render(request, "listarFornecedores.html", {'fornecedores':fornecedores})
 
 def exibirDetalheFornecedor(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Detalhe Fornecedores")
     id=str(request.GET.get('id'))
     fornecedor=Fabricante.objects.get(id=id)
     if fornecedor.endereco_fabricante==None: 
@@ -136,6 +140,7 @@ def exibirDetalheFornecedor(request):
 def cadastrarFornecedor(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Cadastro Fornecedores")
     status=str(request.GET.get('status'))
     if request.method=="GET":
         return render(request, "cadastrarFornecedor.html")
@@ -189,6 +194,7 @@ def cadastrarFornecedor(request):
 def editarFornecedor(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Edição Fornecedores")
     id=request.GET.get('id')
 
     if id:
@@ -250,7 +256,9 @@ def editarFornecedor(request):
     return redirect('/equipamentos/listarFornecedores/')
 
 def cadastrarLocal(request):
-    
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro local")
     if request.method=="GET":
         form=localFormCadastro
         #print(form)
@@ -268,12 +276,17 @@ def cadastrarLocal(request):
             return render(request, "cadastrarLocal.html", {'form':details}) 
 
 def listarLocais(request):
- 
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Listar local")
     if request.method=="GET":
         form = Local_instalacao.objects.all()
         return render(request, "listarLocais.html", {'form':form,'status':0}) 
 
 def download_view(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Download fotos")
     objeto=request.GET.get('filename')
     local=settings.MEDIA_ROOT[:-1]
     
