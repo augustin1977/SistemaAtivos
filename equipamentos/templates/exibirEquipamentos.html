@@ -37,7 +37,7 @@
             <td>{{equipamento.tipo_equipamento}}</td>
             <td>{{equipamento.local}}</td>
             <td><a href="{% url 'exibirDetalheEquipamento' %}?id={{ equipamento.id }}">Link</a></td>
-            <td><a href="{% url 'editarEquipamento' %}?id={{ equipamento.id }}">Link</a></td>
+            <td><a href="{% url 'editarEquipamento' %}?equipamento={{ equipamento.id }}">Link</a></td>
             
           </tr>
           {% endfor %}
