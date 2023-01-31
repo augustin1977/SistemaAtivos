@@ -25,6 +25,7 @@
             <th scope="col">Tipo</th>
             <th scope="col">Local Instalação</th>
             <th scope="col">Ver detalhes</th>
+            <th scope="col">Editar</th>
           </tr>
         </thead>
         <tbody>
@@ -36,6 +37,7 @@
             <td>{{equipamento.tipo_equipamento}}</td>
             <td>{{equipamento.local}}</td>
             <td><a href="{% url 'exibirDetalheEquipamento' %}?id={{ equipamento.id }}">Link</a></td>
+            <td><a href="{% url 'editarEquipamento' %}?id={{ equipamento.id }}">Link</a></td>
             
           </tr>
           {% endfor %}
