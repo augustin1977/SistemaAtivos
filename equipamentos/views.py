@@ -129,7 +129,7 @@ def exibirDetalheFornecedor(request):
         fornecedor.site_Fabricante=""
     if fornecedor.dados_adicionais==None : 
         fornecedor.dados_adicionais=""
-    return render(request, "exibirDetalheFornecedor.html", {'fornecedor':fornecedor})
+    return render(request, "exibirDetalhefornecedor.html", {'fornecedor':fornecedor})
 
 def cadastrarFornecedor(request):
     if not request.session.get('usuario'):
