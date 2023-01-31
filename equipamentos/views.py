@@ -285,11 +285,6 @@ def download_view(request):
     
     if mimetype is None:
         mimetype = 'application/force-download'
-
-
-
-
-
       
     response = HttpResponse()
     response['Content-Type'] = mimetype

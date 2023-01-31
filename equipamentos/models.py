@@ -3,7 +3,8 @@ from usuarios.models import *
 from equipamentos.models import *
 import datetime
 from django.forms import ValidationError 
-import pytz
+
+
 
 class Fabricante(models.Model):
     nome_fabricante=models.CharField(max_length=80)
