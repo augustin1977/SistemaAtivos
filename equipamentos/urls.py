@@ -14,6 +14,7 @@ urlpatterns = [path("",views.home, name="home"),
                path('cadastrarLocal/',views.cadastrarLocal,name="cadastrarLocal"),
                path('listarLocais/',views.listarLocais,name="listarLocais"),
                path('editarLocal/',views.editarLocal,name="editarLocal"),
+               path('cadastrarTipo/',views.cadastrarTipo,name="cadastrarTipo"),
 
 ]
 

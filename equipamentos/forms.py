@@ -104,11 +104,8 @@ class equipamentoCadastrarForm(Form):
 class cadastraTipo_equipamento(Form):
     nome=CharField(widget= TextInput(attrs={'class': "form-control"}))
     descricao=CharField(widget=Textarea(attrs={'class': "form-control"}))
-    sigla=CharField(label="",widget=HiddenInput())
-    def descricao_clean(self):
-        cd=self.cleaned_data
-        return cd
-
+    sigla=CharField(required=False,label="",widget=HiddenInput())
+   
     def clean(self):
         super().clean()
         cd=self.cleaned_data
@@ -116,10 +113,14 @@ class cadastraTipo_equipamento(Form):
         tipos=Tipo_equipamento.objects.all()
         for tipo in tipos:
             siglas.append(tipo.sigla)
-        cd['sigla']=cd['nome'][0:3]
+        cd['sigla']=cd['nome'][0:3].upper()
+        print(siglas)
         i=3
         while(cd['sigla'] in siglas  and i<len(cd['nome'])):
-            cd['siglas']=cd['nome'][0:2]+cd['nome'][i]
+            cd['sigla']=cd['nome'][0:2].upper()+cd['nome'][i].upper()
+            i+=1
+            print(cd['sigla'])
         if i>len(cd['nome']):
-            cd['siglas']=cd['nome'][0:2]+'x'
+            cd['sigla']=cd['nome'][0:2].upper()+'X'
+            cd['sigla']=cd['sigla'].upper()
         return cd

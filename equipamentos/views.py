@@ -307,6 +307,29 @@ def editarLocal(request):
             return render(request, "listarLocais.html", {'form':form,'status':1}) 
         else:
             return render(request, "listarLocais.html", {'form':form,'status':2})
+
+def cadastrarTipo(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro Tipo Equipamento")
+    if request.method=="GET":
+        form=cadastraTipo_equipamento
+        return render(request, "cadastrarTipo.html", {'form':form,'status':0})
+    else:
+        details = cadastraTipo_equipamento(request.POST)
+        if details.is_valid():
+            print('valido')
+            
+            tipo=Tipo_equipamento(nome_tipo=details.cleaned_data['nome'],sigla=details.cleaned_data['sigla'],descricao_tipo=details.cleaned_data['descricao'])
+            tipo.save()
+            form=cadastraTipo_equipamento
+                        
+            return render(request, "cadastrarTipo.html", {'form':form,'status':1})
+        else:
+            print('invalido')
+            return render(request, "cadastrarTipo.html", {'form':details}) 
+
+
 def download_view(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
