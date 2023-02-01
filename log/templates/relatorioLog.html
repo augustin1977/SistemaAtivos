@@ -1,12 +1,11 @@
 {% extends 'base.html'%}
-{% block 'titulo'%} Fornecedores {% endblock %}
+{% block 'titulo'%} Relatório de LOG {% endblock %}
 {% block 'menu' %} 
 <a class="navbar-brand" href="{% url 'home' %}">Notas</a>
 <a class="navbar-brand" href="{% url 'listar_equipamentos' %}">Equipamentos</a>
 <a class="navbar-brand" href="{% url 'listarTipo' %}">Tipo Equipamento</a>
 <a class="navbar-brand" href="{% url 'listarLocais' %}">Locais Instalação</a>
 <a class="navbar-brand" href="{% url 'listarFornecedores' %}">Fornecedores</a>
-<a class="navbar-brand" href="{% url 'cadastrarFornecedor' %}">Cadastrar Fornecedor</a>
 <a class="navbar-brand" href="{% url 'listarLog' %}">Relatórios</a>
 {% endblock %}
 {% block 'conteudo'%} 
@@ -17,27 +16,32 @@
         <div class="col-md">
             <h1>  Listas Locais de Fornecedores</h1>
         </div>
-    {% if status == 10 %}
-  <div class="alert alert-success" role="alert">
-      Fornecedor Editado com sucesso
-    </div>
-  {% endif %}
-    <table class="table table-hover">
+        <table class="table table-hover">
         <thead>
           <tr>
-            <th scope="col">Fornecedor</th>
-            <th scope="col">Contato</th>
-            <th scope="col">Ver detalhes</th>
-            <th scope="col">Editar detalhes</th>
+            <th scope="col">#</th>
+            <th scope="col">Data</th>
+            <th scope="col">Transação</th>
+            <th scope="col">Movimento</th>
+            <th scope="col">Equipamento</th>
+            <th scope="col">Nota</th>
+            <th scope="col">Usuario</th>
+            <th scope="col">Alteração</th>
           </tr>
         </thead>
         <tbody>
-            {% for fornecedor in fornecedores %}
+            {% for log in lista_log %}
             <tr>
-            <th scope="row">{{fornecedor.nome_fabricante}}</th>
-            <td>{{fornecedor.nome_contato_fabricante}}</td>
-            <td><a href="{% url 'exibirDetalheFornecedor' %}?id={{ fornecedor.id }}">Visualizar</a></td>
-            <td><a href="{% url 'editarFornecedor' %}?id={{ fornecedor.id }}">Editar</a></td>
+             <td>{{ log.id }}</td>
+            <th scope="row">{{ log.data_cadastro }}</th>
+            <td>{{ log.transacao }}</td>
+            <td>{{ log.movimento }}</td>
+            <td>{{ log.equipamento }}</td>
+            <td>{{ log.nota_equipamento }}</td>
+            <td>{{ log.usuario }}</td>
+            <td>{{ log.alteracao }}</td>
+
+
           </tr>
           {% endfor %}
         </tbody>

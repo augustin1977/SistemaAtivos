@@ -1,8 +1,7 @@
 from django.urls import path
 from . import views
 
-urlpatterns = [
-    
+urlpatterns = [path("listarLog/",views.listarLog, name="listarLog"),
+               
 
-    
 ]
