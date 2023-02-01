@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Usuario,Tipo
+from log.models import Log
 from django.shortcuts import redirect 
 from hashlib import sha256
 import re
@@ -67,6 +68,8 @@ def validar_login(request):
     else:
         request.session['usuario']= usuario[0].id
         print(f"{usuario[0].nome} logou no sistema")
+        log=Log(transacao='us',movimento='lo',usuario=Usuario.objects.get(id=usuario[0].id),alteracao=f'{usuario[0]} logou no sistema')
+        log.save()
         return redirect(f'/equipamentos/?status=0')
     
 def sair(request):
