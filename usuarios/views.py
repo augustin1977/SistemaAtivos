@@ -50,6 +50,8 @@ def valida_cadastro(request):
         senha= sha256(senha.encode()).hexdigest() # recuperando senha e codificando num hash sha256
         usuario=Usuario(nome=nome, senha=senha, email=email, tipo=tipo, chapa=chapa) # cria um objeto usuário com as informações recebidas do fomulario
         usuario.save() # salva o objeto usuário no banco de dados
+        log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'{usuario} se cadastrou no sistema')
+        log.save()
         return redirect('/auth/login/?status=0') # retorna sem erro
     except:
         return redirect('/auth/cadastrar/?status=99') # retorna erro geral de gravação no banco de dados
