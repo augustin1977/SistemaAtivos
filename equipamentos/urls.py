@@ -15,6 +15,7 @@ urlpatterns = [path("",views.home, name="home"),
                path('listarLocais/',views.listarLocais,name="listarLocais"),
                path('editarLocal/',views.editarLocal,name="editarLocal"),
                path('cadastrarTipo/',views.cadastrarTipo,name="cadastrarTipo"),
+               path('listarTipo/',views.listarTipo,name="listarTipo"),
 
 ]
 

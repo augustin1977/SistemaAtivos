@@ -329,6 +329,14 @@ def cadastrarTipo(request):
             print('invalido')
             return render(request, "cadastrarTipo.html", {'form':details}) 
 
+def listarTipo(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro Tipo Equipamento")
+
+    form=Tipo_equipamento.objects.all()
+    return render(request, "listarTipo.html", {'form':form,'status':0})
+
 
 def download_view(request):
     if not request.session.get('usuario'):

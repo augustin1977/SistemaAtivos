@@ -1,0 +1,51 @@
+{% extends 'base.html'%}
+{% block 'titulo'%} Tipos de Equipamento {% endblock %}
+{% block 'menu' %} 
+<a class="navbar-brand" href="{% url 'home' %}">Notas</a>
+<a class="navbar-brand" href="{% url 'listar_equipamentos' %}">Equipamentos</a>
+<a class="navbar-brand" href="{% url 'listarTipo' %}">Tipo Equipamento</a>
+<a class="navbar-brand" href="{% url 'cadastrarTipo' %}">Cadastrar Tipo Equipamento</a>
+<a class="navbar-brand" href="{% url 'listarLocais' %}">Locais Instalação</a>
+<a class="navbar-brand" href="{% url 'cadastrarLocal' %}">Cadastrar Local Instalação</a>
+<a class="navbar-brand" href="{% url 'listarFornecedores' %}">Fornecedores</a>
+<a class="navbar-brand" href="{% url 'home' %}">Relatórios</a>
+{% endblock %}
+{% block 'conteudo'%} 
+<div class ='container'>
+    <div class='row'>
+        <div class='col-md-3'>
+        </div>
+        <div class="col-md">
+            <h1>  Tipos de Equipamento</h1>
+        </div>
+
+            <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Sigla</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr>
+            
+          </tr>
+          {% for tipo in form %}
+          <tr>
+          
+          <th scope="row">{{local.predio}}</th>
+          <td>{{tipo.nome_tipo}}</td>
+          <td>{{tipo.descricao_tipo}}</td>
+          <td>{{tipo.sigla}}</td>
+          <td><a href="{% url 'inicio' %}?id={{ local.id }}">Editar</a></td>
+               
+        </tr>
+        {% endfor %}
+        </tbody>    
+        </table>
+     </div>
+ </div>
+        
+ {% endblock %}
+            
