@@ -12,18 +12,20 @@ class Log(models.Model):
     movimento=models.CharField(choices=lista_movimentos,max_length=10)
     data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False)
     usuario=models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
-    equipamento=models.ForeignKey(Equipamento,on_delete=models.DO_NOTHING, null=True)
-    Nota_equipamento=models.ForeignKey(Nota_equipamento,on_delete=models.DO_NOTHING,null=True)
+    equipamento=models.ForeignKey(Equipamento,on_delete=models.DO_NOTHING, null=True,blank=True)
+    nota_equipamento=models.ForeignKey(Nota_equipamento,on_delete=models.DO_NOTHING,null=True,blank=True)
     alteracao=models.CharField(max_length=30)
-    
+    class Meta:
+        ordering = ['-data_cadastro','usuario','nota_equipamento','transacao','movimento']
     def __str__(self):
-        retorno= self.transacao
+        retorno= str(self.data_cadastro)+"."+self.transacao+ "."+self.movimento
         if self.usuario:
-            retorno+="."+self.usuario
+            retorno+="."+str(self.usuario)
         if self.equipamento:
-            retorno+="."+self.equipamento
-        if self.Nota_equipamento:
-            retorno+="."+self.Nota_equipamento
+            retorno+="."+str(self.equipamento)
+        if self.nota_equipamento:
+            retorno+="."+str(self.nota_equipamento)
         if self.alteracao:
             retorno+="."+self.alteracao
         return  retorno
+    
