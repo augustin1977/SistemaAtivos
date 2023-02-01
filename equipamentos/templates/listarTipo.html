@@ -25,20 +25,17 @@
                     <th scope="col">Nome</th>
                     <th scope="col">Descrição</th>
                     <th scope="col">Sigla</th>
+                    <th scope="col">Editar</th>
                   </tr>
                 </thead>
                 <tbody>
-                    <tr>
-            
-          </tr>
+
           {% for tipo in form %}
           <tr>
-          
-          <th scope="row">{{local.predio}}</th>
-          <td>{{tipo.nome_tipo}}</td>
+          <th scope="row">{{tipo.nome_tipo}}</th>
           <td>{{tipo.descricao_tipo}}</td>
           <td>{{tipo.sigla}}</td>
-          <td><a href="{% url 'inicio' %}?id={{ local.id }}">Editar</a></td>
+          <td><a href="{% url 'home' %}?id={{ tipo.id }}">Link</a></td>
                
         </tr>
         {% endfor %}
