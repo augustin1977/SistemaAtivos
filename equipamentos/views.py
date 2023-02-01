@@ -206,7 +206,7 @@ def editarFornecedor(request):
         post_nome_fabricante=request.POST.get('nome_fabricante')
         post_endereco_fabricante=request.POST.get('endereco_fabricante')
         post_nome_contato_fabricante=request.POST.get('nome_contato_fabricante')
-        post_telefone_contato=request.POST.get('telefone_contato_fabricante')
+        post_telefone_contato=request.POST.get('Telefone_contato_fabricante')
         post_email_contato_fabricante=request.POST.get('email_contato_fabricante')
         post_site_Fabricante=request.POST.get('site_Fabricante')
         post_dados_adicionais=request.POST.get('dados_adicionais')
