@@ -66,7 +66,7 @@ def validar_login(request):
         return redirect('/auth/login/?status=1')
     else:
         request.session['usuario']= usuario[0].id
-        print(f'{usuario.nome} logou no sistema')
+        print(f"{usuario[0].nome} logou no sistema")
         return redirect(f'/equipamentos/?status=0')
     
 def sair(request):
