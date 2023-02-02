@@ -18,30 +18,42 @@ def cadastrar(request):
     return render(request, "cadastro.html", {'status':status})
 
 def editar(request):
+
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     usuario = Usuario.objects.get(id=request.session.get('usuario')) 
+
     if request.method=="GET":
+
         return render(request, "editar.html",{'usuario':usuario})
+
     senha_antiga=request.POST.get("senha_antiga")
-    nova_senha=request.POST.get("senha_antiga")
+    nova_senha=request.POST.get("senha_nova")
+    nova_senha2=request.POST.get("senha_nova2")
+
     nome=request.POST.get("nome")
     email=request.POST.get("email")
     chapa=request.POST.get("chapa")
+
+    if nova_senha!= nova_senha2:
+        return render(request, "editar.html",{'usuario':usuario,'status':4})
     senha_antiga=sha256(senha_antiga.encode()).hexdigest()
+    
     if senha_antiga==usuario.senha:
         regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%<^&*?()])[a-zA-Z0-9!@#$%<^&*?()]{6,}" # verifica se tem ao menos uma letra, um numero, um simbolo e no minimo 6 caracteres 
-        if  not (re.search(regex, nova_senha)):
+        if  (re.search(regex, nova_senha)):
             nova_senha=sha256(nova_senha.encode()).hexdigest()
             usuario.chapa=chapa
             usuario.nome=nome
             usuario.senha=nova_senha
             usuario.email=email
+            usuario.primeiro_acesso=False
             usuario.save()
-            return redirect('/auth/login/?status=0')
+            log=Log(transacao='us',movimento='ed',usuario=usuario,alteracao=f'{usuario} Alterou a senha de acesso')
+            log.save()
+            return redirect(f'/equipamentos/')
         else:
             return render(request, "editar.html",{'usuario':usuario,'status':3})
-
     return render(request, "editar.html",{'usuario':usuario,'status':1})
     
 
@@ -65,9 +77,9 @@ def valida_cadastro(request):
         return redirect('/auth/cadastrar/?status=2') # retorna erro valor nulo
     if len(usuario)>0:
         return redirect('/auth/cadastrar/?status=2') # chapa nula
-    regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'    
-    if not(re.search(regex,email)): 
-        return redirect('/auth/cadastrar/?status=4') # email invalido   
+    #regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'    
+    #if not(re.search(regex,email)): 
+    #    return redirect('/auth/cadastrar/?status=4') # email invalido   
     
     regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%<^&*?()])[a-zA-Z0-9!@#$%<^&*?()]{6,}" # verifica se tem ao menos uma letra, um numero, um simbolo e no minimo 6 caracteres 
     if  not (re.search(regex, senha)) :

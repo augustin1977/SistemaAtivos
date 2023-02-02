@@ -25,6 +25,11 @@
         Email invalido, por favor verifique a grafia do email.
       </div>
     {% endif %}
+    {% if status == '4'%}
+    <div class="alert alert-danger" role="alert">
+        Senhas novas não são iguais digite novamente
+      </div>
+    {% endif %}
     {% if status == '99'%}
     <div class="alert alert-danger" role="alert">
         Erro Geral no cadastro de Usuários
@@ -35,18 +40,24 @@
     <div class="col-md">
     <h1>  Editar Cadastro Usuário</h1>
     <hr>
-    <form method ="POST" action="{% url 'editarCadastro' %}"> {% csrf_token %}
+    <form method ="POST" action="{% url 'editar' %}"> {% csrf_token %}
         <label> nome</label>
-        <input name="nome" class="form-control" type="text" placeholder="Nome">
+        <input name="nome" class="form-control" type="text" placeholder="Nome" value="{{ usuario.nome }}">
         <br> 
         <label> Numero crachá</label>
-        <input name="chapa" class="form-control" type="text" placeholder="Chapa"> 
+        <input name="chapa" class="form-control" type="text" placeholder="Chapa" value="{{ usuario.chapa }}"> 
         <br>    
         <label> Email de Recuperação</label>
-        <input name="email" class="form-control" type="text" placeholder="nome@servidor.com">
+        <input name="email" class="form-control" type="text" placeholder="nome@servidor.com" value="{{ usuario.email }}">
         <br>
-        <label>  senha </label>
-        <input name="senha" class="form-control" type="password" placeholder="">
+        <label>  Senha Antiga</label>
+        <input name="senha_antiga" class="form-control" type="password" placeholder="">
+        <br>
+        <label>  Senha Nova</label>
+        <input name="senha_nova" class="form-control" type="password" placeholder="">
+        <br>
+        <label>  Digite novamente a Senha Nova</label>
+        <input name="senha_nova2" class="form-control" type="password" placeholder="">
         <br>
         <input class="btn btn-info btn-blue"type="submit" value="enviar">
         <a href="{% url 'login' %}"class="btn btn-warning btn-mg"> Cancelar </a>
