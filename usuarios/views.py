@@ -53,6 +53,7 @@ def valida_cadastro(request):
     senha=request.POST.get('senha')
     chapa=request.POST.get("chapa")
     tipo=Tipo.objects.get(tipo="user")
+    primeiro_acesso=True
     usuario= Usuario.objects.filter(email=email)
     
     if len(usuario)>0:
@@ -73,7 +74,7 @@ def valida_cadastro(request):
         return redirect('/auth/cadastrar/?status=3') # Senha invalida
     try:
         senha= sha256(senha.encode()).hexdigest() # recuperando senha e codificando num hash sha256
-        usuario=Usuario(nome=nome, senha=senha, email=email, tipo=tipo, chapa=chapa) # cria um objeto usuário com as informações recebidas do fomulario
+        usuario=Usuario(nome=nome, senha=senha, email=email, tipo=tipo, chapa=chapa, primeiro_acesso=primeiro_acesso) # cria um objeto usuário com as informações recebidas do fomulario
         usuario.save() # salva o objeto usuário no banco de dados
         log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'{usuario} se cadastrou no sistema')
         log.save()
@@ -87,6 +88,7 @@ def validar_login(request):
     # validar o login feito na pagina de login
     email=request.POST.get('email')
     senha=request.POST.get('senha')
+    primeiro_acesso=False
     senha=sha256(senha.encode()).hexdigest()
     usuario=Usuario.objects.filter(email=email).filter(senha=senha)
     
@@ -97,6 +99,8 @@ def validar_login(request):
         print(f"{usuario[0].nome} logou no sistema")
         log=Log(transacao='us',movimento='lo',usuario=Usuario.objects.get(id=usuario[0].id),alteracao=f'{usuario[0]} logou no sistema')
         log.save()
+        if usuario[0].primeiro_acesso==True:
+            return redirect('/auth/editar/?status=1')
         return redirect(f'/equipamentos/?status=0')
     
 def sair(request):
