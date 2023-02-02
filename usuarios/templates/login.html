@@ -19,7 +19,7 @@
       </div>
     {% endif %}
     <form method ="POST" action="{% url 'validar_login'%}"> {% csrf_token %}  
-        <label> Email de Recuperação</label>
+        <label> Email</label>
         <input name="email" class="form-control" type="text" placeholder="nome@servidor.com">
         <br>
         <label>  senha </label>
@@ -27,6 +27,8 @@
         <br>
         <input class="btn btn-info btn-blue"type="submit" value="enviar">
         <a href="{% url 'cadastrar' %}"class="btn btn-warning btn-mg"> Cadastrar </a>
+        <a href="{% url 'cadastrar' %}"class="btn btn-warning btn-mg"> Esqueci a senha </a>
+
     </form>
 
     

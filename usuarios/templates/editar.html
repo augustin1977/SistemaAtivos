@@ -1,2 +1,61 @@
-<h1> Editar Cadastro de Usuários </h1>
-<br>By Eric Augustin
+
+{% extends 'base.html'%}
+{% block 'titulo'%} Alteração de senha {% endblock %}
+{% block 'conteudo'%} 
+<div class ='container'>
+    {% if status == '1'%}
+    <div class="alert alert-danger" role="alert">
+        Senha incorreta, favor digitar novamente
+      </div>
+    {% endif %}
+
+    {% if status == '2'%}
+    <div class="alert alert-danger" role="alert">
+        Campo obrigatório com valor nulo, varifique o formulário
+      </div>
+    {% endif %}
+
+    {% if status == '3'%}
+    <div class="alert alert-danger" role="alert">
+        Senha muito curta, as senhas devem ter no minimo 6 caracteres alfanumericos e deve conter, letras maiusculas, minusculas, numeros e simbolos
+      </div>
+    {% endif %}
+    {% if status == '4'%}
+    <div class="alert alert-danger" role="alert">
+        Email invalido, por favor verifique a grafia do email.
+      </div>
+    {% endif %}
+    {% if status == '99'%}
+    <div class="alert alert-danger" role="alert">
+        Erro Geral no cadastro de Usuários
+      </div>
+    {% endif %}
+    <div class='row'>
+    <div class='col-md-3'></div>
+    <div class="col-md">
+    <h1>  Editar Cadastro Usuário</h1>
+    <hr>
+    <form method ="POST" action="{% url 'editarCadastro' %}"> {% csrf_token %}
+        <label> nome</label>
+        <input name="nome" class="form-control" type="text" placeholder="Nome">
+        <br> 
+        <label> Numero crachá</label>
+        <input name="chapa" class="form-control" type="text" placeholder="Chapa"> 
+        <br>    
+        <label> Email de Recuperação</label>
+        <input name="email" class="form-control" type="text" placeholder="nome@servidor.com">
+        <br>
+        <label>  senha </label>
+        <input name="senha" class="form-control" type="password" placeholder="">
+        <br>
+        <input class="btn btn-info btn-blue"type="submit" value="enviar">
+        <a href="{% url 'login' %}"class="btn btn-warning btn-mg"> Cancelar </a>
+    </form>
+    </hr>
+
+    </div>
+    <div class='col-md-3'></div>
+    
+</div>
+
+{% endblock %}

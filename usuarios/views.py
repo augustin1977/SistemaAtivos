@@ -18,8 +18,33 @@ def cadastrar(request):
     return render(request, "cadastro.html", {'status':status})
 
 def editar(request):
-    # Cria a view que edita o cadastro do usuário, ainda não implementado
-    return render(request, "editar.html")
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    usuario = Usuario.objects.get(id=request.session.get('usuario')) 
+    if request.method=="GET":
+        return render(request, "editar.html",{'usuario':usuario})
+    senha_antiga=request.POST.get("senha_antiga")
+    nova_senha=request.POST.get("senha_antiga")
+    nome=request.POST.get("nome")
+    email=request.POST.get("email")
+    chapa=request.POST.get("chapa")
+    senha_antiga=sha256(senha_antiga.encode()).hexdigest()
+    if senha_antiga==usuario.senha:
+        regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%<^&*?()])[a-zA-Z0-9!@#$%<^&*?()]{6,}" # verifica se tem ao menos uma letra, um numero, um simbolo e no minimo 6 caracteres 
+        if  not (re.search(regex, nova_senha)):
+            nova_senha=sha256(nova_senha.encode()).hexdigest()
+            usuario.chapa=chapa
+            usuario.nome=nome
+            usuario.senha=nova_senha
+            usuario.email=email
+            usuario.save()
+            return redirect('/auth/login/?status=0')
+        else:
+            return render(request, "editar.html",{'usuario':usuario,'status':3})
+
+    return render(request, "editar.html",{'usuario':usuario,'status':1})
+    
+
 
 def valida_cadastro(request):
     # validar cadastro, falta implementar verificação de e-mail
