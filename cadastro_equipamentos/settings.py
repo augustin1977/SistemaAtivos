@@ -32,13 +32,8 @@ DEBUG = True
 ALLOWED_HOSTS = ["gestaoativosma.ad.ipt.br","10.3.10.20","10.11.39.220","127.0.0.1"]
 
 # cmail commands
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST_USER = 'gestaodeativos@outlook.com.br'
-EMAIL_HOST_PASSWORD = 'RunofMine2023!'
-EMAIL_HOST = 'outlook.office365.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 # Application definition
 

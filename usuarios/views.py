@@ -73,28 +73,31 @@ def valida_cadastro(request):
     
     if len(usuario)>0:
         return redirect('/auth/cadastrar/?status=1') # retorna erro de usuario ja existente
-    usuario= Usuario.objects.filter(nome=nome)
-    if len(usuario)>0:
-        return redirect('/auth/cadastrar/?status=1') # retorna erro de usuario ja existente
-    if len(nome.strip())==0 or len(email.strip())==0 :
-        return redirect('/auth/cadastrar/?status=2') # retorna erro valor nulo
-    if len(usuario)>0:
-        return redirect('/auth/cadastrar/?status=2') # chapa nula
-   
-   
 
-    try:
-        send_mail(subject='Recuperação de Senha Sistema de gestão de ativos',message=f"A sua nova senha é {senha}",
-            from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario[0].email,'ericaugustin@ipt.br']) 
-        senha= sha256(senha.encode()).hexdigest() # recuperando senha e codificando num hash sha256
-        usuario=Usuario(nome=nome, senha=senha, email=email, tipo=tipo, chapa=chapa, primeiro_acesso=primeiro_acesso) # cria um objeto usuário com as informações recebidas do fomulario
-        
-        log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'{usuario} se cadastrou no sistema')
-        usuario.save() # salva o objeto usuário no banco de dados
-        log.save()
-        return redirect('/auth/login/?status=0') # retorna sem erro
-    except:
-        return redirect('/auth/cadastrar/?status=99') # retorna erro geral de gravação no banco de dados
+    if len(nome.strip())==0 :
+        return redirect('/auth/cadastrar/?status=2') # retorna erro valor nulo
+    
+    padrao = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+    if not re.fullmatch(padrao, email):
+        return redirect('/auth/cadastrar/?status=4') # email invalido
+
+
+    print("EntreiAqui")
+    
+    
+    senha= sha256(senha.encode()).hexdigest() # recuperando senha e codificando num hash sha256
+    print("cria Senha")
+    usuario=Usuario(nome=nome, senha=senha, email=email, tipo=tipo, chapa=chapa, primeiro_acesso=primeiro_acesso) # cria um objeto usuário com as informações recebidas do fomulario
+    print("criausuario")
+    log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'{usuario} se cadastrou no sistema')
+    print("crialog")
+    send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'ericaugustin@ipt.br']) 
+    print('e-mail enviado')
+    usuario.save() # salva o objeto usuário no banco de dados
+    log.save()
+    return redirect('/auth/login/?status=0') # retorna sem erro
+    #except:
+    #    return redirect('/auth/cadastrar/?status=99') # retorna erro geral de gravação no banco de dados
   
     return HttpResponse("Erro na pagina de cadastro - View")
 
