@@ -97,9 +97,22 @@ def cadastrarEquipamento(request):
             material_consumo=details.cleaned_data['material_consumo']
             usuario=details.cleaned_data['usuario']
             codigo=details.cleaned_data['codigo']
+            custo_aquisição=details.cleaned_data['custo_aquisição']
+
+            responsavel=details.cleaned_data['responsavel']
+            potencia_eletrica=details.cleaned_data['potencia_eletrica']
+            nacionalidade=details.cleaned_data['nacionalidade']
+            data_ultima_atualizacao=details.cleaned_data['data_ultima_atualizacao']
+            tensao_eletrica=details.cleaned_data['tensao_eletrica']
+            projeto_compra=details.cleaned_data['projeto_compra']
+            especificacao=details.cleaned_data['especificacao']
+            outros_dados=details.cleaned_data['outros_dados']
+            
             e= Equipamento(nome_equipamento=nome_equipamento,modelo=modelo,fabricante=fabricante,local=local,tipo_equipamento=tipo_equipamento,
                             data_cadastro=data_cadastro,data_compra=data_compra,data_ultima_calibracao=data_ultima_calibracao,patrimonio=patrimonio,
-                            usuario=Usuario.objects.get(id=usuario),codigo=codigo)
+                            usuario=Usuario.objects.get(id=usuario),codigo=codigo,responsavel=responsavel,potencia_eletrica=potencia_eletrica,
+                            nacionalidade=nacionalidade,data_ultima_atualizacao=data_ultima_atualizacao,tensao_eletrica=tensao_eletrica,
+                            projeto_compra=projeto_compra,especificacao=especificacao,outros_dados=outros_dados,custo_aquisição=custo_aquisição)
             e.save()
 
             for material in material_consumo:
