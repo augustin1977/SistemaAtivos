@@ -82,7 +82,7 @@ class Equipamento(models.Model):
     codigo=models.CharField(max_length=9,null=True, blank=True)
     custo_aquisição=MoneyField(max_digits=25, decimal_places=2, default_currency='BRL')
     responsavel=models.CharField(max_length=50,null=True, blank=True)
-    potencia_eletrica=models.DecimalField(max_digits=15, decimal_places=3,null=True, blank=True)
+    potencia_eletrica=models.CharField(max_length=30,null=True, blank=True)
     nacionalidade=models.CharField(max_length=50,null=True, blank=True)
     data_ultima_atualizacao=models.DateTimeField(auto_now=False, auto_now_add=False,null=True, blank=True)
     tensao_eletrica=models.CharField(max_length=30,null=True, blank=True)

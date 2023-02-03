@@ -3,6 +3,7 @@ from django.forms import *
 from .models import *
 from django.forms import modelform_factory
 from django.forms import BaseModelFormSet
+from djmoney.forms.fields import MoneyField,MoneyWidget
 import datetime
 
 class localFormCadastro(ModelForm):
@@ -54,6 +55,9 @@ class equipamentoEditarForm(Form):
     material_consumo=ModelMultipleChoiceField(required=False,blank=True,queryset= Material_consumo.objects.all(),widget=SelectMultiple(attrs={'class': "form-control"}))
     usuario=CharField(label="",widget=HiddenInput())
 
+
+
+
     
     def clean(self):
         super().clean()
@@ -83,6 +87,14 @@ class equipamentoCadastrarForm(Form):
     patrimonio=CharField(widget= TextInput(attrs={'class': "form-control"}))
     material_consumo=ModelMultipleChoiceField(required=False,blank=True,queryset= Material_consumo.objects.all(),widget=SelectMultiple(attrs={'class': "form-control"}))
     usuario=CharField(label="",widget=HiddenInput())
+    custo_aquisição=MoneyField(default_currency='BRL',required=False,widget= MoneyWidget(attrs={'class': "form-control"}))
+    responsavel=CharField(widget= TextInput(attrs={'class': "form-control"}))
+    potencia_eletrica=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
+    nacionalidade=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
+    tensao_eletrica=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
+    projeto_compra=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
+    especificacao=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
+    outros_dados=CharField(widget= Textarea(attrs={'class': "form-control"}))
 
     
     def clean(self):
@@ -98,6 +110,7 @@ class equipamentoCadastrarForm(Form):
         tipo=Tipo_equipamento.objects.get(id=tipo_equipamento.id)
         numero=len(Equipamento.objects.filter(tipo_equipamento=tipo_equipamento.id))+1
         cd['codigo']=f'{tipo.sigla.upper()}{numero:03d}'
+        cd['data_ultima_atualizacao']=utc.localize( datetime.datetime.now())
         return cd
 
     
