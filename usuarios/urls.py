@@ -12,4 +12,5 @@ urlpatterns = [
     path("validar_login/",views.validar_login, name="validar_login"),
     path("sair/",views.sair, name="sair"),
     path("",views.login, name="vazio"),
+    path("esqueci_senha/",views.esqueci_senha, name="esqueci_senha"),
 ]

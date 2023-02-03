@@ -3,19 +3,24 @@
 {% block 'conteudo'%} 
 <div class ='container'>
   <h1>Login</h1>
-    {% if status == 0%}
+    {% if status == '0' %}
     <div class="alert alert-success role="alert">
         Cadastro realizado com sucesso, pode seguir com o login
       </div>
     {% endif %}
-    {% if status == 1%}
+    {% if status == '1' %}
     <div class="alert alert-danger" role="alert">
         Senha ou email incorretos!
       </div>
     {% endif %}
-    {% if status == 2%}
+    {% if status == '2' %}
     <div class="alert alert-danger" role="alert">
         Usuario não logado, favor fazer o login!
+      </div>
+    {% endif %}
+    {% if status == '51' %}
+    <div class="alert alert-success" role="alert">
+        Nova senha enviada por e-mail com sucesso
       </div>
     {% endif %}
     <form method ="POST" action="{% url 'validar_login'%}"> {% csrf_token %}  
@@ -27,6 +32,7 @@
         <br>
         <input class="btn btn-info btn-blue"type="submit" value="enviar">
         <a href="{% url 'cadastrar' %}"class="btn btn-warning btn-mg"> Cadastrar </a>
+        <a href="{% url 'esqueci_senha' %}"class="btn btn-warning btn-mg"> Esqueci a senha </a>
         
 
     </form>

@@ -1,0 +1,30 @@
+{% extends 'base.html'%}
+{% block 'titulo'%} Esqueci a senha {% endblock %}
+{% block 'conteudo'%} 
+<div class ='container'>
+  <h1>Esqueci a senha</h1>
+    {% if status == '1' %}
+    <div class="alert alert-danger" role="alert">
+        Email não cadastrado no sistema!
+        </div>
+    {% endif %}  
+    {% if status == '2' %}
+    <div class="alert alert-danger" role="alert">
+        Flaha no envio do email, senha não redefinida!
+        </div>
+    {% endif %}  
+    <form method ="POST" action="{% url 'esqueci_senha'%}"> {% csrf_token %}  
+        <label> Email</label>
+        <input name="email" class="form-control" type="text" placeholder="nome@servidor.com">
+        <br>
+        <input class="btn btn-info btn-blue"type="submit" value="enviar">
+        <a href="{% url 'login' %}"class="btn btn-warning btn-mg"> cancelar </a>
+        
+
+    </form>
+
+    
+</div>
+    
+{% endblock %}
+<br>By Eric Augustin

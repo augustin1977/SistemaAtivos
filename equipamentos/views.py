@@ -98,7 +98,6 @@ def cadastrarEquipamento(request):
             usuario=details.cleaned_data['usuario']
             codigo=details.cleaned_data['codigo']
             custo_aquisição=details.cleaned_data['custo_aquisição']
-
             responsavel=details.cleaned_data['responsavel']
             potencia_eletrica=details.cleaned_data['potencia_eletrica']
             nacionalidade=details.cleaned_data['nacionalidade']

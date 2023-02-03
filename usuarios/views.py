@@ -4,7 +4,10 @@ from .models import Usuario,Tipo
 from log.models import Log
 from django.shortcuts import redirect 
 from hashlib import sha256
+from django.core.mail import send_mail
 import re
+import string
+import random
 def vazio(request):
     return redirect('/auth/cadastrar/') 
 def login(request):
@@ -114,7 +117,35 @@ def validar_login(request):
         if usuario[0].primeiro_acesso==True:
             return redirect('/auth/editar/?status=1')
         return redirect(f'/equipamentos/?status=0')
+
+def esqueci_senha(request):
     
+    if request.method=="GET":
+        status=request.GET.get('status')
+        return render(request, "esqueci_senha.html", {'status':status})
+    else:
+        email= request.POST.get('email')
+        usuario=Usuario.objects.filter(email=email)
+        if len(usuario)==0:
+            return redirect('/auth/esqueci_senha/?status=1') # Usuario não cadastrado
+        novasenha=gera_senha(12)
+        usuario[0].senha=sha256(novasenha.encode()).hexdigest()   
+        usuario[0].primeiro_acesso=True
+        try:
+            send_mail(subject='Recuperação de Senha Sistema de gestão de ativos',message=f"A sua nova senha é {novasenha}",
+            from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario[0].email,'ericaugustin@ipt.br'])  
+        except:
+            return redirect('/auth/esqueci_senha/?status=2') # Falha no envio
+        usuario[0].save()
+        return redirect('/auth/login/?status=51') # nova senha enviada por email com sucesso
 def sair(request):
     request.session.flush() # sair do usuário
     return redirect('/auth/login')
+
+
+
+
+def gera_senha(tamanho):
+    caracteres = string.ascii_letters + string.digits + string.punctuation
+    senha = ''.join(random.choice(caracteres) for i in range(tamanho))
+    return senha
