@@ -82,22 +82,17 @@ def valida_cadastro(request):
         return redirect('/auth/cadastrar/?status=4') # email invalido
 
 
-    print("EntreiAqui")
-    
-    
-    senha= sha256(senha.encode()).hexdigest() # recuperando senha e codificando num hash sha256
-    print("cria Senha")
-    usuario=Usuario(nome=nome, senha=senha, email=email, tipo=tipo, chapa=chapa, primeiro_acesso=primeiro_acesso) # cria um objeto usuário com as informações recebidas do fomulario
-    print("criausuario")
-    log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'{usuario} se cadastrou no sistema')
-    print("crialog")
-    send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'ericaugustin@ipt.br']) 
-    print('e-mail enviado')
-    usuario.save() # salva o objeto usuário no banco de dados
-    log.save()
-    return redirect('/auth/login/?status=0') # retorna sem erro
-    #except:
-    #    return redirect('/auth/cadastrar/?status=99') # retorna erro geral de gravação no banco de dados
+    try:    
+        senhacod= sha256(senha.encode()).hexdigest() # recuperando senha e codificando num hash sha256
+        print("cria Senha")
+        usuario=Usuario(nome=nome, senha=senhacod, email=email, tipo=tipo, chapa=chapa, primeiro_acesso=primeiro_acesso) # cria um objeto usuário com as informações recebidas do fomulario
+        log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'{usuario} se cadastrou no sistema')
+        send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'ericaugustin@ipt.br']) 
+        usuario.save() # salva o objeto usuário no banco de dados
+        log.save()
+        return redirect('/auth/login/?status=0') # retorna sem erro
+    except:
+        return redirect('/auth/cadastrar/?status=99') # retorna erro geral de gravação no banco de dados
   
     return HttpResponse("Erro na pagina de cadastro - View")
 
@@ -143,6 +138,10 @@ def esqueci_senha(request):
         log.save()
         return redirect('/auth/login/?status=51') # nova senha enviada por email com sucesso
 def sair(request):
+    
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    log=Log(transacao='us',movimento='lf',usuario=usuario,alteracao=f'{usuario} saiu do sistema')
+    log.save()
     request.session.flush() # sair do usuário
     return redirect('/auth/login')
 

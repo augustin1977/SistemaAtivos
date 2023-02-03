@@ -10,6 +10,7 @@ from os import path
 import mimetypes
 from django.utils.encoding import smart_str
 import re
+from log.models import Log
 from .forms import *
 def home(request):
     if not request.session.get('usuario'):
@@ -33,6 +34,9 @@ def exibirDetalheEquipamento(request):
     equipamento=Equipamento.objects.get(id=id)
     materiais=Material_consumo.objects.filter(equipamento__id=id)
     arquivos= Media.objects.filter(equipamento__id=id)
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    log=Log(transacao='eq',movimento='lt',usuario=usuario,alteracao=f'{usuario} listou detalhe equipamento{equipamento}')
+    log.save()
     return render(request, "exibirDetalheEquipamento.html", {'equipamento':equipamento, 'materiais':materiais, 'media':arquivos})
 
 def editarEquipamento(request):
