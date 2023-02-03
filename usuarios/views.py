@@ -65,7 +65,7 @@ def valida_cadastro(request):
     # validar cadastro, falta implementar verificação de e-mail
     nome=request.POST.get('nome')
     email=request.POST.get('email')
-    senha=request.POST.get('senha')
+    senha=gera_senha(12)
     chapa=request.POST.get("chapa")
     tipo=Tipo.objects.get(tipo="user")
     primeiro_acesso=True
@@ -80,18 +80,17 @@ def valida_cadastro(request):
         return redirect('/auth/cadastrar/?status=2') # retorna erro valor nulo
     if len(usuario)>0:
         return redirect('/auth/cadastrar/?status=2') # chapa nula
-    #regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'    
-    #if not(re.search(regex,email)): 
-    #    return redirect('/auth/cadastrar/?status=4') # email invalido   
-    
-    regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%<^&*?()])[a-zA-Z0-9!@#$%<^&*?()]{6,}" # verifica se tem ao menos uma letra, um numero, um simbolo e no minimo 6 caracteres 
-    if  not (re.search(regex, senha)) :
-        return redirect('/auth/cadastrar/?status=3') # Senha invalida
+   
+   
+
     try:
+        send_mail(subject='Recuperação de Senha Sistema de gestão de ativos',message=f"A sua nova senha é {senha}",
+            from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario[0].email,'ericaugustin@ipt.br']) 
         senha= sha256(senha.encode()).hexdigest() # recuperando senha e codificando num hash sha256
         usuario=Usuario(nome=nome, senha=senha, email=email, tipo=tipo, chapa=chapa, primeiro_acesso=primeiro_acesso) # cria um objeto usuário com as informações recebidas do fomulario
-        usuario.save() # salva o objeto usuário no banco de dados
+        
         log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'{usuario} se cadastrou no sistema')
+        usuario.save() # salva o objeto usuário no banco de dados
         log.save()
         return redirect('/auth/login/?status=0') # retorna sem erro
     except:
@@ -136,7 +135,9 @@ def esqueci_senha(request):
             from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario[0].email,'ericaugustin@ipt.br'])  
         except:
             return redirect('/auth/esqueci_senha/?status=2') # Falha no envio
+        log=Log(transacao='us',movimento='ed',usuario=usuario[0],alteracao=f'{usuario[0]} recuperou a senha via e-mail - email enviado para {usuario[0].email}')
         usuario[0].save()
+        log.save()
         return redirect('/auth/login/?status=51') # nova senha enviada por email com sucesso
 def sair(request):
     request.session.flush() # sair do usuário
