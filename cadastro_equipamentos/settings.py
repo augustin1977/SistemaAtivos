@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
-from info_email import *
+import info_email 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,8 +34,8 @@ ALLOWED_HOSTS = ["gestaoativosma.ad.ipt.br","10.3.10.20","10.11.39.220","127.0.0
 
 # cmail commands
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST_USER = info_email['email']
-EMAIL_HOST_PASSWORD = info_email['senha']
+EMAIL_HOST_USER = info_email.info_email['email']
+EMAIL_HOST_PASSWORD = info_email.info_email['senha']
 EMAIL_HOST = 'outlook.office365.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
