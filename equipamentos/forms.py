@@ -144,3 +144,16 @@ class cadastraTipo_equipamento(Form):
             cd['sigla']=cd['nome'][0:2].upper()+'X'
             cd['sigla']=cd['sigla'].upper()
         return cd
+
+class editarTipo_equipamento(Form):
+    id=CharField(label="",widget=HiddenInput())
+    nome=CharField(widget= TextInput(attrs={'class': "form-control"}))
+    descricao=CharField(widget=Textarea(attrs={'class': "form-control"}))
+    sigla=CharField(required=False,label="",widget=HiddenInput())
+   
+    def clean(self):
+        super().clean()
+        cd=self.cleaned_data
+        siglas=[]
+        tipos=Tipo_equipamento.objects.all()
+        return cd

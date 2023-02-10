@@ -54,6 +54,8 @@ class Tipo_equipamento(models.Model):
         return str(self.nome_tipo)
     class Meta:
         ordering = ['nome_tipo']
+    def dados_para_form(self):
+        return {'id':self.id, 'nome_tipo':self.nome_tipo,"descricao_tipo":self.descricao_tipo}
 
 class Material_consumo(models.Model):
     nome_material=models.CharField(max_length=70)
