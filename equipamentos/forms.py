@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django import forms
 from django.forms import *
 from .models import *
@@ -12,6 +13,7 @@ class localFormCadastro(ModelForm):
         model = Local_instalacao
         fields = '__all__'
         widgets = {
+            'laboratorio': TextInput (attrs={'class': "form-control"}),
             'predio': TextInput (attrs={'class': "form-control"}),
             'piso':TextInput (attrs={'class': "form-control"}),
             'sala':TextInput (attrs={'class': "form-control"}),
@@ -27,6 +29,7 @@ class localFormEditar(ModelForm):
         fields = '__all__'
         widgets = {
             'id': HiddenInput(),
+            'laboratorio': TextInput (attrs={'class': "form-control"}),
             'predio': TextInput (attrs={'class': "form-control"}),
             'piso':TextInput (attrs={'class': "form-control"}),
             'sala':TextInput (attrs={'class': "form-control"}),
@@ -157,3 +160,9 @@ class TipoEquipamentoForm(Form):
         siglas=[]
         tipos=Tipo_equipamento.objects.all()
         return cd
+
+
+class DocumentForm(ModelForm):
+    class Meta:
+        model = Media
+        fields = ('nome','media','equipamento')

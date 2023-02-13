@@ -21,6 +21,7 @@ MEDIA_ROOT=os.path.join(BASE_DIR,"images/")
 
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -98,6 +99,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+        
     }
 }
 
@@ -125,6 +127,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = "PT-BR"
+
+ENCODING = 'utf-8'
 
 TIME_ZONE = "America/Sao_Paulo"
 

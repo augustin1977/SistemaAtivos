@@ -25,6 +25,7 @@
             <table class="table table-hover">
                 <thead>
                   <tr>
+                    <th scope="col">Laboratório</th>
                     <th scope="col">Predio</th>
                     <th scope="col">Andar</th>
                     <th scope="col">Piso</th>
@@ -40,7 +41,7 @@
           </tr>
           {% for local in form %}
           <tr>
-          
+            <th scope="row">{{local.laboratorio}}</th>
           <th scope="row">{{local.predio}}</th>
           <td>{{local.piso}}</td>
           <td>{{local.sala}}</td>

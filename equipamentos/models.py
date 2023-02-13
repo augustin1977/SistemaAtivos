@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from usuarios.models import *
 from equipamentos.models import *
@@ -21,6 +23,7 @@ class Fabricante(models.Model):
         ordering = ['nome_fabricante']
 
 class Local_instalacao(models.Model):
+    laboratorio=models.CharField(max_length=30)
     predio=models.CharField(max_length=30)
     piso=models.CharField(max_length=15)
     sala=models.CharField(max_length=15,null=True, blank=True)
@@ -30,7 +33,7 @@ class Local_instalacao(models.Model):
     class Meta:
         ordering = ['predio','piso','-sala','-armario','prateleira']
     def __str__(self):
-        retorno= self.predio
+        retorno= self.laboratorio+"."+self.predio
         if self.piso:
             retorno+="."+self.piso
         if self.sala:
@@ -41,7 +44,7 @@ class Local_instalacao(models.Model):
             retorno+="."+self.prateleira
         return  retorno
     def dados_para_form(self):
-        return {'id':self.id, 'predio':self.predio,"piso":self.piso,"sala":self.sala,
+        return {'id':self.id, 'laboratorio':self.laboratorio,'predio':self.predio,"piso":self.piso,"sala":self.sala,
         "armario":self.armario,'prateleira':self.prateleira}
 
     

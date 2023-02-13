@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render
 from django.contrib.staticfiles.views import serve
 from django.http import HttpResponse
@@ -7,9 +8,9 @@ from hashlib import sha256
 from cadastro_equipamentos import settings
 from django.http import HttpResponse, Http404
 from os import path
-import mimetypes
+from cadastro_equipamentos.settings import BASE_DIR
 from django.utils.encoding import smart_str
-import re
+import re,os
 from log.models import Log
 from .forms import *
 def home(request):
@@ -403,31 +404,80 @@ def listarTipo(request):
     form=Tipo_equipamento.objects.all()
     return render(request, "listarTipo.html", {'form':form,'status':0})
 
-
-def download_view(request):
+def importaDados(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Download fotos")
-    objeto=request.GET.get('filename')
-    local=settings.MEDIA_ROOT[:-1]
-    
-    caminho=path.join(local,objeto)
-    print(local," | ",objeto," | ",caminho)
-    
-    if not (path.exists(caminho)):
-        raise Http404()
+    if request.GET.get('campo')=='local':
+        caminho=os.path.join(BASE_DIR,"banco Migrado",'local.csv')
+        arquivo=open(caminho,'r')
+        dados=arquivo.readline()
+        dados=arquivo.readline()
+        conteudo=[]
+        while(dados):
+            dado=dados.split(";")
+            piso=None
+            sala=None
+            armario=None
+            prateleira=None
+            apelido_local=None
+            predio=None
+            if not dado[0]=="":
+                conteudo.append(dado)
+                predio=dado[0]
+                if not dado[1]=="":
+                    piso= dado[1]
+                if not dado[2]=="":
+                    sala="Sala "+dado[2]
+                if not dado[3]=="":
+                    armario=dados[3]
+                if not dado[4]=="":
+                    prateleira=dados[4]
+                if not dado[5]=="" and dado[5]!="\n":
+                    apelido_local=dados[5] 
+                local=Local_instalacao(laboratorio='LPM',
+                    predio=predio,
+                    piso=piso,
+                    sala=sala,
+                    armario=armario,
+                    prateleira=prateleira,
+                    apelido_local=apelido_local   )
+                local.save()
+            dados=arquivo.readline()
+        arquivo.close()
+        return HttpResponse(conteudo)
+    elif request.GET.get('campo')=='tipo':
+        caminho=os.path.join(BASE_DIR,"banco Migrado",'tipo.csv')
+        arquivo=open(caminho,'r')
+        dados=arquivo.readline()
+        dados=arquivo.readline()
+        conteudo=[]
+        while(dados):
+            dado=dados.split(";") 
+            print(dado[0], len(dados[0]))
+            if dado[0]!="" and len(dado[0])>=3:
+                
+                conteudo.append(dado)
+                tipos=Tipo_equipamento.objects.all()
+                siglas=[]
+                for tipo in tipos:
+                    siglas.append(tipo.sigla)
+                sigla=dado[0][:3].upper()
 
-    mimetype, encoding = mimetypes.guess_type(caminho)
-    
-    if mimetype is None:
-        mimetype = 'application/force-download'
-      
-    response = HttpResponse()
-    response['Content-Type'] = mimetype
-    response['Pragma'] = 'public'
-    response['Expires'] = '100'
-    response['Cache-Control'] = 'must-revalidate, post-check=0, pre-check=0'
-    response['Content-Disposition'] = f'attachment; filename={caminho}'
-    #response['Content-Transfer-Encoding'] = 'binary'
-    #response['Content-Length'] = str(path.getsize(caminho))
-    return response
+                i=3
+                j=2
+                while(sigla in siglas  and i<len(dado[0])):
+                    if dado[0][i:6-j].upper()!=" ":
+                        sigla=dado[0][0:j].upper()+dado[0][i:6-j].upper()
+                    else:
+                        sigla=dado[0][0:j].upper()+dado[0][i+1:7-j].upper()
+                    i+=1
+                    if i>len(dado[0]):
+                        sigla=dado[0][0:j].upper()+'X'*(3-j)
+                        j-=1
+                print(sigla)
+                tipo=Tipo_equipamento(nome_tipo=dado[0], sigla=sigla)
+                tipo.save()
+            dados=arquivo.readline()
+        arquivo.close()
+        return HttpResponse(conteudo)
+
