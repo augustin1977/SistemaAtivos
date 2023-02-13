@@ -361,10 +361,10 @@ def editarTipo(request):
     if request.method=="GET":
         dados = Tipo_equipamento.objects.get(id=request.GET.get("id")).dados_para_form()
         print(dados)
-        form=editarTipo_equipamento(initial=dados)
+        form=TipoEquipamentoForm(initial=dados)
         return render(request, "editarTipo.html",{'form':form,'id':request.GET.get("id"),'status':0}) 
     else:
-        details = editarTipo_equipamento(request.POST)
+        details = TipoEquipamentoForm(request.POST)
         if details.is_valid():
             print('valido')
             tipo=Tipo_equipamento.get(id=details.cleaned_data['id'] )

@@ -145,10 +145,10 @@ class cadastraTipo_equipamento(Form):
             cd['sigla']=cd['sigla'].upper()
         return cd
 
-class editarTipo_equipamento(Form):
+class TipoEquipamentoForm(Form):
     id=CharField(label="",widget=HiddenInput())
-    nome=CharField(widget= TextInput(attrs={'class': "form-control"}))
-    descricao=CharField(widget=Textarea(attrs={'class': "form-control"}))
+    nome_tipo=CharField(widget= TextInput(attrs={'class': "form-control"}))
+    descricao_tipo=CharField(widget=Textarea(attrs={'class': "form-control"}))
     sigla=CharField(required=False,label="",widget=HiddenInput())
    
     def clean(self):
