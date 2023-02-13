@@ -18,7 +18,7 @@ def listarLog(request):
         return redirect('/auth/login/?status=2')
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     print(f"{Usuario.objects.get(id=usuario.id)} acessou Relatório de Logs")
-    log=Log(transacao='rt',movimento='lo',usuario=Usuario.objects.get(id=usuario.id),alteracao=f'{usuario.nome} visualisou relatório de logs')
+    log=Log(transacao='rt',movimento='lt',usuario=Usuario.objects.get(id=usuario.id),alteracao=f'{usuario.nome} visualisou relatório de logs')
     log.save()
     log=Log.objects.all().order_by('-data_cadastro')[:200]
     lognovo=[]

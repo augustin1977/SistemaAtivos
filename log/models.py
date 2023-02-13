@@ -14,7 +14,7 @@ class Log(models.Model):
     usuario=models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
     equipamento=models.ForeignKey(Equipamento,on_delete=models.DO_NOTHING, null=True,blank=True)
     nota_equipamento=models.ForeignKey(Nota_equipamento,on_delete=models.DO_NOTHING,null=True,blank=True)
-    alteracao=models.CharField(max_length=100)
+    alteracao=models.TextField()
     class Meta:
         ordering = ['-data_cadastro','usuario','nota_equipamento','transacao','movimento']
     def __str__(self):
