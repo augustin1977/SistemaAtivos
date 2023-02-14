@@ -17,13 +17,8 @@
   </head>
 
   <body>
-    <style>
-       .navbar{
-        position:fixed;
-
-      }
-    </style>
-    <nav class="navbar navbar-dark bg-dark">
+   
+    <nav class="navbar navbar-dark bg-dark fixed-top">
         <a class="navbar-brand" href="{% url 'home' %}"">Inicio</a>
         {% block 'menu' %} {% endblock %}
         <a class="navbar-brand" href="{% url 'sair' %}">Sair</a>
