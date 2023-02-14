@@ -9,10 +9,10 @@ from cadastro_equipamentos import settings
 from django.http import HttpResponse, Http404
 from os import path
 
-lista_transacoes={'eq':'Equipamento','te':'Tipo Equipamento','fn':'Fornecedor','li':'Local Instalação','mc':'Material Consumo',
-                        'me':'media','dc':'Disciplina de Manutenção','mf':'Modo de Falha','me':'Modo de falha Equipamento',
-                        'nm':'Nota Material','ne':'Nota Equipamento','us':'usuario','tu':'Tipo de Usuario','rt':"Relatório"}
-lista_movimentos={'cd':'Cadastro','lt':'Listagem','ed':'Edição','dl':'Delete','lo':'logon'}
+lista_transacoes=[('eq','Equipamento'),('te','Tipo Equipamento'),('fn','Fornecedor'),('li','Local Instalação'),('mc','Material Consumo'),
+                        ('me','media'),('dc','Disciplina de Manutenção'),('mf','Modo de Falha'),('me','Modo de falha Equipamento'),
+                        ('nm','Nota Material'),('ne','Nota Equipamento'),('us','usuario'),('tu','Tipo de Usuario'),("rt","Relatório")]
+lista_movimentos=[('cd','Cadastro'),('lt','Listagem'),('ed','Edição'),('dl','Delete'),('lo','logOn'),('lf','logOff')]
 def listarLog(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
