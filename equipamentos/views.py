@@ -387,7 +387,7 @@ def editarTipo(request):
         details = TipoEquipamentoForm(request.POST)
         if details.is_valid():
             print('valido')
-            tipo=Tipo_equipamento.get(id=details.cleaned_data['id'] )
+            tipo=Tipo_equipamento.objects.get(id=details.cleaned_data['id'] )
             tipo.nome_tipo=details.cleaned_data['nome_tipo']
             tipo.descricao=details.cleaned_data['descricao']
             tipo.save()
