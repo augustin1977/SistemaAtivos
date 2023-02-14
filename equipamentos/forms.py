@@ -49,6 +49,7 @@ class equipamentoEditarForm(Form):
     id=CharField(label="",widget=HiddenInput())
     nome_equipamento=CharField(widget= TextInput(attrs={'class': "form-control"}))
     modelo=CharField(widget= TextInput(attrs={'class': "form-control"}))
+    codigo=CharField(widget= TextInput(attrs={'class': "form-control"}))
     fabricante=ModelChoiceField(queryset=Fabricante.objects.all() ,widget=Select (attrs={'class': "form-control"}))
     local=ModelChoiceField(queryset=Local_instalacao.objects.all(),widget=Select(attrs={'class': "form-control"}))
     tipo_equipamento=ModelChoiceField(queryset= Tipo_equipamento.objects.all(),widget=Select(attrs={'class': "form-control"}))
@@ -78,9 +79,6 @@ class equipamentoEditarForm(Form):
         if data_compra>data_cadastro:
             raise ValidationError('Data Compra invalida: a data de compra deve ser anterior a data de hoje')
         tipo_equipamento=cd["tipo_equipamento"]
-        tipo=Tipo_equipamento.objects.get(id=tipo_equipamento.id)
-        numero=len(Equipamento.objects.filter(tipo_equipamento=tipo_equipamento.id))+1
-        cd['codigo']=f'{tipo.sigla.upper()}{numero:03d}'
         cd['data_ultima_atualizacao']=utc.localize( datetime.datetime.now())
         return cd
 

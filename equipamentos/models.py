@@ -84,7 +84,7 @@ class Equipamento(models.Model):
     data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False)
     patrimonio=models.CharField(max_length=30,null=True, blank=True)
     material_consumo=models.ManyToManyField(Material_consumo,  blank=True)
-    codigo=models.CharField(max_length=9,null=True, blank=True)
+    codigo=models.CharField(max_length=9,null=True, blank=True,unique=True)
     custo_aquisição=MoneyField(max_digits=25, decimal_places=2, default_currency='BRL')
     responsavel=models.CharField(max_length=50,null=True, blank=True)
     potencia_eletrica=models.CharField(max_length=30,null=True, blank=True)
