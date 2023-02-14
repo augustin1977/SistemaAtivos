@@ -389,7 +389,7 @@ def editarTipo(request):
             print('valido')
             tipo=Tipo_equipamento.objects.get(id=details.cleaned_data['id'] )
             tipo.nome_tipo=details.cleaned_data['nome_tipo']
-            tipo.descricao_tipo=details.cleaned_data['descricao']
+            tipo.descricao_tipo=details.cleaned_data['descricao_tipo']
             tipo.save()
             form=Tipo_equipamento.objects.all()
             return render(request, "listarTipo.html", {'form':form,'status':1})
