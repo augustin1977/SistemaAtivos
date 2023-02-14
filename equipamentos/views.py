@@ -409,7 +409,7 @@ def importaDados(request):
         return redirect('/auth/login/?status=2')
     if request.GET.get('campo')=='local':
         caminho=os.path.join(BASE_DIR,"banco Migrado",'local.csv')
-        arquivo=open(caminho,'r')
+        arquivo=open(caminho,'r', encoding='utf-8')
         dados=arquivo.readline()
         dados=arquivo.readline()
         conteudo=[]
@@ -447,7 +447,7 @@ def importaDados(request):
         return HttpResponse(conteudo)
     elif request.GET.get('campo')=='tipo':
         caminho=os.path.join(BASE_DIR,"banco Migrado",'tipo.csv')
-        arquivo=open(caminho,'r')
+        arquivo=open(caminho,'r', encoding='utf-8')
         dados=arquivo.readline()
         dados=arquivo.readline()
         conteudo=[]
@@ -480,4 +480,33 @@ def importaDados(request):
             dados=arquivo.readline()
         arquivo.close()
         return HttpResponse(conteudo)
-
+    elif request.GET.get('campo')=='fabricante':
+        caminho=os.path.join(BASE_DIR,"banco Migrado",'fabricante.csv')
+        arquivo=open(caminho,'r', encoding='utf-8')
+        dados=arquivo.readline()
+        dados=arquivo.readline()
+        conteudo=[]
+        while(dados):
+            dado=dados.split(";") 
+            if dado[0]!="" and len(dado[0])>=3:
+                conteudo.append(dado)   
+                fabricante=Fabricante(nome_fabricante=dado[0])
+                fabricante.save()
+            dados=arquivo.readline()
+        arquivo.close()
+        return HttpResponse(conteudo)
+    elif request.GET.get('campo')=='equipamento':
+        caminho=os.path.join(BASE_DIR,"banco Migrado",'equipamentos.csv')
+        arquivo=open(caminho,'r', encoding='utf-8')
+        dados=arquivo.readline()
+        dados=arquivo.readline()
+        conteudo=""
+        while(dados):
+            dado=dados.split(";") 
+            if dado[0]!="" and len(dado[0])>=3:
+                conteudo+=str(dados)+"<br>"
+                # precisa incluir os dados no banco# 
+            dados=arquivo.readline()
+        arquivo.close()
+        return HttpResponse(conteudo)
+    return HttpResponse("Erro")
