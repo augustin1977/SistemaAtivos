@@ -66,7 +66,8 @@ def editarEquipamento(request):
                 log=Log(transacao='eq',movimento='ed',usuario=usuario,equipamento=e,
                     alteracao=f"{usuario} editou nome do equipamento: {e.nome_equipamento} para {details.cleaned_data['nome_equipamento']}")
                 log.save()
-                e.nome_equipamento==details.cleaned_data['nome_equipamento']
+                e.nome_equipamento=details.cleaned_data['nome_equipamento']
+                print(e.nome_equipamento)
             if not (e.modelo==details.cleaned_data['modelo']):
                 log=Log(transacao='eq',movimento='ed',usuario=usuario,equipamento=e,
                     alteracao=f"{usuario} editou modelo do equipamento: {e.modelo} para {details.cleaned_data['modelo']}")
@@ -85,7 +86,6 @@ def editarEquipamento(request):
             e.patrimonio=details.cleaned_data['patrimonio']
             e.codigo=details.cleaned_data['codigo']
             e.save()
-            
             usuario=Usuario.objects.get(id=request.session.get('usuario'))
             
             lista_materiais=Material_consumo.objects.filter(equipamento__id=details.cleaned_data['id'])
