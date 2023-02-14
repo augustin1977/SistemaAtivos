@@ -8,6 +8,7 @@ class Log(models.Model):
                         ('me','media'),('dc','Disciplina de Manutenção'),('mf','Modo de Falha'),('me','Modo de falha Equipamento'),
                         ('nm','Nota Material'),('ne','Nota Equipamento'),('us','usuario'),('tu','Tipo de Usuario'),("rt","Relatório")]
     lista_movimentos=[('cd','Cadastro'),('lt','Listagem'),('ed','Edição'),('dl','Delete'),('lo','logOn'),('lf','logOff')]
+   
     transacao=models.CharField(choices=lista_transacoes,max_length=10)
     movimento=models.CharField(choices=lista_movimentos,max_length=10)
     data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False)

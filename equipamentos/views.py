@@ -4,13 +4,11 @@ from django.contrib.staticfiles.views import serve
 from django.http import HttpResponse
 from .models import Usuario,Tipo,Equipamento,Material_consumo,Media,Fabricante
 from django.shortcuts import redirect 
-from hashlib import sha256
 from cadastro_equipamentos import settings
 from django.http import HttpResponse, Http404
 from os import path
 from cadastro_equipamentos.settings import BASE_DIR
-from django.utils.encoding import smart_str
-import re,os
+import os,csv
 from log.models import Log
 from .forms import *
 def home(request):
@@ -83,6 +81,7 @@ def editarEquipamento(request):
             e.data_compra=details.cleaned_data['data_compra']
             e.data_ultima_calibracao=details.cleaned_data['data_ultima_calibracao']
             e.data_cadastro=details.cleaned_data['data_cadastro']
+            e.data_ultima_atualizacao=details.cleaned_data['data_ultima_atualizacao']
             e.patrimonio=details.cleaned_data['patrimonio']
             e.codigo=details.cleaned_data['codigo']
             e.save()
@@ -557,3 +556,29 @@ def importaDados(request):
         arquivo.close()
         return HttpResponse(conteudo)
     return HttpResponse("Erro")
+
+def baixarRelatorioEquipamentos(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="relatorio.csv"'
+
+    # Crie um objeto CSV Writer
+    response.write(u'\ufeff'.encode('utf8'))
+    writer = csv.writer(response, delimiter=';')
+
+    # Escreva o cabeçalho do arquivo CSV
+    writer.writerow(['Nome_equipamento', 'modelo', 'fabricante','local','tipo_equipamento',
+        'data_compra','data_ultima_calibracao','usuario_cadastro','data_cadastro',
+        'patrimonio','codigo','custo_aquisição','moeda','projeto_compra','responsavel','potencia_eletrica',
+        'tensao_eletrica','nacionalidade','data_ultima_atualizacao','especificacao','dados_adicionais'])
+
+    # Execute a consulta no banco de dados e adicione os resultados ao arquivo CSV
+    for obj in Equipamento.objects.all().order_by('-nome_equipamento'):
+        writer.writerow([obj.nome_equipamento, obj.modelo, obj.fabricante,obj.local,obj.tipo_equipamento,
+            obj.data_compra,obj.data_ultima_calibracao,obj.usuario,obj.data_cadastro,
+            obj.patrimonio,obj.codigo,obj.custo_aquisição,obj.custo_aquisição_currency,obj.projeto_compra,
+            obj.responsavel,obj.potencia_eletrica,obj.tensao_eletrica,obj.nacionalidade,
+            obj.data_ultima_atualizacao,obj.especificacao,obj.outros_dados])
+
+    return response
