@@ -17,6 +17,15 @@
   </head>
 
   <body>
+    <style>
+      th {
+        position: fixed;
+      }
+      .navbar navbar-dark bg-dark{
+        position:fixed;
+        top: 0;
+      }
+    </style>
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand" href="{% url 'home' %}"">Inicio</a>
         {% block 'menu' %} {% endblock %}
