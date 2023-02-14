@@ -22,8 +22,9 @@
             Erro ao gravar dados Fornecedor 
         </div>
         {% endif %}
+        <div class="table-responsive" style="max-height: 85vh;">
             <table class="table table-hover">
-                <thead class="thead-dark sticky-top"> 
+              <thead class="thead-light sticky-top">
                   <tr>
                     <th scope="col">Laboratório</th>
                     <th scope="col">Predio</th>
@@ -35,7 +36,7 @@
                     <th scope="col">Editar Detalhes </th> 
                   </tr>
                 </thead>
-                <tbody>
+                <tbody style="overflow-y: scroll;">
                     <tr>
             
           </tr>
@@ -54,6 +55,8 @@
         {% endfor %}
         </tbody>    
         </table>
+        </div>
+
      </div>
  </div>
         

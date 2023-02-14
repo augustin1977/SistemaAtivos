@@ -24,11 +24,11 @@ class Fabricante(models.Model):
 
 class Local_instalacao(models.Model):
     laboratorio=models.CharField(max_length=30)
-    predio=models.CharField(max_length=30)
-    piso=models.CharField(max_length=15)
-    sala=models.CharField(max_length=15,null=True, blank=True)
-    armario=models.CharField(max_length=15,null=True, blank=True)
-    prateleira=models.CharField(max_length=15,null=True, blank=True)
+    predio=models.CharField(max_length=50)
+    piso=models.CharField(max_length=80)
+    sala=models.CharField(max_length=80,null=True, blank=True)
+    armario=models.CharField(max_length=80,null=True, blank=True)
+    prateleira=models.CharField(max_length=50,null=True, blank=True)
     apelido_local=models.CharField(max_length=50,null=True, blank=True)
     class Meta:
         ordering = ['predio','piso','-sala','-armario','prateleira']
