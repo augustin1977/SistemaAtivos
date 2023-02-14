@@ -100,8 +100,8 @@ def editarEquipamento(request):
                     log=Log(transacao='mc',movimento='dl',usuario=usuario,equipmento=e,alteracao=f'{usuario} excluiu {material} do {e}')
                     log.save()
             
-    fornecedores=Fabricante.objects.all()
-    return render(request, "listarFornecedores.html", {'fornecedores':fornecedores})
+    equipamentos=Equipamento.objects.all()
+    return render(request, "exibirEquipamentos.html", {'equipamentos':equipamentos})
 
 def cadastrarEquipamento(request):
     if not request.session.get('usuario'):
