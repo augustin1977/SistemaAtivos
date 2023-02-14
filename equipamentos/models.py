@@ -107,7 +107,7 @@ class Equipamento(models.Model):
     class Meta:
         ordering = ['nome_equipamento']
     def __str__(self):
-        return str(self.nome_equipamento)
+        return str(self.nome_equipamento)+"-"+str(self.codigo)
     
 
 
