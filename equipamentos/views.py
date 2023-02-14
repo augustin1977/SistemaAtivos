@@ -498,9 +498,11 @@ def importaDados(request):
     elif request.GET.get('campo')=='equipamento':
         caminho=os.path.join(BASE_DIR,"banco Migrado",'equipamentos.csv')
         arquivo=open(caminho,'r', encoding='utf-8')
-        dados=arquivo.readline()
-        dados=arquivo.readline()
         conteudo=""
+        dados=arquivo.readline()
+        conteudo+="<h1>"+str(dados)+"</h1><br>"
+        dados=arquivo.readline()
+        
         while(dados):
             dado=dados.split(";") 
             if dado[0]!="" and len(dado[0])>=3:
