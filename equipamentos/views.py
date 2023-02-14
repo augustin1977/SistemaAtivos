@@ -500,14 +500,59 @@ def importaDados(request):
         arquivo=open(caminho,'r', encoding='utf-8')
         conteudo=""
         dados=arquivo.readline()
-        conteudo+="<h1>"+str(dados)+"</h1><br>"
+        dados=dados.split(";")
+        conteudo+="<h1>"
+        for i,dado in enumerate(dados):
+            conteudo+=str(i)+"-"+str(dado)+'  '
+        conteudo+="</h1><br>"
         dados=arquivo.readline()
-        
+        cont=0
         while(dados):
             dado=dados.split(";") 
             if dado[0]!="" and len(dado[0])>=3:
+                print(cont)
+                cont+=1
                 conteudo+=str(dados)+"<br>"
-                # precisa incluir os dados no banco# 
+                fabricante=Fabricante.objects.filter(nome_fabricante__contains=dado[7])
+                if len(fabricante)==0:
+                    fabricante=[None]
+                local=Local_instalacao.objects.filter(laboratorio=dado[0],predio=dado[1])
+                if len(local)==0:
+                    local=[None]
+                tipo=Tipo_equipamento.objects.filter(nome_tipo=dado[6])
+                if len(tipo)==0:
+                    tipo=Tipo_equipamento.objects.filter(nome_tipo='outros')
+                usuario=Usuario.objects.filter(nome="System")
+                eqptos=Equipamento.objects.filter(tipo_equipamento=tipo[0])
+                numero=len(eqptos)+1
+                codigo=f'{tipo[0].sigla.upper()}{numero:03d}'
+                utc=pytz.UTC
+                hoje=utc.localize( datetime.datetime.now())
+                if len(dado[15])>2:
+                    tensao=dado[15]
+                if len(dado[15])>2:
+                    tensao+="/"+dado[16]
+                tensao+="V"
+                if len(dados[17])>2:
+                    tensao+=f"-{dados[17]} - {dado[18]}"
+                try:
+                    ano=int(dado[25])
+                except:
+                    ano=1900
+                data_compra=utc.localize(datetime.datetime(ano,1,1))
+                try:
+                    valor=float(dado[9])
+                except:
+                    valor=0.01
+
+
+                equipamento=Equipamento(nome_equipamento=dado[4],fabricante=fabricante[0],local=local[0],modelo=dado[19],
+                        tipo_equipamento=tipo[0],data_compra=data_compra,usuario=usuario[0],patrimonio=dado[28],
+                        codigo=codigo, custo_aquisição=valor,custo_aquisição_currency="BRL",responsavel=dado[12].capitalize(),
+                        potencia_eletrica=dado[13]+dado[14],nacionalidade=dado[24],data_ultima_atualizacao= hoje,
+                        tensao_eletrica=tensao,projeto_compra=dado[26],especificacao=dado[20]+" "+dado[22],
+                        outros_dados=dado[29])
+                equipamento.save()
             dados=arquivo.readline()
         arquivo.close()
         return HttpResponse(conteudo)
