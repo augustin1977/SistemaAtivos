@@ -1,3 +1,4 @@
+import random
 def retiraespacos(palavra):
     resultado=""
     for letra in palavra:
@@ -5,11 +6,11 @@ def retiraespacos(palavra):
             resultado+=letra.upper()
     return resultado
             
-def fazlista(palavra,lista): # precisa arrumar pra migrar certinho
+def fazlista(palavra,lista):
     letras="ABCDEFGHIJKLMOPQRSTUVXYWZ"
-    siglas=[]
-    for palavra in lista:
-        item=retiraespacos(palavra)
+    siglas=lista
+    item=retiraespacos(palavra)
+    if len(item)>3:
         i=0
         j=i+1
         k=j+1
@@ -17,10 +18,7 @@ def fazlista(palavra,lista): # precisa arrumar pra migrar certinho
         while(sigla in siglas and i<len(item)):
             while(sigla in siglas and j<len(item)):
                 while(sigla in siglas and k<len(item)):
-
-                    
                     sigla=item[i].upper()+item[j].upper()+item[k].upper()
-                    print(i,j,k,sigla,item)
                     k+=1
                 j+=1
             i+=1
@@ -28,10 +26,16 @@ def fazlista(palavra,lista): # precisa arrumar pra migrar certinho
             i=0
             while(sigla in siglas and i<len(letras)):
                 sigla=sigla[:-1]+letras[i]
-                print(sigla,i)
                 i+=1
             if i==len(letras):
                 sigla='XXX'
-        siglas.append(sigla)
-        siglas.sort()
+        
+    elif len(item)>0:
+        while(sigla in siglas and i<len(letras)):
+                sigla=sigla[1]+letras[i]+letras[(random.randint(0,len(letras)))]
+                i+=1
+    else:
+        sigla="XXX"
+    siglas.append(sigla)
+    siglas.sort()        
     return siglas
