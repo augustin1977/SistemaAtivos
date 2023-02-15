@@ -66,6 +66,10 @@ class Material_consumo(models.Model):
     especificacao_material=models.TextField(null=True, blank=True)
     unidade_material=models.CharField(max_length=10)
     simbolo_unidade_material=models.CharField(max_length=5)
+    def dados_para_form(self):
+        return {"id":self.id,"nome_material":self.nome_material,"fornecedor":self.fornecedor,
+        "especificacao_material":self.especificacao_material,"unidade_material":self.unidade_material,
+        "simbolo_unidade_material":self.simbolo_unidade_material}
     def __str__(self):
         return self.nome_material + "-"+ self.especificacao_material
     class Meta:

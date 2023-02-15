@@ -159,8 +159,15 @@ class TipoEquipamentoForm(Form):
         tipos=Tipo_equipamento.objects.all()
         return cd
 
-
-class DocumentForm(ModelForm):
+class materialCadastraForm(ModelForm):
+    id=CharField(label="",widget=HiddenInput(),required=False)
     class Meta:
-        model = Media
-        fields = ('nome','media','equipamento')
+        model = Material_consumo
+        fields = '__all__'
+        widgets = {
+            'nome_material':TextInput (attrs={'class': "form-control"}),
+            'fornecedor':Select (attrs={'class': "form-control"}),
+            'especificacao_material':Textarea(attrs={'class': "form-control"}),
+            'unidade_material':TextInput (attrs={'class': "form-control"}),
+            'simbolo_unidade_material':TextInput (attrs={'class': "form-control"}),
+        }

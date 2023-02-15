@@ -311,7 +311,6 @@ def cadastrarLocal(request):
     else:
         details = localFormCadastro(request.POST)
         if details.is_valid():
-            print('valido')
             details.save()
             form=localFormCadastro
                         
@@ -327,6 +326,7 @@ def listarLocais(request):
     if request.method=="GET":
         form = Local_instalacao.objects.all()
         return render(request, "listarLocais.html", {'form':form,'status':0}) 
+
 def editarLocal(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -373,6 +373,7 @@ def cadastrarTipo(request):
         else:
             print('invalido')
             return render(request, "cadastrarTipo.html", {'form':details}) 
+
 def editarTipo(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -395,6 +396,7 @@ def editarTipo(request):
         else:
             print('invalido')
             return render(request, "editarTipo.html", {'form':details}) 
+
 def listarTipo(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -558,6 +560,7 @@ def importaDados(request):
     return HttpResponse("Erro")
 
 def baixarRelatorioEquipamentos(request):
+
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     response = HttpResponse(content_type='text/csv')
@@ -582,3 +585,60 @@ def baixarRelatorioEquipamentos(request):
             obj.data_ultima_atualizacao,obj.especificacao,obj.outros_dados])
 
     return response
+
+
+def cadastrarMaterial(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    usu=Usuario.objects.get(id=request.session.get('usuario'))
+    print(f"{usu.nome} acessou cadastro Cadastro Material")
+    
+    if request.method=="GET":
+        form=materialCadastraForm
+        return render(request, "cadastrarMaterial.html", {'form':form,'status':0})
+    else:
+        details = materialCadastraForm(request.POST)
+        if details.is_valid():
+            details.save()
+            equipto=details.cleaned_data['nome_material']
+            log=Log(transacao='mc',movimento='cd',usuario=usu,
+                alteracao=f'{usu.nome} cadastrou o material {equipto}')
+            log.save()
+            form=materialCadastraForm
+                        
+            return render(request, "cadastrarMaterial.html", {'form':form,'status':1})
+        else:
+            print('invalido')
+            return render(request, "cadastrarMaterial.html", {'form':details,'status':2}) 
+def editarMaterial(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Editar Material")
+    if request.method=="GET":
+        dados = Material_consumo.objects.get(id=request.GET.get("id")).dados_para_form()
+        form=materialCadastraForm(initial=dados) 
+        return render(request, "editarMAterial.html", {'form':form,'id':request.GET.get("id"),'status':0}) 
+    else:
+        form = Material_consumo.objects.all()        
+        details = materialCadastraForm(request.POST)
+        if details.is_valid():
+            
+            mat=Material_consumo.objects.get(id=details.cleaned_data['id'])
+            print(mat.id)
+            mat.nome_material=details.cleaned_data['nome_material']
+            mat.fornecedor=details.cleaned_data['fornecedor']
+            mat.especificacao_material=details.cleaned_data['especificacao_material']
+            mat.unidade_material=details.cleaned_data['unidade_material']
+            mat.simbolo_unidade_material=details.cleaned_data['simbolo_unidade_material']
+            mat.save()
+            return render(request, "listarMateriais.html", {'form':form,'status':1}) 
+        else:
+            return render(request, "listarMateriais.html", {'form':form,'status':2})
+
+def listarMaterial(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Listar materiais")
+    if request.method=="GET":
+        form = Material_consumo.objects.all()
+        return render(request, "listarMateriais.html", {'form':form,'status':0})
