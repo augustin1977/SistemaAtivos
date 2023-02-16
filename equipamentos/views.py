@@ -11,6 +11,7 @@ from cadastro_equipamentos.settings import BASE_DIR
 import os,csv
 from log.models import Log
 from .forms import *
+import funcoesAuxiliares
 def home(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -451,31 +452,20 @@ def importaDados(request):
         arquivo=open(caminho,'r', encoding='utf-8')
         dados=arquivo.readline()
         dados=arquivo.readline()
+        
+        
+        siglas=[]
         conteudo=[]
+        tipos=Tipo_equipamento.objects.all()
+        for tipo in tipos:
+            siglas.append(tipo.sigla)
+
         while(dados):
             dado=dados.split(";") 
+            conteudo.append(dado)
             print(dado[0], len(dados[0]))
-            if dado[0]!="" and len(dado[0])>=3:
-                
-                conteudo.append(dado)
-                tipos=Tipo_equipamento.objects.all()
-                siglas=[]
-                for tipo in tipos:
-                    siglas.append(tipo.sigla)
-                sigla=dado[0][:3].upper()
-
-                i=3
-                j=2
-                while(sigla in siglas  and i<len(dado[0])):
-                    if dado[0][i:6-j].upper()!=" ":
-                        sigla=dado[0][0:j].upper()+dado[0][i:6-j].upper()
-                    else:
-                        sigla=dado[0][0:j].upper()+dado[0][i+1:7-j].upper()
-                    i+=1
-                    if i>len(dado[0]):
-                        sigla=dado[0][0:j].upper()+'X'*(3-j)
-                        j-=1
-                print(sigla)
+            if dado[0]!="":
+                sigla,siglas=funcoesAuxiliares.fazlista(dado[0],siglas)
                 tipo=Tipo_equipamento(nome_tipo=dado[0], sigla=sigla)
                 tipo.save()
             dados=arquivo.readline()

@@ -37,5 +37,5 @@ def fazlista(palavra,lista):
     else:
         sigla="XXX"
     siglas.append(sigla)
-    siglas.sort()        
-    return siglas
+       
+    return sigla,siglas
