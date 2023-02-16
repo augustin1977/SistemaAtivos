@@ -138,7 +138,8 @@ def esqueci_senha(request):
         log.save()
         return redirect('/auth/login/?status=51') # nova senha enviada por email com sucesso
 def sair(request):
-    
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     log=Log(transacao='us',movimento='lf',usuario=usuario,alteracao=f'{usuario} saiu do sistema')
     log.save()
