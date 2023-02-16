@@ -22,6 +22,7 @@ class localFormCadastro(ModelForm):
             'apelido_local':TextInput (attrs={'class': "form-control"}),
 
         }
+
 class localFormEditar(ModelForm):
     id=CharField(label="",widget=HiddenInput())
     class Meta:
@@ -38,12 +39,12 @@ class localFormEditar(ModelForm):
             'apelido_local':TextInput (attrs={'class': "form-control"}),
 
         }
+
 class  localFormlista(ModelForm):
     ListaLocais = modelformset_factory(Local_instalacao, fields=('__all__'))
     class Meta:
         model = Local_instalacao
         fields = '__all__'
-
 
 class equipamentoEditarForm(Form):
     id=CharField(label="",widget=HiddenInput())
@@ -82,7 +83,6 @@ class equipamentoEditarForm(Form):
         cd['data_ultima_atualizacao']=utc.localize( datetime.datetime.now())
         return cd
 
-
 class equipamentoCadastrarForm(Form):
     nome_equipamento=CharField(widget= TextInput(attrs={'class': "form-control"}))
     modelo=CharField(widget= TextInput(attrs={'class': "form-control"}))
@@ -120,7 +120,6 @@ class equipamentoCadastrarForm(Form):
         cd['codigo']=f'{tipo.sigla.upper()}{numero:03d}'
         cd['data_ultima_atualizacao']=utc.localize( datetime.datetime.now())
         return cd
-
     
 class cadastraTipo_equipamento(Form):
     nome=CharField(widget= TextInput(attrs={'class': "form-control"}))
@@ -171,3 +170,23 @@ class materialCadastraForm(ModelForm):
             'unidade_material':TextInput (attrs={'class': "form-control"}),
             'simbolo_unidade_material':TextInput (attrs={'class': "form-control"}),
         }
+
+class mediaForm(ModelForm):
+    #id=CharField(label="",widget=HiddenInput(),required=False)
+    
+    class Meta:
+        model = Media
+        fields = '__all__'
+        widgets = {
+            'nome':TextInput (attrs={'class': "form-control"}),
+            'equipamento':Select (attrs={'class': "form-control"}),
+            'documentos':ClearableFileInput(attrs={'multiple': True,'class': "form-control"}),
+            
+        }
+    def clean(self):
+        super().clean()
+        cd=self.cleaned_data
+        print(cd)
+        return cd
+    
+

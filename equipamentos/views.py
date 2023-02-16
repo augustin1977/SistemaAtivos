@@ -11,7 +11,7 @@ from cadastro_equipamentos.settings import BASE_DIR
 import os,csv
 from log.models import Log
 from .forms import *
-import funcoesAuxiliares
+import equipamentos.funcoesAuxiliares as funcoesAuxiliares
 def home(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -576,7 +576,6 @@ def baixarRelatorioEquipamentos(request):
 
     return response
 
-
 def cadastrarMaterial(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -600,6 +599,7 @@ def cadastrarMaterial(request):
         else:
             print('invalido')
             return render(request, "cadastrarMaterial.html", {'form':details,'status':2}) 
+
 def editarMaterial(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -632,3 +632,23 @@ def listarMaterial(request):
     if request.method=="GET":
         form = Material_consumo.objects.all()
         return render(request, "listarMateriais.html", {'form':form,'status':0})
+
+
+
+def cadastrarArquivo(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    if request.method == 'POST':
+        form = mediaForm(request.POST, request.FILES)
+        print(request.FILES)
+        if form.is_valid():
+            form.save()
+            print("arquivo gravado")
+            return redirect('cadastrarArquivo')
+        else:
+            print("Falhou")
+    else:
+        form = mediaForm()
+    return render(request, 'cadastrarArquivo.html', {'form': form})
+
+    
