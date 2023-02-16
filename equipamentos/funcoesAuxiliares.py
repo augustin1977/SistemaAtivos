@@ -10,7 +10,7 @@ def fazlista(palavra,lista):
     letras="ABCDEFGHIJKLMOPQRSTUVXYWZ"
     siglas=lista
     item=retiraespacos(palavra)
-    if len(item)>3:
+    if len(item)>=3:
         i=0
         j=i+1
         k=j+1
