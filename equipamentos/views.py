@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from cadastro_equipamentos import settings
 from django.http import HttpResponse, Http404
 from os import path
+import urllib.request
 from cadastro_equipamentos.settings import BASE_DIR,MEDIA_ROOT
 import os,csv
 from log.models import Log
@@ -547,6 +548,9 @@ def importaDados(request):
             dados=arquivo.readline()
         arquivo.close()
         return HttpResponse(conteudo)
+    elif request.GET.get('campo')=='arquivos':
+        return HttpResponse("Não implementado")
+        
     return HttpResponse("Erro")
 
 def baixarRelatorioEquipamentos(request):
@@ -657,12 +661,11 @@ def download_arquivo(request):
         figuras=["jpg","bmp",'gif','svg','png']
         if nome_arquivo[-3:].lower() in figuras:
             print("imagem")
-            response = HttpResponse(arquivo.read(), content_type='image/jpeg')
+            response = HttpResponse(arquivo.read(), content_type='image')
         else:
             response = HttpResponse(arquivo.read(), content_type='application/octet-stream')
         filename=request.GET.get('filename').split("/")
         response['Content-Disposition'] = f'attachment; filename="{filename[1]}"'
-    
     return response
     
 
