@@ -5,6 +5,7 @@ from .models import *
 from django.forms import modelform_factory
 from django.forms import BaseModelFormSet
 from djmoney.forms.fields import MoneyField,MoneyWidget
+from cadastro_equipamentos.settings import TIME_ZONE
 import datetime
 import pytz
 
@@ -107,7 +108,7 @@ class equipamentoCadastrarForm(Form):
     
     def clean(self):
         super().clean()
-        utc=pytz.UTC
+        utc=BR = pytz.timezone(TIME_ZONE)# pytz.UTC
         cd=self.cleaned_data
         cd['data_cadastro']=utc.localize( datetime.datetime.now())
         data_compra=cd["data_compra"]

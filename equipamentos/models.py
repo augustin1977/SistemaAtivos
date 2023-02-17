@@ -98,6 +98,7 @@ class Equipamento(models.Model):
     projeto_compra=models.CharField(max_length=50,null=True, blank=True)
     especificacao=models.TextField(null=True, blank=True)
     outros_dados=models.TextField(null=True, blank=True)
+    ativo=models.BooleanField(default=True)
 
     def dados_para_form(self):
         return {"id":self.id,"nome_equipamento":self.nome_equipamento,"modelo":self.modelo,"fabricante":self.fabricante,

@@ -8,7 +8,7 @@ from cadastro_equipamentos import settings
 from django.http import HttpResponse, Http404
 from os import path
 import urllib.request
-from cadastro_equipamentos.settings import BASE_DIR,MEDIA_ROOT
+from cadastro_equipamentos.settings import BASE_DIR,MEDIA_ROOT,TIME_ZONE
 import os,csv
 from log.models import Log
 from .forms import *
@@ -25,7 +25,7 @@ def lista_equipamentos(request):
         return redirect('/auth/login/?status=2')
     usu=Usuario.objects.get(id=request.session.get('usuario'))
     print(f"{usu.nome} acessou Lista Equipamentos")
-    equipamentos=Equipamento.objects.all()
+    equipamentos=Equipamento.objects.filter(ativo=True)
     log=Log(transacao='eq',movimento='lt',usuario=usu,alteracao=f'{usu.nome} visualisou Lista equipamentos')
     log.save()
     return render(request, "exibirEquipamentos.html", {'equipamentos':equipamentos})
@@ -35,7 +35,7 @@ def exibirDetalheEquipamento(request):
         return redirect('/auth/login/?status=2')
     print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Detalhe Equipamentos")
     id=str(request.GET.get('id'))
-    equipamento=Equipamento.objects.get(id=id)
+    equipamento=Equipamento.objects.get(id=id,ativo=True)
     materiais=Material_consumo.objects.filter(equipamento__id=id)
     arquivos= Media.objects.filter(equipamento__id=id)
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
@@ -50,7 +50,7 @@ def editarEquipamento(request):
     print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Edição Equipamentos")
     if request.method=="GET":
         equipamento=request.GET.get("equipamento")
-        dados=Equipamento.objects.get(id=equipamento)
+        dados=Equipamento.objects.get(id=equipamento,ativo=True)
         dados_paraformulario=dados.dados_para_form()
         form=equipamentoEditarForm(initial=dados_paraformulario) 
         log=Log(transacao='eq',movimento='lt',usuario=usuario,equipamento=dados,alteracao=f'{usuario} listou detalhe equipamento: {equipamento}')
@@ -59,7 +59,7 @@ def editarEquipamento(request):
     else:
         details = equipamentoEditarForm(request.POST)
         if details.is_valid():
-            e=Equipamento.objects.get(id=details.cleaned_data['id'])
+            e=Equipamento.objects.get(id=details.cleaned_data['id'],ativo=True)
             log=Log(transacao='eq',movimento='ed',usuario=usuario,equipamento=e,alteracao=f'{usuario} editou equipamento{e}')
             log.save()
             if not(e.nome_equipamento==details.cleaned_data['nome_equipamento']):
@@ -101,7 +101,7 @@ def editarEquipamento(request):
                     log=Log(transacao='mc',movimento='dl',usuario=usuario,equipmento=e,alteracao=f'{usuario} excluiu {material} do {e}')
                     log.save()
             
-    equipamentos=Equipamento.objects.all()
+    equipamentos=Equipamento.objects.filter(ativo=True)
     return render(request, "exibirEquipamentos.html", {'equipamentos':equipamentos})
 
 def cadastrarEquipamento(request):
@@ -142,10 +142,10 @@ def cadastrarEquipamento(request):
                             data_cadastro=data_cadastro,data_compra=data_compra,data_ultima_calibracao=data_ultima_calibracao,patrimonio=patrimonio,
                             usuario=Usuario.objects.get(id=usuario),codigo=codigo,responsavel=responsavel,potencia_eletrica=potencia_eletrica,
                             nacionalidade=nacionalidade,data_ultima_atualizacao=data_ultima_atualizacao,tensao_eletrica=tensao_eletrica,
-                            projeto_compra=projeto_compra,especificacao=especificacao,outros_dados=outros_dados,custo_aquisição=custo_aquisição)
+                            projeto_compra=projeto_compra,especificacao=especificacao,outros_dados=outros_dados,custo_aquisição=custo_aquisição,ativo=True)
             e.save()
             usuario=Usuario.objects.get(id=request.session.get('usuario'))
-            log=Log(transacao='eq',movimento='cd',usuario=usuario,equipmento=e,alteracao=f'{usuario} cadastrou equipamento{e}')
+            log=Log(transacao='eq',movimento='cd',usuario=usuario,equipamento=e,alteracao=f'{usuario} cadastrou equipamento{e}')
             log.save()
 
             for material in material_consumo:
@@ -482,7 +482,7 @@ def importaDados(request):
             dado=dados.split(";") 
             if dado[0]!="" and len(dado[0])>=3:
                 conteudo.append(dado)   
-                fabricante=Fabricante(nome_fabricante=dado[0])
+                fabricante=Fabricante(nome_fabricante=dado[0].capitalize())
                 fabricante.save()
             dados=arquivo.readline()
         arquivo.close()
@@ -515,11 +515,12 @@ def importaDados(request):
                 if len(tipo)==0:
                     tipo=Tipo_equipamento.objects.filter(nome_tipo='outros')
                 usuario=Usuario.objects.filter(nome="System")
-                eqptos=Equipamento.objects.filter(tipo_equipamento=tipo[0])
+                eqptos=Equipamento.objects.filter(tipo_equipamento=tipo[0],ativo=True)
                 numero=len(eqptos)+1
                 codigo=f'{tipo[0].sigla.upper()}{numero:03d}'
                 utc=pytz.UTC
-                hoje=utc.localize( datetime.datetime.now())
+                BR = pytz.timezone(TIME_ZONE)
+                hoje=BR.localize( datetime.datetime.now())
                 if len(dado[15])>2:
                     tensao=dado[15]
                 if len(dado[15])>2:
@@ -530,15 +531,15 @@ def importaDados(request):
                 try:
                     ano=int(dado[25])
                 except:
-                    ano=1900
-                data_compra=utc.localize(datetime.datetime(ano,1,1))
+                    ano=1899
+                data_compra=BR.localize(datetime.datetime(year=ano,month=1,day=1))
                 try:
                     valor=float(dado[9])
                 except:
                     valor=0.01
 
 
-                equipamento=Equipamento(nome_equipamento=dado[4],fabricante=fabricante[0],local=local[0],modelo=dado[19],
+                equipamento=Equipamento(nome_equipamento=dado[4].capitalize(),fabricante=fabricante[0],local=local[0],modelo=dado[19],
                         tipo_equipamento=tipo[0],data_compra=data_compra,usuario=usuario[0],patrimonio=dado[28],
                         codigo=codigo, custo_aquisição=valor,custo_aquisição_currency="BRL",responsavel=dado[12].capitalize(),
                         potencia_eletrica=dado[13]+dado[14],nacionalidade=dado[24],data_ultima_atualizacao= hoje,
@@ -571,7 +572,7 @@ def baixarRelatorioEquipamentos(request):
         'tensao_eletrica','nacionalidade','data_ultima_atualizacao','especificacao','dados_adicionais'])
 
     # Execute a consulta no banco de dados e adicione os resultados ao arquivo CSV
-    for obj in Equipamento.objects.all().order_by('-nome_equipamento'):
+    for obj in Equipamento.objects.filter(ativo=True).order_by('-nome_equipamento'):
         writer.writerow([obj.nome_equipamento, obj.modelo, obj.fabricante,obj.local,obj.tipo_equipamento,
             obj.data_compra,obj.data_ultima_calibracao,obj.usuario,obj.data_cadastro,
             obj.patrimonio,obj.codigo,obj.custo_aquisição,obj.custo_aquisição_currency,obj.projeto_compra,
