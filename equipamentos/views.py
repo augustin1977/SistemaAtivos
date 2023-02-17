@@ -158,6 +158,34 @@ def cadastrarEquipamento(request):
         else:
             return render(request, "cadastrarEquipamento.html", {'form':details}) 
 
+        
+def excluirEquipamento(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    id=str(request.GET.get('id'))
+    equipamento=Equipamento.objects.get(id=id,ativo=True)
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    if request.GET.get('excluir')=='2':
+        equipamento.ativo=False
+        equipamento.save()
+        log=Log(transacao='eq',
+                movimento='dl',
+                usuario=usuario,
+                equipamento=equipamento,
+                alteracao=f'{usuario} excluiu equipamento: {equipamento}')
+        log.save()
+        return redirect('/equipamentos/listarEquipamentos')
+
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou excluir Equipamentos")
+    
+    materiais=Material_consumo.objects.filter(equipamento__id=id)
+    arquivos= Media.objects.filter(equipamento__id=id)
+    print('excluir',request.GET.get('excluir'))
+    return render(request, "exibirDetalheEquipamento.html", {'equipamento':equipamento, 
+                                                             'materiais':materiais, 
+                                                             'media':arquivos, 
+                                                             'confirmarexluir':request.GET.get('excluir')})
+
 def listarFornecedores(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -569,15 +597,15 @@ def baixarRelatorioEquipamentos(request):
     writer.writerow(['Nome_equipamento', 'modelo', 'fabricante','local','tipo_equipamento',
         'data_compra','data_ultima_calibracao','usuario_cadastro','data_cadastro',
         'patrimonio','codigo','custo_aquisição','moeda','projeto_compra','responsavel','potencia_eletrica',
-        'tensao_eletrica','nacionalidade','data_ultima_atualizacao','especificacao','dados_adicionais'])
+        'tensao_eletrica','nacionalidade','data_ultima_atualizacao','especificacao','dados_adicionais','ativo'])
 
     # Execute a consulta no banco de dados e adicione os resultados ao arquivo CSV
-    for obj in Equipamento.objects.filter(ativo=True).order_by('-nome_equipamento'):
+    for obj in Equipamento.objects.all().order_by('-nome_equipamento'):
         writer.writerow([obj.nome_equipamento, obj.modelo, obj.fabricante,obj.local,obj.tipo_equipamento,
             obj.data_compra,obj.data_ultima_calibracao,obj.usuario,obj.data_cadastro,
             obj.patrimonio,obj.codigo,obj.custo_aquisição,obj.custo_aquisição_currency,obj.projeto_compra,
             obj.responsavel,obj.potencia_eletrica,obj.tensao_eletrica,obj.nacionalidade,
-            obj.data_ultima_atualizacao,obj.especificacao,obj.outros_dados])
+            obj.data_ultima_atualizacao,obj.especificacao,obj.outros_dados,obj.ativo])
 
     return response
 

@@ -23,5 +23,6 @@ urlpatterns = [path("",views.home, name="home"),
                path('listarMaterial/',views.listarMaterial,name="listarMaterial"),
                path('cadastrarArquivo/',views.cadastrarArquivo,name="cadastrarArquivo"),
                path('download_arquivo/',views.download_arquivo,name="download_arquivo"),
+               path('excluirEquipamento/',views.excluirEquipamento,name="excluirEquipamento"),
 ]
 

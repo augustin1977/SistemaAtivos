@@ -1,6 +1,6 @@
 
 {% extends 'base.html'%}
-{% block 'titulo'%} Inicio {% endblock %}
+{% block 'titulo'%} Gestão Ativos MA {% endblock %}
 {% block 'menu' %} 
 {% include 'menuequipamento.html' %} 
 {% endblock %}
@@ -8,13 +8,15 @@
 <div class ='container'>
   <div class='row'>
       <div class='col-md-3'>
+        <br>
+        <h2 class="sticky-top">  Lista Equipamento</h2>
       </div>
       <div class="col-md">
-          <h1>  Lista Equipamento</h1>
+          
       </div>
-    <div class="table-responsive" style="max-height: 85vh;">
-    <table class="table table-hover">
-      <thead class="thead-light sticky-top"> 
+    <div class="table-responsive" style="max-height: 75vh;">
+    <table class="table table-hover" >
+      <thead class="thead-light sticky-top" > 
           <tr>
             <th scope="col">Equipamentos</th>
             <th scope="col">Modelo</th>
@@ -22,25 +24,27 @@
             <th scope="col">Local Instalação</th>
             <th scope="col">Ver detalhes</th>
             <th scope="col">Editar</th>
+            <th scope="col">Excluir</th>
           </tr>
         </thead>
-        <tbody style="overflow-y: scroll;">
+        <tbody style="overflow: auto;" >
             {% for equipamento in equipamentos %}
             <tr>
-            
+
             <th scope="row">{{equipamento.nome_equipamento}}-{{equipamento.codigo}}</th>
             <td>{{equipamento.modelo}}</td>
             <td>{{equipamento.tipo_equipamento}}</td>
             <td>{{equipamento.local}}</td>
-            <td><a href="{% url 'exibirDetalheEquipamento' %}?id={{ equipamento.id }}">Link</a></td>
-            <td><a href="{% url 'editarEquipamento' %}?equipamento={{ equipamento.id }}">Link</a></td>
-            
+            <td><a href="{% url 'exibirDetalheEquipamento' %}?id={{ equipamento.id }}"><i class="bi bi-file-text"></i></a></td>
+            <td><a href="{% url 'editarEquipamento' %}?equipamento={{ equipamento.id }}"><i class="bi bi-pencil-square"></i></a></td>
+            <td><a href="{% url 'excluirEquipamento' %}?id={{ equipamento.id }}&excluir=1"><i class="bi bi-trash"></i></a></td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
       </div>
     </div>
+    <br>
     <a href="{% url 'baixarRelatorioEquipamentos' %}"class="btn btn-success btn-mg"> Baixar Relatório </a>
     <div class='col-md-3'></div> 
     

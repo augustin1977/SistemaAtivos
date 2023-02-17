@@ -1,12 +1,14 @@
 
 {% extends 'base.html'%}
-{% block 'titulo'%} Inicio {% endblock %}
+{% block 'titulo'%} Gestão Ativos MA  {% endblock %}
 {% block 'menu' %} 
 {% include 'menuequipamento.html' %} 
 {% endblock %}
 {% block 'conteudo'%} 
 <div class ='container'>
-    <table class="table table-hover">
+  <br>
+  <br>  
+  <table class="table table-hover">
         <thead>
           <tr>
             <th scope="col">Item </th>
@@ -32,7 +34,7 @@
             <th scope="row">Data Compra</th>
             <td>{{equipamento.data_compra}}</td></tr>
             <th scope="row">Numero Patrimonio</th>
-            <td>{{equipamento.patrimonio}}</td> </tr>
+            <td>{{equipamento.patrimonio}} exluir-{{ confirmarexluir }}</td> </tr>
             <th scope="row">Material Consumo</th>
             <td>
             {% for material in materiais %}   
@@ -49,9 +51,17 @@
 
             </td> 
           </tr>
+          {% if confirmarexluir == '1' %}
+          <th scope="row"> Excluir</th>
+          <td>
+            <a href="{% url 'excluirEquipamento' %}?id={{ equipamento.id }}&excluir=2"class="btn btn-danger btn-mg"> Excluir registro <i class="bi bi-trash"></i> </a>
+          </td>
+        </tr>
+          {% endif %}
         </tbody>
       </table>
-    
+
+      
         
 </div>
 
