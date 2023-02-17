@@ -22,5 +22,6 @@ urlpatterns = [path("",views.home, name="home"),
                path('editarMaterial/',views.editarMaterial,name="editarMaterial"),
                path('listarMaterial/',views.listarMaterial,name="listarMaterial"),
                path('cadastrarArquivo/',views.cadastrarArquivo,name="cadastrarArquivo"),
+               path('download_arquivo/',views.download_arquivo,name="download_arquivo"),
 ]
 

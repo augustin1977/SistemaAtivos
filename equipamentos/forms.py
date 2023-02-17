@@ -183,10 +183,6 @@ class mediaForm(ModelForm):
             'documentos':ClearableFileInput(attrs={'multiple': True,'class': "form-control"}),
             
         }
-    def clean(self):
-        super().clean()
-        cd=self.cleaned_data
-        print(cd)
-        return cd
+
     
 

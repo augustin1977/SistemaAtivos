@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from cadastro_equipamentos import settings
 from django.http import HttpResponse, Http404
 from os import path
-from cadastro_equipamentos.settings import BASE_DIR
+from cadastro_equipamentos.settings import BASE_DIR,MEDIA_ROOT
 import os,csv
 from log.models import Log
 from .forms import *
@@ -650,5 +650,20 @@ def cadastrarArquivo(request):
     else:
         form = mediaForm()
     return render(request, 'cadastrarArquivo.html', {'form': form})
+
+def download_arquivo(request):
+    nome_arquivo=os.path.join(MEDIA_ROOT,request.GET.get('filename'))
+    with open(nome_arquivo, 'rb') as arquivo:
+        figuras=["jpg","bmp",'gif','svg','png']
+        if nome_arquivo[-3:].lower() in figuras:
+            print("imagem")
+            response = HttpResponse(arquivo.read(), content_type='image/jpeg')
+        else:
+            response = HttpResponse(arquivo.read(), content_type='application/octet-stream')
+        filename=request.GET.get('filename').split("/")
+        response['Content-Disposition'] = f'attachment; filename="{filename[1]}"'
+    
+    return response
+    
 
     

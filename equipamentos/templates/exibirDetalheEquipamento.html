@@ -43,10 +43,7 @@
             <td>
             {% for arquivo in media %}   
                 {% if arquivo.documentos %}
-                  <a href='{{ arquivo.documentos }}'>{{arquivo}}</a>' <br>
-                {% endif %}
-                {% if arquivo.media %}
-                  <a href="{% url 'download' %}?filename={{ arquivo.media }}">{{arquivo}}</a> <br>
+                  <a href="{% url 'download_arquivo' %}?filename={{ arquivo.documentos }}">{{arquivo.nome}}</a> <br>
                 {% endif %}
             {% endfor %}
 
