@@ -39,12 +39,12 @@ def editar(request):
     chapa=request.POST.get("chapa")
 
     if nova_senha!= nova_senha2:
-        return render(request, "editar.html",{'usuario':usuario,'status':4})
+        return render(request, "editar.html",{'usuario':usuario,'status':5})
     senha_antiga=sha256(senha_antiga.encode()).hexdigest()
     
     if senha_antiga==usuario.senha:
-        regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%<^&*?()])[a-zA-Z0-9!@#$%<^&*?()]{6,}" # verifica se tem ao menos uma letra, um numero, um simbolo e no minimo 6 caracteres 
-        if  (re.search(regex, nova_senha)):
+        #regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%<^&*?()])[a-zA-Z0-9!@#$%<^&*?()]{6,}" # verifica se tem ao menos uma letra, um numero, um simbolo e no minimo 6 caracteres 
+        if  True :#(re.search(regex, nova_senha)):
             nova_senha=sha256(nova_senha.encode()).hexdigest()
             usuario.chapa=chapa
             usuario.nome=nome
@@ -100,7 +100,7 @@ def validar_login(request):
     # validar o login feito na pagina de login
     email=request.POST.get('email')
     senha=request.POST.get('senha')
-    primeiro_acesso=False
+    #primeiro_acesso=False
     senha=sha256(senha.encode()).hexdigest()
     usuario=Usuario.objects.filter(email=email).filter(senha=senha)
     
