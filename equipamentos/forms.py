@@ -108,7 +108,7 @@ class equipamentoCadastrarForm(Form):
     
     def clean(self):
         super().clean()
-        utc=BR = pytz.timezone(TIME_ZONE)# pytz.UTC
+        utc=pytz.timezone(TIME_ZONE)# pytz.UTC
         cd=self.cleaned_data
         cd['data_cadastro']=utc.localize( datetime.datetime.now())
         data_compra=cd["data_compra"]

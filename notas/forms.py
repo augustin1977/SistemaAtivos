@@ -48,9 +48,20 @@ class Nota_equipamento (models.Model):
         'equipamento':Select (attrs={'class': "form-control"}),
         'modo_Falha_equipamento':Select (attrs={'class': "form-control"}),
         'material':Select (attrs={'class': "form-control"}),
-        'data_ocorrencia':Textarea (attrs={'class': "form-control"}),
+        'data_ocorrencia':DateTimeField (attrs={'class': "form-control"}),
         'falha': CheckboxInput (attrs={'class': "form-control"}),
         'calibracao':CheckboxInput (attrs={'class': "form-control"}),
         'lubrificao':CheckboxInput (attrs={'class': "form-control"}),
         }
+    def clean(self):
+        super().clean()
+        cd=self.cleaned_data
+        utc=pytz.timezone(TIME_ZONE)
+        cd['data_cadastro']=utc.localize( datetime.datetime.now())
+        if (cd['calibracao']):
+               equipamento=Equipamento.objects.get(cd['equipamento'])
+               equipamento.data_ultima_calibracao=utc.localize( datetime.datetime.now())
+               equipamento.save()
+
+
     

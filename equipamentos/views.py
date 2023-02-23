@@ -173,6 +173,7 @@ def excluirEquipamento(request):
                 usuario=usuario,
                 equipamento=equipamento,
                 alteracao=f'{usuario} excluiu equipamento: {equipamento}')
+
         log.save()
         return redirect('/equipamentos/listarEquipamentos')
 
