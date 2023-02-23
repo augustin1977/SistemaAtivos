@@ -47,7 +47,7 @@ class Nota_equipamento (models.Model):
         'descricao':Textarea (attrs={'class': "form-control"}),
         'equipamento':Select (attrs={'class': "form-control"}),
         'modo_Falha_equipamento':Select (attrs={'class': "form-control"}),
-        'material':Select (attrs={'class': "form-control"}),
+        'material':CheckboxSelectMultiple (attrs={'class': "form-control"}),
         'data_ocorrencia':DateTimeField (attrs={'class': "form-control"}),
         'falha': CheckboxInput (attrs={'class': "form-control"}),
         'calibracao':CheckboxInput (attrs={'class': "form-control"}),
