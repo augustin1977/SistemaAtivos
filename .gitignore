@@ -6,3 +6,5 @@ info_email.py
 teste.py
 gunicorn_conf
 log
+*.log
+*log
