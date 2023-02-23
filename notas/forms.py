@@ -8,51 +8,54 @@ from equipamentos.models import *
 import datetime
 import pytz
 
-class Disciplina(models.Model):
-
+class cadastraDisciplinaForm(ModelForm):
      class Meta:
         model = Disciplina
         fields = '__all__'
         widgets = {
             'disciplina': TextInput (attrs={'class': "form-control"}),
             }
-class Modo_Falha (models.Model):
-    model = Modo_Falha
-    fields = '__all__'
-    widgets = {
-        'disciplina': Select (attrs={'class': "form-control"}),
-        'modo_falha':TextInput (attrs={'class': "form-control"})
-        }
+class CadastraModo_FalhaForm (ModelForm):
+   class Meta:
+        model = Modo_Falha
+        fields = '__all__'
+        widgets = {
+            'disciplina': Select (attrs={'class': "form-control"}),
+            'modo_falha':TextInput (attrs={'class': "form-control"})
+            }
+        
+class CadastraModo_falha_equipamentoForm (ModelForm):
+    class Meta:
+        model = Modo_falha_equipamento
+        fields = '__all__'
+        widgets = {
+            'modo_falha': Select (attrs={'class': "form-control"}),
+            'equipamento':Select (attrs={'class': "form-control"})
+            }
+class CadastraNota_materialForm (ModelForm):
+    class Meta:
+        model = Nota_material
+        fields = '__all__'
+        widgets = {
+            'material': Select (attrs={'class': "form-control"}),
+            'quantidade':NumberInput (attrs={'class': "form-control"})
+            }
     
-class Modo_falha_equipamento (models.Model):
-    model = Modo_falha_equipamento
-    fields = '__all__'
-    widgets = {
-        'modo_falha': Select (attrs={'class': "form-control"}),
-        'equipamento':Select (attrs={'class': "form-control"})
-        }
-class Nota_material (models.Model):
-    model = Nota_material
-    fields = '__all__'
-    widgets = {
-        'material': Select (attrs={'class': "form-control"}),
-        'quantidade':DecimalField (attrs={'class': "form-control"})
-        }
-    
-class Nota_equipamento (models.Model):
-    model = Nota_equipamento
-    fields = '__all__'
-    widgets = {
-        'titulo': TextInput (attrs={'class': "form-control"}),
-        'descricao':Textarea (attrs={'class': "form-control"}),
-        'equipamento':Select (attrs={'class': "form-control"}),
-        'modo_Falha_equipamento':Select (attrs={'class': "form-control"}),
-        'material':CheckboxSelectMultiple (attrs={'class': "form-control"}),
-        'data_ocorrencia':DateTimeField (attrs={'class': "form-control"}),
-        'falha': CheckboxInput (attrs={'class': "form-control"}),
-        'calibracao':CheckboxInput (attrs={'class': "form-control"}),
-        'lubrificao':CheckboxInput (attrs={'class': "form-control"}),
-        }
+class CadastraNota_equipamentoForm (ModelForm):
+    class Meta:
+        model = Nota_equipamento
+        fields = '__all__'
+        widgets = {
+            'titulo': TextInput (attrs={'class': "form-control"}),
+            'descricao':Textarea (attrs={'class': "form-control"}),
+            'equipamento':Select (attrs={'class': "form-control"}),
+            'modo_Falha_equipamento':Select (attrs={'class': "form-control"}),
+            'material':CheckboxSelectMultiple (attrs={'class': "form-control"}),
+            'data_ocorrencia':DateInput (attrs={'class': "form-control"}),
+            'falha': CheckboxInput (attrs={'class': "form-control"}),
+            'calibracao':CheckboxInput (attrs={'class': "form-control"}),
+            'lubrificao':CheckboxInput (attrs={'class': "form-control"}),
+            }
     def clean(self):
         super().clean()
         cd=self.cleaned_data

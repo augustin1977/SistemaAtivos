@@ -3,7 +3,8 @@ from . import views
 
 
 
-urlpatterns = [
+urlpatterns = [path('cadastrarDisciplina/',views.cadastrarDisciplina,name="cadastrarDisciplina"),
+               path('cadastrarModo_Falha/',views.cadastrarModo_Falha,name="cadastrarModo_Falha"),
  
     
 ]
