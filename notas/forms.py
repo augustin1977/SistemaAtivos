@@ -25,13 +25,17 @@ class CadastraModo_FalhaForm (ModelForm):
             }
         
 class CadastraModo_falha_equipamentoForm (ModelForm):
+    equipamento = ModelChoiceField(queryset=Equipamento.objects.filter(ativo=True),widget=Select(attrs={'class': "form-control"}))
     class Meta:
         model = Modo_falha_equipamento
-        fields = '__all__'
+        
+        fields = ['equipamento','modo_falha']
         widgets = {
             'modo_falha': Select (attrs={'class': "form-control"}),
-            'equipamento':Select (attrs={'class': "form-control"})
+            
             }
+        
+        
 class CadastraNota_materialForm (ModelForm):
     class Meta:
         model = Nota_material

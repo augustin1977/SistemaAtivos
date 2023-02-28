@@ -12,7 +12,12 @@ from cadastro_equipamentos.settings import BASE_DIR,MEDIA_ROOT,TIME_ZONE
 import os,csv
 from log.models import Log
 from .forms import *
-
+def notas(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    # cria a view do login do usuário
+    status=str(request.GET.get('status'))
+    return render(request, "notas.html", {'status':status})
 def cadastrarDisciplina(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -57,3 +62,25 @@ def cadastrarModo_Falha(request):
         else:
             print('invalido')
             return render(request, "cadastrarModo_Falha.html", {'form':form}) 
+
+def cadastrarModo_FalhaEquipamento(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro cadastro Modo de Falha Equipamento")
+    if request.method=="GET":
+        form=CadastraModo_falha_equipamentoForm
+        return render(request, "cadastrarModoFalhaEquipamento.html", {'form':form,'status':0})
+    else:
+        details = (request.POST)
+        form=CadastraModo_falha_equipamentoForm(details)
+        if form.is_valid():
+            print('valido')
+            data=form.cleaned_data
+            disciplina=Modo_falha_equipamento(equipamento=data['equipamento'],modo_falha=data['modo_falha'])
+            disciplina.save()
+            form=CadastraModo_falha_equipamentoForm
+                        
+            return render(request, "cadastrarModoFalhaEquipamento.html", {'form':form,'status':1})
+        else:
+            print('invalido')
+            return render(request, "cadastrarModoFalhaEquipamento.html", {'form':form}) 
