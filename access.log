@@ -1,3 +1,0 @@
-10.3.10.20 - - [23/Feb/2023:09:39:31 -0300] "GET / HTTP/1.1" 502 568 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
-10.3.10.20 - - [23/Feb/2023:09:39:32 -0300] "GET / HTTP/1.1" 502 568 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
-10.3.10.20 - - [23/Feb/2023:09:39:33 -0300] "GET /favicon.ico HTTP/1.1" 502 568 "http://gestaoativosma.ad.ipt.br/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
