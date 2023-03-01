@@ -46,9 +46,11 @@ class CadastraNota_materialForm (ModelForm):
             }
     
 class CadastraNota_equipamentoForm (ModelForm):
+    equipamento=ModelChoiceField(queryset=Equipamento.objects.filter(ativo=True),widget=Select(attrs={'class': "form-control"}))
+    #Modo_falha_equipamento = ModelChoiceField(queryset=Modo_falha_equipamento.objects.filter(equipamento=equipamento),widget=Select(attrs={'class': "form-control"}))
     class Meta:
         model = Nota_equipamento
-        fields = '__all__'
+        fields = ['titulo','descricao','equipamento','modo_Falha_equipamento','material','data_ocorrencia','falha','calibracao','lubrificao']
         widgets = {
             'titulo': TextInput (attrs={'class': "form-control"}),
             'descricao':Textarea (attrs={'class': "form-control"}),
