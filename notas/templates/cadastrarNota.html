@@ -17,6 +17,33 @@
                 {{ form }}
         <button class="btn btn-primary">Enviar</button>
             </form>
+            
+            <script type="text/javascript">
+                $(document).ready(function() {
+                  $('#id_equipamento').change(function() {
+             
+                    var equipamento_id = $(this).val();
+                    $.ajax(
+                    {
+                      url: '{% url "get_modos_de_falha" %}',
+                      data: {
+                        'equipamento_id': equipamento_id
+                      },
+                      dataType: 'json',
+                      success: function(data) {
+                        var modos_falha = $('#id_modo_Falha_equipamento');
+                        modos_falha.empty();
+                        $.each(data, function(i, item) {
+                          modos_falha.append($('<option>', {
+                            value: item.id,
+                            text: item.modo_falha
+                          }));
+                        });
+                      }
+                    });
+                  });
+                });
+                </script>
             </hr>
 </div>
 <div class='col-md-3'></div>
