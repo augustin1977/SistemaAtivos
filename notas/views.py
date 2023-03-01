@@ -106,12 +106,11 @@ def cadastrarNota(request):
                 descricao=data['descricao'],
                 equipamento=data['equipamento'],
                 modo_Falha_equipamento=data['modo_Falha_equipamento'],
-                material=data['material'],
                 data_cadastro=data['data_cadastro'],
                 data_ocorrencia=data['data_ocorrencia'],
                 falha=data['falha'],
                 calibracao=data['calibracao'],
-                lubrificao=data['lubrificacao'],
+                lubrificao=data['lubrificao'],
                 usuario=usuario
             )
             nota.save()
