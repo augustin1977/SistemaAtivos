@@ -30,7 +30,6 @@ def cadastrarDisciplina(request):
         details = (request.POST)
         form=cadastraDisciplinaForm(details)
         if form.is_valid():
-            print('valido')
             data=form.cleaned_data
             disciplina=Disciplina(disciplina=data['disciplina'])
             disciplina.save()
@@ -38,7 +37,6 @@ def cadastrarDisciplina(request):
                         
             return render(request, "cadastrarDisciplina.html", {'form':form,'status':1})
         else:
-            print('invalido')
             return render(request, "cadastrarDisciplina.html", {'form':details}) 
 
         
@@ -53,7 +51,6 @@ def cadastrarModo_Falha(request):
         details = (request.POST)
         form=CadastraModo_FalhaForm(details)
         if form.is_valid():
-            print('valido')
             data=form.cleaned_data
             disciplina=Modo_Falha(disciplina=data['disciplina'],modo_falha=data['modo_falha'])
             disciplina.save()
@@ -61,7 +58,6 @@ def cadastrarModo_Falha(request):
                         
             return render(request, "cadastrarModo_Falha.html", {'form':form,'status':1})
         else:
-            print('invalido')
             return render(request, "cadastrarModo_Falha.html", {'form':form}) 
 
 def cadastrarModo_FalhaEquipamento(request):
@@ -75,7 +71,6 @@ def cadastrarModo_FalhaEquipamento(request):
         details = (request.POST)
         form=CadastraModo_falha_equipamentoForm(details)
         if form.is_valid():
-            print('valido')
             data=form.cleaned_data
             disciplina=Modo_falha_equipamento(equipamento=data['equipamento'],modo_falha=data['modo_falha'])
             disciplina.save()
@@ -83,7 +78,6 @@ def cadastrarModo_FalhaEquipamento(request):
                         
             return render(request, "cadastrarModoFalhaEquipamento.html", {'form':form,'status':1})
         else:
-            print('invalido')
             return render(request, "cadastrarModoFalhaEquipamento.html", {'form':form}) 
         
 def cadastrarNota(request):
