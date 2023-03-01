@@ -45,21 +45,37 @@ class CadastraNota_materialForm (ModelForm):
             'quantidade':NumberInput (attrs={'class': "form-control"})
             }
     
-class CadastraNota_equipamentoForm (ModelForm):
+class CadastraNota_equipamentoForm(ModelForm):
+    equipamento = ModelChoiceField(
+        queryset=Equipamento.objects.filter(ativo=True),
+        widget=Select(attrs={'class': 'form-control'})
+    )
+    modo_Falha_equipamento = ModelChoiceField(
+        queryset=Modo_falha_equipamento.objects.none(),
+        widget=Select(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = Nota_equipamento
-        fields = '__all__'
+        fields = ['titulo', 'descricao', 'equipamento', 'modo_Falha_equipamento', 'material', 'data_ocorrencia', 'falha', 'calibracao', 'lubrificao']
         widgets = {
-            'titulo': TextInput (attrs={'class': "form-control"}),
-            'descricao':Textarea (attrs={'class': "form-control"}),
-            'equipamento':Select (attrs={'class': "form-control"}),
-            'modo_Falha_equipamento':Select (attrs={'class': "form-control"}),
-            'material':CheckboxSelectMultiple (attrs={'class': "form-control"}),
-            'data_ocorrencia':DateInput (attrs={'class': "form-control"}),
-            'falha': CheckboxInput (attrs={'class': "form-control"}),
-            'calibracao':CheckboxInput (attrs={'class': "form-control"}),
-            'lubrificao':CheckboxInput (attrs={'class': "form-control"}),
-            }
+            'titulo': TextInput(attrs={'class': 'form-control'}),
+            'descricao': Textarea(attrs={'class': 'form-control'}),
+            'material': CheckboxSelectMultiple(attrs={'class': 'form-control'}),
+            'data_ocorrencia': SelectDateWidget(attrs={'class': 'form-control'}),
+            'falha': CheckboxInput(attrs={'class': 'form-control'}),
+            'calibracao': CheckboxInput(attrs={'class': 'form-control'}),
+            'lubrificao': CheckboxInput(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'equipamento' in self.data:
+            equipamento_id = int(self.data.get('equipamento'))
+            self.fields['modo_Falha_equipamento'].queryset = Modo_falha_equipamento.objects.filter(equipamento_id=equipamento_id)
+        elif self.instance.pk:
+            self.fields['modo_Falha_equipamento'].queryset = self.instance.equipamento.modo_falha_equipamento_set.all()
+
     def clean(self):
         super().clean()
         cd=self.cleaned_data

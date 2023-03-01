@@ -12,12 +12,12 @@ class Modo_Falha (models.Model):
     modo_falha=models.CharField(max_length=50)
     def __str__(self):
         return str(self.disciplina)+"."+ str(self.modo_falha)
-"""Cadastra modos de falha possiveis de cada equipamento ex(eletrica.queima_resistencia.forno_eletrico)"""        
+"""Cadastra modos de falha possiveis de cada equipamento ex(forno.eletrica.queima_resistencia)"""        
 class Modo_falha_equipamento(models.Model):
     modo_falha=models.ForeignKey(Modo_Falha, on_delete=models.DO_NOTHING)
     equipamento=models.ForeignKey(Equipamento, on_delete=models.DO_NOTHING)
     def __str__(self):
-        return f"{self.modo_falha}.{self.equipamento}"
+        return f"{self.modo_falha}"
     class Meta:
     # Define as restrições de unicidade
         unique_together = ('modo_falha', 'equipamento')

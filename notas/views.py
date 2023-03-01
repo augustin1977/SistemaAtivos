@@ -12,6 +12,7 @@ from cadastro_equipamentos.settings import BASE_DIR,MEDIA_ROOT,TIME_ZONE
 import os,csv
 from log.models import Log
 from .forms import *
+from django.http import JsonResponse
 def notas(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -84,3 +85,48 @@ def cadastrarModo_FalhaEquipamento(request):
         else:
             print('invalido')
             return render(request, "cadastrarModoFalhaEquipamento.html", {'form':form}) 
+        
+def cadastrarNota(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    print(f"{usuario.nome} acessou cadastro Notas")
+    if request.method=="GET":
+        form=CadastraNota_equipamentoForm
+        return render(request, "cadastrarNota.html", {'form':form,'status':0})
+    else:
+        details = (request.POST)
+        form=CadastraNota_equipamentoForm(details)
+        if form.is_valid():
+            print('valido')
+            data=form.cleaned_data
+            
+            nota=Nota_equipamento(
+                titulo=data['titulo'],
+                descricao=data['descricao'],
+                equipamento=data['equipamento'],
+                modo_Falha_equipamento=data['modo_Falha_equipamento'],
+                data_cadastro=data['data_cadastro'],
+                data_ocorrencia=data['data_ocorrencia'],
+                falha=data['falha'],
+                calibracao=data['calibracao'],
+                lubrificao=data['lubrificao'],
+                usuario=usuario
+            )
+            nota.save()
+            form=CadastraNota_equipamentoForm
+            return render(request, "cadastrarNota.html", {'form':form,'status':1})
+        else:
+            print('invalido')
+            return render(request, "cadastrarNota.html", {'form':form}) 
+
+
+def get_modos_de_falha(request):
+    equipamento_id = request.GET.get('equipamento_id')
+    modos_falha = Modo_falha_equipamento.objects.filter(equipamento_id=equipamento_id).values('id', 'modo_falha')
+    modos_falha=list(modos_falha)
+    
+    for modo_falha in modos_falha:
+        modo_falha['modo_falha']=str(Modo_Falha.objects.get(id=modo_falha['modo_falha']))
+    print(modos_falha)    
+    return JsonResponse(modos_falha, safe=False)
