@@ -134,3 +134,13 @@ def exibirdisciplinas(request):
         return redirect('/auth/login/?status=2')
     disciplinas=Disciplina.objects.all()
     return render(request, "exibirDisciplinas.html", {'disciplinas':disciplinas,'status':0})
+
+def excluirmodosfalha(request):
+    pass
+def editarmodosfalha(request):
+    pass
+def exibirmodosfalha(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    modosFalha=Modo_Falha.objects.all()
+    return render(request, "exibirModosFalha.html", {'modosFalha':modosFalha,'status':0})

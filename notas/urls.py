@@ -12,5 +12,8 @@ urlpatterns = [path('notas/',views.notas,name="notas"),
                path('exibirdisciplinas/', views.exibirdisciplinas, name='exibirdisciplinas'),
                path('editardisciplina/', views.editardisciplina, name='editardisciplina'),
                path('excluirdisciplina/', views.excluirdisciplina, name='excluirdisciplina'),
+               path('exibirmodofalha/', views.exibirmodosfalha, name='exibirmodofalha'),
+               path('editarmodofalha/', views.editarmodosfalha, name='editarmodofalha'),
+               path('excluirmodofalha/', views.excluirmodosfalha, name='excluirmodofalha'),
     
 ]

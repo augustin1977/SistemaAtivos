@@ -12,6 +12,8 @@ class Modo_Falha (models.Model):
     modo_falha=models.CharField(max_length=50)
     def __str__(self):
         return str(self.disciplina)+"."+ str(self.modo_falha)
+    class Meta:
+        ordering = ['disciplina']
 """Cadastra modos de falha possiveis de cada equipamento ex(forno.eletrica.queima_resistencia)"""        
 class Modo_falha_equipamento(models.Model):
     modo_falha=models.ForeignKey(Modo_Falha, on_delete=models.DO_NOTHING)

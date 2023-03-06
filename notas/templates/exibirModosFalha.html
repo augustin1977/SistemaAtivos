@@ -9,7 +9,7 @@
   <div class='row'>
       <div class='col-md-3'>
         <br>
-        <h2 class="sticky-top">  Lista Risciplinas</h2>
+        <h2 class="sticky-top">  Lista Modos de Falha</h2>
       </div>
       <div class="col-md">
       </div>
@@ -18,16 +18,18 @@
       <thead class="thead-light sticky-top" > 
           <tr>
             <th scope="col">Disciplina</th>
+            <th scope="col">Modo Falha</th>
             <th scope="col">Editar</th>
             <th scope="col">Excluir</th>
         </tr>
         </thead>
         <tbody style="overflow: auto;" >
-            {% for disciplina in disciplinas %}
+            {% for modofalha in modosFalha %}
             <tr>
-            <th scope="row">{{disciplina.disciplina}}</th>
-            <td><a href="{% url 'editardisciplina' %}?id={{ disciplina.id }}"><i class="bi bi-file-text"></i></a></td>
-            <td><a href="{% url 'excluirdisciplina' %}?id={{ disciplina.id }}&excluir=1"><i class="bi bi-trash"></i></a></td>
+            <th scope="row">{{modofalha.disciplina}}</th>
+            <td>{{ modofalha.modo_falha }}</td>
+            <td><a href="{% url 'editarmodofalha' %}?id={{ modofalha.id }}"><i class="bi bi-file-text"></i></a></td>
+            <td><a href="{% url 'excluirmodofalha' %}?id={{ modofalha.id }}&excluir=1"><i class="bi bi-trash"></i></a></td>
           </tr>
           {% endfor %}
         </tbody>
