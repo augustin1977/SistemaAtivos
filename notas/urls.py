@@ -10,7 +10,7 @@ urlpatterns = [path('notas/',views.notas,name="notas"),
                path('cadastrarNota/',views.cadastrarNota,name="cadastrarNota"),
                path('get_modos_de_falha/', views.get_modos_de_falha, name='get_modos_de_falha'),
                path('exibirdisciplinas/', views.exibirdisciplinas, name='exibirdisciplinas'),
-               path('editardisciplina/', views.editardisciplina, name='editarDisciplina'),
-               path('excluirdisciplina/', views.excluirdisciplina, name='excluirDisciplina'),
+               path('editardisciplina/', views.editardisciplina, name='editardisciplina'),
+               path('excluirdisciplina/', views.excluirdisciplina, name='excluirdisciplina'),
     
 ]

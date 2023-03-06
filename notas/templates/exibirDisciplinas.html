@@ -26,8 +26,8 @@
             {% for disciplina in disciplinas %}
             <tr>
             <th scope="row">{{disciplina.disciplina}}</th>
-            <td><a href="{% url 'editarDisciplina' %}?id={{ equipamento.id }}"><i class="bi bi-file-text"></i></a></td>
-            <td><a href="{% url 'excluirDisciplina' %}?id={{ equipamento.id }}&excluir=1"><i class="bi bi-trash"></i></a></td>
+            <td><a href="{% url 'editardisciplina' %}?id={{ equipamento.id }}"><i class="bi bi-file-text"></i></a></td>
+            <td><a href="{% url 'excluirdisciplina' %}?id={{ equipamento.id }}&excluir=1"><i class="bi bi-trash"></i></a></td>
           </tr>
           {% endfor %}
         </tbody>
