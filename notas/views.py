@@ -124,4 +124,13 @@ def get_modos_de_falha(request):
         modo_falha['modo_falha']=str(Modo_Falha.objects.get(id=modo_falha['modo_falha']))
     print(modos_falha)    
     return JsonResponse(modos_falha, safe=False)
-# adicionando git *
+
+def excluirdisciplina(request):
+    pass
+def editardisciplina(request):
+    pass
+def exibirdisciplinas(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    disciplinas=Disciplina.objects.all()
+    return render(request, "exibirDisciplinas.html", {'disciplinas':disciplinas,'status':0})

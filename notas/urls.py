@@ -9,5 +9,8 @@ urlpatterns = [path('notas/',views.notas,name="notas"),
                path('cadastrarModo_FalhaEquipamento/',views.cadastrarModo_FalhaEquipamento,name="cadastrarModo_FalhaEquipamento"),
                path('cadastrarNota/',views.cadastrarNota,name="cadastrarNota"),
                path('get_modos_de_falha/', views.get_modos_de_falha, name='get_modos_de_falha'),
+               path('exibirdisciplinas/', views.exibirdisciplinas, name='exibirdisciplinas'),
+               path('editardisciplina/', views.editardisciplina, name='editarDisciplina'),
+               path('excluirdisciplina/', views.excluirdisciplina, name='excluirDisciplina'),
     
 ]
