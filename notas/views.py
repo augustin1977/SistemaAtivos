@@ -126,9 +126,9 @@ def get_modos_de_falha(request):
     return JsonResponse(modos_falha, safe=False)
 
 def excluirDisciplina(request):
-    pass
+    return HttpResponse(request.GET.get('id'))
 def editarDisciplina(request):
-    pass
+    return HttpResponse(request.GET.get('id'))
 def exibirDisciplinas(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -136,11 +136,24 @@ def exibirDisciplinas(request):
     return render(request, "exibirDisciplinas.html", {'disciplinas':disciplinas,'status':0})
 
 def excluirModoFalha(request):
-    pass
+    return HttpResponse(request.GET.get('id'))
 def editarModoFalha(request):
-    pass
+    return HttpResponse(request.GET.get('id'))
 def exibirModoFalha(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     modosFalha=Modo_Falha.objects.all()
+    
     return render(request, "exibirModosFalha.html", {'modosFalha':modosFalha,'status':0})
+
+def excluirModoFalhaEquipamento(request):
+    return HttpResponse(request.GET.get('id'))
+def editarModoFalhaEquipamento(request):
+    return HttpResponse(request.GET.get('id'))
+def exibirModoFalhaEquipamento(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    modosFalha=Modo_falha_equipamento.objects.all()
+    for i in modosFalha:
+        print(i.equipamento, i.modo_falha)
+    return render(request, "exibirModosFalhaEquipamento.html", {'modosFalha':modosFalha,'status':0})

@@ -23,6 +23,7 @@ class Modo_falha_equipamento(models.Model):
     class Meta:
     # Define as restrições de unicidade
         unique_together = ('modo_falha', 'equipamento')
+        ordering = ['equipamento','modo_falha']
 
 """ cadastra o material utilizado na nota_equipamento"""    
 class Nota_material(models.Model):

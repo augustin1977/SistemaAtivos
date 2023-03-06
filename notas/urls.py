@@ -15,5 +15,8 @@ urlpatterns = [path('notas/',views.notas,name="notas"),
                path('exibirModoFalha/', views.exibirModoFalha, name='exibirModoFalha'),
                path('editarModoFalha/', views.editarModoFalha, name='editarModoFalha'),
                path('excluirModoFalha/', views.excluirModoFalha, name='excluirModoFalha'),
+               path('exibirModoFalhaEquipamento/', views.exibirModoFalhaEquipamento, name='exibirModoFalhaEquipamento'),
+               path('editarModoFalhaEquipamento/', views.editarModoFalhaEquipamento, name='editarModoFalhaEquipamento'),
+               path('excluirModoFalhaEquipamento/', views.excluirModoFalhaEquipamento, name='excluirModoFalhaEquipamento'),
     
 ]
