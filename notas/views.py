@@ -124,4 +124,4 @@ def get_modos_de_falha(request):
         modo_falha['modo_falha']=str(Modo_Falha.objects.get(id=modo_falha['modo_falha']))
     print(modos_falha)    
     return JsonResponse(modos_falha, safe=False)
-# adicionando git
+# adicionando git *
