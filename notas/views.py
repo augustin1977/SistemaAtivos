@@ -125,21 +125,21 @@ def get_modos_de_falha(request):
     print(modos_falha)    
     return JsonResponse(modos_falha, safe=False)
 
-def excluirdisciplina(request):
+def excluirDisciplina(request):
     pass
-def editardisciplina(request):
+def editarDisciplina(request):
     pass
-def exibirdisciplinas(request):
+def exibirDisciplinas(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     disciplinas=Disciplina.objects.all()
     return render(request, "exibirDisciplinas.html", {'disciplinas':disciplinas,'status':0})
 
-def excluirmodosfalha(request):
+def excluirModoFalha(request):
     pass
-def editarmodosfalha(request):
+def editarModoFalha(request):
     pass
-def exibirmodosfalha(request):
+def exibirModoFalha(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     modosFalha=Modo_Falha.objects.all()

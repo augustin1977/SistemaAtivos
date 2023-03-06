@@ -2,16 +2,18 @@
 {% extends 'base.html'%}
 {% block 'titulo'%} Gestão Ativos MA {% endblock %}
 {% block 'menu' %} 
-{% include 'menuequipamento.html' %} 
+{% include 'menunota.html' %} 
 {% endblock %}
 {% block 'conteudo'%} 
 <div class ='container'>
   <div class='row'>
       <div class='col-md-3'>
-        <br>
-        <h2 class="sticky-top">  Lista Modos de Falha</h2>
+        
       </div>
       <div class="col-md">
+        <br>
+        <br>
+        <h2 class="sticky-top">Lista Modos de Falha</h2>
       </div>
     <div class="table-responsive" style="max-height: 75vh;">
     <table class="table table-hover" >
@@ -28,8 +30,8 @@
             <tr>
             <th scope="row">{{modofalha.disciplina}}</th>
             <td>{{ modofalha.modo_falha }}</td>
-            <td><a href="{% url 'editarmodofalha' %}?id={{ modofalha.id }}"><i class="bi bi-file-text"></i></a></td>
-            <td><a href="{% url 'excluirmodofalha' %}?id={{ modofalha.id }}&excluir=1"><i class="bi bi-trash"></i></a></td>
+            <td><a href="{% url 'editarModoFalha' %}?id={{ modofalha.id }}"><i class="bi bi-file-text"></i></a></td>
+            <td><a href="{% url 'excluirModoFalha' %}?id={{ modofalha.id }}&excluir=1"><i class="bi bi-trash"></i></a></td>
           </tr>
           {% endfor %}
         </tbody>
