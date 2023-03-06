@@ -154,6 +154,4 @@ def exibirModoFalhaEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     modosFalha=Modo_falha_equipamento.objects.all()
-    for i in modosFalha:
-        print(i.equipamento, i.modo_falha)
     return render(request, "exibirModosFalhaEquipamento.html", {'modosFalha':modosFalha,'status':0})
