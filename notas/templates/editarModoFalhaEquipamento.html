@@ -16,6 +16,7 @@
         <h2>Modo de Falha do Equipamento <br>{{ equipamento }} </h2>
 
     <form method ="POST" action="{% url 'editarModoFalhaEquipamento' %}"> {% csrf_token %}
+    <input type="hidden" name='id' id="id" value= {{ equipamento.id }}>
     {% for pergunta in perguntas %}
     <h3> {{ pergunta.texto }}</h3>
     <input type="radio" id={{ pergunta.sim }} name={{ pergunta.resposta }} value=1>
@@ -23,7 +24,7 @@
     <input type="radio" id={{ pergunta.nao }} name={{ pergunta.resposta }} value=0>
     <label for={{ pergunta.nao }} >nao</label><br>
     {% endfor %}
-    <button class="btn btn-primary">Enviar</button>
+    <button type="submit" class="btn btn-primary">Enviar</button>
   </form>
   </div>
   <div class='col-md-3'></div>
