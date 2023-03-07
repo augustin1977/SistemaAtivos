@@ -156,18 +156,16 @@ def editarModoFalhaEquipamento(request):
             {'numero':3,'texto':"Usa outra fonte de energia?","resposta":"resposta3",'sim':'sim3','nao':'nao3'},
             {'numero':4,'texto':"Tem partes moveis?","resposta":"resposta4",'sim':'sim4','nao':'nao4'},
             {'numero':5,'texto':"usa combustivel?","resposta":"resposta5",'sim':'sim5','nao':'nao5'},]
-    if request.method=="GET":
-        mf=Modo_falha_equipamento.objects.get(id=request.GET.get('id'))
-        equipamento=mf.equipamento
-        modosFalha=Modo_falha_equipamento.objects.filter(equipamento=equipamento)
-        
-        print(modosFalha[0].equipamento)
-        return  render(request, "editarModoFalhaEquipamento.html",
-                        {'modosFalha':modosFalha,'perguntas':perguntas,'equipamento':equipamento,'status':0})
-    lista=[]
     for r in perguntas:
         lista.append(r['resposta'])
     respostas=[]
+    mf=Modo_falha_equipamento.objects.get(id=request.GET.get('id'))
+    equipamento=mf.equipamento
+    modosFalha=Modo_falha_equipamento.objects.filter(equipamento=equipamento)
+    if request.method=="GET":      
+        return  render(request, "editarModoFalhaEquipamento.html",
+                        {'modosFalha':modosFalha,'perguntas':perguntas,'equipamento':equipamento,'status':0})
+    lista=[]
     for l in lista:
         res=request.POST.get(l)
         if res=='1':
