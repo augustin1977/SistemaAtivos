@@ -1,0 +1,36 @@
+
+{% extends 'base.html'%}
+{% block 'titulo'%} Gestão Ativos MA {% endblock %}
+{% block 'menu' %} 
+{% include 'menudisciplina.html' %} 
+{% endblock %}
+{% block 'conteudo'%} 
+<div class ='container'>
+  <div class='row'>
+      <div class='col-md-3'>
+       
+      </div>
+      <div class="col-md">
+        <br>
+        <br>
+        <h2>Modo de Falha do Equipamento <br>{{ modosFalha.equipamento }} </h2>
+        {{ modosFalha.equipamento }} 
+      <br>
+    <form method ="POST" action="{% url 'editarModoFalhaEquipamento' %}"> {% csrf_token %}
+    {% for pergunta in perguntas %}
+    <h2>{{ pergunta.numero }}</h2>
+    <p>{{ pergunta.texto }}?</p>
+    <input type="radio" id={{ pergunta.sim }} name={{ pergunta.resposta }} value=1>
+    <label for={{ pergunta.sim }} >Sim</label><br>
+    <input type="radio" id={{ pergunta.nao }} name={{ pergunta.resposta }} value=0>
+    <label for={{ pergunta.nao }} >nao</label><br>
+    {% endfor %}
+
+
+    <button class="btn btn-primary">Enviar</button>
+  </form>
+  </div>
+  <div class='col-md-3'></div>
+  </div>
+  </div>
+  {% endblock %}

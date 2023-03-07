@@ -149,10 +149,39 @@ def exibirModoFalha(request):
 def excluirModoFalhaEquipamento(request):
     return HttpResponse(request.GET.get('id'))
 def editarModoFalhaEquipamento(request):
-    return HttpResponse(request.GET.get('id'))
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    perguntas=[{'numero':1,'texto':"Pergunta1","resposta":"resposta1",'sim':'sim1','nao':'nao1'},
+            {'numero':2,'texto':"Pergunta2","resposta":"resposta2",'sim':'sim2','nao':'nao2'},
+            {'numero':3,'texto':"Pergunta3","resposta":"resposta3",'sim':'sim3','nao':'nao3'},
+            {'numero':4,'texto':"Pergunta4","resposta":"resposta4",'sim':'sim4','nao':'nao4'},
+            {'numero':5,'texto':"Pergunta5","resposta":"resposta5",'sim':'sim5','nao':'nao5'},]
+    if request.method=="GET":
+        mf=Modo_falha_equipamento.objects.get(id=request.GET.get('id'))
+        equipamento=mf.equipamento
+        mfe=Modo_falha_equipamento.objects.filter(equipamento=equipamento)
+        
+        print(perguntas)
+        return  render(request, "editarModoFalhaEquipamento.html",
+                        {'modosFalha':mfe,'perguntas':perguntas,'status':0})
+    lista=[]
+    for r in perguntas:
+        lista.append(r['resposta'])
+    respostas=[]
+    for l in lista:
+        res=request.POST.get(l)
+        if res=='1':
+            respostas.append(True)
+        elif res=='0':
+            respostas.append(False)
+        else:
+            respostas.append(None)   
+        
+    resposta="-".join( str(valor) for valor in respostas)
+    return HttpResponse(resposta)
+
 def exibirModoFalhaEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     modosFalha=Modo_falha_equipamento.objects.all()
-
     return render(request, "exibirModosFalhaEquipamento.html", {'modosFalha':modosFalha,'status':0})
