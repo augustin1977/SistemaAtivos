@@ -13,9 +13,7 @@
       <div class="col-md">
         <br>
         <br>
-        <h2>Modo de Falha do Equipamento <br>{{ modosFalha.equipamento }} </h2>
-        {{ modosFalha.equipamento }} 
-      <br>
+        <h2>Modo de Falha do Equipamento <br>{{ equipamento }} </h2>
     <form method ="POST" action="{% url 'editarModoFalhaEquipamento' %}"> {% csrf_token %}
     {% for pergunta in perguntas %}
     <h2>{{ pergunta.numero }}</h2>

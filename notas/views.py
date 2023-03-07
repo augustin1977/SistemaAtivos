@@ -159,11 +159,11 @@ def editarModoFalhaEquipamento(request):
     if request.method=="GET":
         mf=Modo_falha_equipamento.objects.get(id=request.GET.get('id'))
         equipamento=mf.equipamento
-        mfe=Modo_falha_equipamento.objects.filter(equipamento=equipamento)
+        modosFalha=Modo_falha_equipamento.objects.filter(equipamento=equipamento)
         
-        print(perguntas)
+        print(modosFalha[0].equipamento)
         return  render(request, "editarModoFalhaEquipamento.html",
-                        {'modosFalha':mfe,'perguntas':perguntas,'status':0})
+                        {'modosFalha':modosFalha,'perguntas':perguntas,'equipamento':equipamento,'status':0})
     lista=[]
     for r in perguntas:
         lista.append(r['resposta'])
