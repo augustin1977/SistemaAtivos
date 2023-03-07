@@ -151,11 +151,11 @@ def excluirModoFalhaEquipamento(request):
 def editarModoFalhaEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    perguntas=[{'numero':1,'texto':"Pergunta1","resposta":"resposta1",'sim':'sim1','nao':'nao1'},
-            {'numero':2,'texto':"Pergunta2","resposta":"resposta2",'sim':'sim2','nao':'nao2'},
-            {'numero':3,'texto':"Pergunta3","resposta":"resposta3",'sim':'sim3','nao':'nao3'},
-            {'numero':4,'texto':"Pergunta4","resposta":"resposta4",'sim':'sim4','nao':'nao4'},
-            {'numero':5,'texto':"Pergunta5","resposta":"resposta5",'sim':'sim5','nao':'nao5'},]
+    perguntas=[{'numero':1,'texto':"É ligado na energia?","resposta":"resposta1",'sim':'sim1','nao':'nao1'},
+            {'numero':2,'texto':"Tem partes eletronicas?","resposta":"resposta2",'sim':'sim2','nao':'nao2'},
+            {'numero':3,'texto':"Usa outra fonte de energia?","resposta":"resposta3",'sim':'sim3','nao':'nao3'},
+            {'numero':4,'texto':"Tem partes moveis?","resposta":"resposta4",'sim':'sim4','nao':'nao4'},
+            {'numero':5,'texto':"usa combustivel?","resposta":"resposta5",'sim':'sim5','nao':'nao5'},]
     if request.method=="GET":
         mf=Modo_falha_equipamento.objects.get(id=request.GET.get('id'))
         equipamento=mf.equipamento
