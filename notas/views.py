@@ -234,7 +234,7 @@ def editarNotas(request):
             nota.usuario=usuario
             nota.save()
             form=CadastraNota_equipamentoForm
-            return redirect("/notas/exibirnotas")
+            return redirect("/notas/exibirNotas")
         else:
             print('invalido')
             return render(request, "editarNota.html", {'form':form})    

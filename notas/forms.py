@@ -84,7 +84,4 @@ class CadastraNota_equipamentoForm(ModelForm):
         if (cd['calibracao']):
                equipamento=Equipamento.objects.get(cd['equipamento'])
                equipamento.data_ultima_calibracao=utc.localize( datetime.datetime.now())
-               equipamento.save()
-
-
-    
+               equipamento.save()   
