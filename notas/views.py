@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from equipamentos.models import *
 from .models import *
 from django.contrib.staticfiles.views import serve
@@ -199,6 +199,44 @@ def exibirNotas(request):
     #log=Log(transacao='eq',movimento='lt',usuario=usu,alteracao=f'{usu.nome} visualisou Lista equipamentos') # depois tem que logar isso
     return render(request, "exibirnotas.html", {'notas':notas})
 def editarNotas(request):
-    pass    
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    print(f"{usuario.nome} acessou edição Notas")
+    if request.method=="GET":
+        id=request.GET.get('id')
+        nota= get_object_or_404(Nota_equipamento, pk=id)
+        print(nota)
+        form=CadastraNota_equipamentoForm(instance=nota)
+        if form.is_valid():
+            pass
+        return render(request, "editarNota.html", {'form':form,'status':0,'id':id})
+    else:
+        details = (request.POST)
+        form=CadastraNota_equipamentoForm(details)
+        if form.is_valid():
+            print('valido')
+            data=form.cleaned_data
+            print(data)
+            id=request.POST.get('id')
+            print(id)
+            nota= Nota_equipamento.objects.get(id=id)
+            print(nota)
+            nota.titulo=data['titulo']
+            nota.descricao=data['descricao']
+            nota.equipamento=data['equipamento']
+            nota.modo_Falha_equipamento=data['modo_Falha_equipamento']
+            nota.data_cadastro=data['data_cadastro']
+            nota.data_ocorrencia=data['data_ocorrencia']
+            nota.falha=data['falha']
+            nota.calibracao=data['calibracao']
+            nota.lubrificao=data['lubrificao']
+            nota.usuario=usuario
+            nota.save()
+            form=CadastraNota_equipamentoForm
+            return redirect("/notas/exibirnotas")
+        else:
+            print('invalido')
+            return render(request, "editarNota.html", {'form':form})    
 def excluirNotas(request):
     pass

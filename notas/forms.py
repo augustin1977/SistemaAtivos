@@ -62,7 +62,7 @@ class CadastraNota_equipamentoForm(ModelForm):
             'titulo': TextInput(attrs={'class': 'form-control'}),
             'descricao': Textarea(attrs={'class': 'form-control'}),
             'material': CheckboxSelectMultiple(attrs={'class': 'form-control'}),
-            'data_ocorrencia': SelectDateWidget(attrs={'class': 'form-control'}),
+            'data_ocorrencia': DateInput(attrs={'class': 'form-control'}),
             'falha': CheckboxInput(attrs={'class': 'form-control'}),
             'calibracao': CheckboxInput(attrs={'class': 'form-control'}),
             'lubrificao': CheckboxInput(attrs={'class': 'form-control'}),
