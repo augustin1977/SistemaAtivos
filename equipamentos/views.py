@@ -667,8 +667,6 @@ def listarMaterial(request):
         form = Material_consumo.objects.all()
         return render(request, "listarMateriais.html", {'form':form,'status':0})
 
-
-
 def cadastrarArquivo(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -696,7 +694,4 @@ def download_arquivo(request):
             response = HttpResponse(arquivo.read(), content_type='application/octet-stream')
         filename=request.GET.get('filename').split("/")
         response['Content-Disposition'] = f'attachment; filename="{filename[1]}"'
-    return response
-    
-
-    
+    return response   
