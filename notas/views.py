@@ -13,12 +13,16 @@ import os,csv
 from log.models import Log
 from .forms import *
 from django.http import JsonResponse
+
+
+
 def notas(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     # cria a view do login do usuário
     status=str(request.GET.get('status'))
     return render(request, "notas.html", {'status':status})
+
 def cadastrarDisciplina(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -79,7 +83,7 @@ def cadastrarModo_FalhaEquipamento(request):
             return render(request, "cadastrarModoFalhaEquipamento.html", {'form':form,'status':1})
         else:
             return render(request, "cadastrarModoFalhaEquipamento.html", {'form':form}) 
-        
+       
 def cadastrarNota(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -127,18 +131,23 @@ def get_modos_de_falha(request):
 
 def excluirDisciplina(request):
     return HttpResponse(request.GET.get('id'))
+
 def editarDisciplina(request):
     return HttpResponse(request.GET.get('id'))
+
 def exibirDisciplinas(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     disciplinas=Disciplina.objects.all()
     return render(request, "exibirDisciplinas.html", {'disciplinas':disciplinas,'status':0})
 
+
 def excluirModoFalha(request):
     return HttpResponse(request.GET.get('id'))
+
 def editarModoFalha(request):
     return HttpResponse(request.GET.get('id'))
+
 def exibirModoFalha(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -146,8 +155,10 @@ def exibirModoFalha(request):
     
     return render(request, "exibirModosFalha.html", {'modosFalha':modosFalha,'status':0})
 
+
 def excluirModoFalhaEquipamento(request):
     return HttpResponse(request.GET.get('id'))
+
 def editarModoFalhaEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -192,12 +203,14 @@ def exibirModoFalhaEquipamento(request):
         return redirect('/auth/login/?status=2')
     modosFalha=Modo_falha_equipamento.objects.all()
     return render(request, "exibirModosFalhaEquipamento.html", {'modosFalha':modosFalha,'status':0})
+
 def exibirNotas(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     notas=Nota_equipamento.objects.all() # depois tenho que filtrar isso
     #log=Log(transacao='eq',movimento='lt',usuario=usu,alteracao=f'{usu.nome} visualisou Lista equipamentos') # depois tem que logar isso
     return render(request, "exibirnotas.html", {'notas':notas})
+
 def editarNotas(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -238,5 +251,6 @@ def editarNotas(request):
         else:
             print('invalido')
             return render(request, "editarNota.html", {'form':form})    
+
 def excluirNotas(request):
-    pass
+    HttpResponse("<h1>Não implementado</h1>")
