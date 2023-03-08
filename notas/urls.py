@@ -18,5 +18,8 @@ urlpatterns = [path('notas/',views.notas,name="notas"),
                path('exibirModoFalhaEquipamento/', views.exibirModoFalhaEquipamento, name='exibirModoFalhaEquipamento'),
                path('editarModoFalhaEquipamento/', views.editarModoFalhaEquipamento, name='editarModoFalhaEquipamento'),
                path('excluirModoFalhaEquipamento/', views.excluirModoFalhaEquipamento, name='excluirModoFalhaEquipamento'),
+               path('exibirNotas/', views.exibirNotas, name='exibirNotas'),
+               path('editarNotas/', views.editarNotas, name='editarNotas'),
+               path('excluirNotas/', views.excluirNotas, name='excluirNotas'),
     
 ]

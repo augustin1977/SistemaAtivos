@@ -192,3 +192,13 @@ def exibirModoFalhaEquipamento(request):
         return redirect('/auth/login/?status=2')
     modosFalha=Modo_falha_equipamento.objects.all()
     return render(request, "exibirModosFalhaEquipamento.html", {'modosFalha':modosFalha,'status':0})
+def exibirNotas(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    notas=Nota_equipamento.objects.all() # depois tenho que filtrar isso
+    #log=Log(transacao='eq',movimento='lt',usuario=usu,alteracao=f'{usu.nome} visualisou Lista equipamentos') # depois tem que logar isso
+    return render(request, "exibirnotas.html", {'notas':notas})
+def editarNotas(request):
+    pass    
+def excluirNotas(request):
+    pass

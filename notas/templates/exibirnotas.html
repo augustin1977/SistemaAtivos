@@ -1,0 +1,46 @@
+
+{% extends 'base.html'%}
+{% block 'titulo'%} Gestão Ativos MA {% endblock %}
+{% block 'menu' %} 
+{% include 'menunota.html' %} 
+{% endblock %}
+{% block 'conteudo'%} 
+<div class ='container'>
+  <div class='row'>
+      <div class='col-md-3'>
+       
+      </div>
+      <div class="col-md">
+        <br>
+        <br>
+        <h2 class="sticky-top">Lista Notas</h2>
+      </div>
+    <div class="table-responsive" style="max-height: 75vh;">
+    <table class="table table-hover" >
+      <thead class="thead-light sticky-top" > 
+          <tr>
+            <th scope="col">Titulo</th>
+            <th scope="col">Equipamento</th>
+            <th scope="col">Data Ocorrencia</th>
+        </tr>
+        </thead>
+        <tbody style="overflow: auto;" >
+            {% for nota in notas %}
+            <tr>
+            <th scope="row">{{nota.titulo}}</th>
+            <td> {{ nota.equipamento }}</td>
+            <td> {{ nota.data_ocorrencia }}</td>
+            <td><a href="{% url 'editarNotas' %}?id={{ nota.id }}"><i class="bi bi-file-text"></i></a></td>
+            <td><a href="{% url 'excluirNotas' %}?id={{ nota.id }}&excluir=1"><i class="bi bi-trash"></i></a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <br>
+    <div class='col-md-3'></div> 
+    
+</div>
+
+{% endblock %}

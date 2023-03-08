@@ -49,3 +49,5 @@ class Nota_equipamento(models.Model):
     usuario=models.ForeignKey( Usuario ,on_delete=models.SET_NULL,null=True, blank=True)
     def __str__(self):
         return str(self.titulo)
+    class Meta:
+        ordering = ['data_ocorrencia',"data_cadastro",'equipamento']
