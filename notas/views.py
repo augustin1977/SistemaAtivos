@@ -171,7 +171,7 @@ def editarModoFalhaEquipamento(request):
     print(request.POST.get('id'))
     equipamento=Equipamento.objects.get(id=request.POST.get('id')) 
     modosFalha=Modo_falha_equipamento.objects.filter(equipamento=equipamento)
-    print(modosFalha)
+    
     respostas=[]                 
     for l in lista:
         res=request.POST.get(l)
@@ -183,7 +183,7 @@ def editarModoFalhaEquipamento(request):
             respostas.append(None)   
         
     resposta="-".join( str(valor) for valor in respostas)
-    print(resposta)
+    print(modosFalha[0].equipamento, resposta)
 
     return redirect('/notas/exibirModoFalhaEquipamento')
 
