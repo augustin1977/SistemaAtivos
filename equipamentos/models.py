@@ -32,6 +32,7 @@ class Local_instalacao(models.Model):
     apelido_local=models.CharField(max_length=50,null=True, blank=True)
     class Meta:
         ordering = ['predio','piso','-sala','-armario','prateleira']
+        unique_together=['laboratorio','predio','piso','sala','armario','prateleira']
     def __str__(self):
         retorno= self.laboratorio+"."+self.predio
         if self.piso:
