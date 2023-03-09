@@ -238,7 +238,7 @@ def cadastrarFornecedor(request):
                                 site_Fabricante=post_site_Fabricante,
                                 dados_adicionais=post_dados_adicionais)
         fabricante.save()
-        Log.cadastramento(usuario=usuario,transacao='fn',objeto=fabricante)
+        Log.cadastramento(usuario=usuario,transacao='li',objeto=fabricante)
         return render(request, "cadastrarFornecedor.html", {'status':0})
 
 def editarFornecedor(request):
@@ -329,7 +329,7 @@ def cadastrarLocal(request):
             local=Local_instalacao.objects.get(laboratorio=details.cleaned_data['laboratorio'],sala=details.cleaned_data['sala'],
                                             predio=details.cleaned_data['predio'],piso=details.cleaned_data['piso'],apelido_local=details.cleaned_data['apelido_local'],
                                             armario=details.cleaned_data['armario'],prateleira=details.cleaned_data['prateleira'] )
-            Log.cadastramento(usuario=usuario,transacao='fn',objeto=local)            
+            Log.cadastramento(usuario=usuario,transacao='li',objeto=local)            
             return render(request, "cadastrarLocal.html", {'form':form,'status':1})
         else:
             print('invalido')
@@ -360,7 +360,7 @@ def editarLocal(request):
             listaCampos=['laboratorio','predio','piso','sala','armario','prateleira','apelido_local']
             alteracao=False
             for campo in listaCampos:
-                alterado=Log.foiAlterado(transacao='eq',objeto=e,atributo=campo,valor=details.cleaned_data[campo],usuario=usuario) 
+                alterado=Log.foiAlterado(transacao='li',objeto=e,atributo=campo,valor=details.cleaned_data[campo],usuario=usuario) 
                 if alterado:
                     setattr(e,campo,details.cleaned_data[campo])
                 alteracao|=alterado
@@ -373,7 +373,9 @@ def editarLocal(request):
 def cadastrarTipo(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro Tipo Equipamento")
+    usuario =Usuario.objects.get(id=request.session.get('usuario'))
+    print(f"{usuario.nome} acessou cadastro Tipo Equipamento")
+    
     if request.method=="GET":
         form=cadastraTipo_equipamento
         return render(request, "cadastrarTipo.html", {'form':form,'status':0})
@@ -384,6 +386,7 @@ def cadastrarTipo(request):
             
             tipo=Tipo_equipamento(nome_tipo=details.cleaned_data['nome'],sigla=details.cleaned_data['sigla'],descricao_tipo=details.cleaned_data['descricao'])
             tipo.save()
+            Log.cadastramento(usuario=usuario,transacao='te',objeto=tipo)
             form=cadastraTipo_equipamento
                         
             return render(request, "cadastrarTipo.html", {'form':form,'status':1})
@@ -394,7 +397,8 @@ def cadastrarTipo(request):
 def editarTipo(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro Tipo Equipamento")
+    usuario =Usuario.objects.get(id=request.session.get('usuario'))
+    print(f"{usuario.nome} acessou cadastro Tipo Equipamento")
     if request.method=="GET":
         dados = Tipo_equipamento.objects.get(id=request.GET.get("id")).dados_para_form()
         print(dados)
@@ -405,9 +409,15 @@ def editarTipo(request):
         if details.is_valid():
             print('valido')
             tipo=Tipo_equipamento.objects.get(id=details.cleaned_data['id'] )
-            tipo.nome_tipo=details.cleaned_data['nome_tipo']
-            tipo.descricao_tipo=details.cleaned_data['descricao_tipo']
-            tipo.save()
+            listaCampos=['nome_tipo','descricao_tipo']
+            alteracao=False
+            for campo in listaCampos:
+                alterado=Log.foiAlterado(transacao='te',objeto=tipo,atributo=campo,valor=details.cleaned_data[campo],usuario=usuario) 
+                if alterado:
+                    setattr(tipo,campo,details.cleaned_data[campo])
+                alteracao|=alterado
+            if alteracao:
+                tipo.save()            
             form=Tipo_equipamento.objects.all()
             return render(request, "listarTipo.html", {'form':form,'status':1})
         else:
