@@ -251,7 +251,7 @@ def editarFornecedor(request):
         if request.method=="GET":
             fornecedor=Fabricante.objects.get(id=id)
             return render(request, "editarFornecedor.html",{"fornecedor":fornecedor})
-    if request.method=="POST":
+    if request.method=="POST":      
         post_id=request.POST.get('id')
         post_nome_fabricante=request.POST.get('nome_fabricante')
         post_endereco_fabricante=request.POST.get('endereco_fabricante')
@@ -290,15 +290,21 @@ def editarFornecedor(request):
         #if post_email_contato_fabricante:
             #if not (re.search(regex_email, post_email_contato_fabricante)):
                 #return render(request, "editarFornecedor.html", {'fornecedor':fornecedor,'status':3}) # email com digitação incorreta
-        
-        
-        fornecedor.nome_fabricante=post_nome_fabricante
-        fornecedor.endereco_fabricante=post_endereco_fabricante
-        fornecedor.nome_contato_fabricante=post_nome_contato_fabricante
-        fornecedor.telefone_contato=post_telefone_contato
-        fornecedor.email_contato_fabricante=post_email_contato_fabricante
-        fornecedor.site_Fabricante=post_site_Fabricante
-        fornecedor.dados_adicionais=post_dados_adicionais
+        usuario=Usuario.objects.get(id=request.session.get('usuario'))
+        if Log.foiAlterado(objeto=fornecedor,atributo='nome_fabricante',valor=post_nome_fabricante,usuario=usuario,transacao='fn'):
+            fornecedor.nome_fabricante=post_nome_fabricante
+        if Log.foiAlterado(objeto=fornecedor,atributo='endereco_fabricante',valor=post_endereco_fabricante,usuario=usuario,transacao='fn'):
+            fornecedor.endereco_fabricante=post_endereco_fabricante
+        if Log.foiAlterado(objeto=fornecedor,atributo='nome_contato_fabricante',valor=post_nome_contato_fabricante,usuario=usuario,transacao='fn'):
+            fornecedor.nome_contato_fabricante=post_nome_contato_fabricante
+        if Log.foiAlterado(objeto=fornecedor,atributo='telefone_contato',valor=post_telefone_contato,usuario=usuario,transacao='fn'):
+            fornecedor.telefone_contato=post_telefone_contato
+        if Log.foiAlterado(objeto=fornecedor,atributo='email_contato_fabricante',valor=post_email_contato_fabricante,usuario=usuario,transacao='fn'):
+            fornecedor.email_contato_fabricante=post_email_contato_fabricante
+        if Log.foiAlterado(objeto=fornecedor,atributo='site_Fabricante',valor=post_site_Fabricante,usuario=usuario,transacao='fn'):
+            fornecedor.site_Fabricante=post_site_Fabricante
+        if Log.foiAlterado(objeto=fornecedor,atributo='dados_adicionais',valor=post_dados_adicionais,usuario=usuario,transacao='fn'):
+            fornecedor.dados_adicionais=post_dados_adicionais
         fornecedor.save()
         return redirect('/equipamentos/listarFornecedores/?status=10')
         
