@@ -18,4 +18,4 @@ A política de segurança do projeto Sistema de Ativos tem como objetivo protege
 - O proprietário do repositório deve responder prontamente e trabalhar para corrigir o problema o mais rápido possível.
 
 ### Revisão da Política de Segurança
-A política de segurança do projeto Siitema de Ativos será revisada periodicamente para garantir que esteja atualizada e atenda às necessidades de segurança do projeto.
+A política de segurança do projeto Sistema de Ativos será revisada periodicamente para garantir que esteja atualizada e atenda às necessidades de segurança do projeto.
