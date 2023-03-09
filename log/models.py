@@ -29,4 +29,17 @@ class Log(models.Model):
         if self.alteracao:
             retorno+="."+self.alteracao
         return  retorno
+    def foiAlterado(objeto,atributo,valor,transacao,movimento,usuario,equipamento=None,nota_equipamento=None ):
+        valorObjeto=getattr(objeto,atributo)
+        if valor!=valorObjeto:
+            alteracao=f'O usuario {usuario} alterou {atributo} de {valorObjeto} para {valor} no {type(objeto).__name__} id={objeto.id}'
+            novo=Log(transacao=transacao,
+                     movimento=movimento,
+                     usuario=usuario,
+                     equipamento=equipamento,
+                     nota_equipamento=nota_equipamento,
+                     data_cadastro=None, alteracao=alteracao)
+            novo.save()
+            return True
+        return False
     
