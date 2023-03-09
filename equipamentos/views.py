@@ -684,10 +684,7 @@ def cadastrarArquivo(request):
     return render(request, 'cadastrarArquivo.html', {'form': form})
 
 def download_arquivo(request):
-    if request.method=="GET":
-        nome_arquivo=request.GET.get('filename')
-    else:
-        nome_arquivo=request.POST.get('filename')
+    nome_arquivo=request.POST.get('filename')
     caminho=os.path.join(MEDIA_ROOT,nome_arquivo)
     
     print(nome_arquivo)
