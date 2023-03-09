@@ -26,8 +26,6 @@ def lista_equipamentos(request):
     usu=Usuario.objects.get(id=request.session.get('usuario'))
     print(f"{usu.nome} acessou Lista Equipamentos")
     equipamentos=Equipamento.objects.filter(ativo=True)
-    log=Log(transacao='eq',movimento='lt',usuario=usu,alteracao=f'{usu.nome} visualisou Lista equipamentos')
-    log.save()
     return render(request, "exibirEquipamentos.html", {'equipamentos':equipamentos})
 
 def exibirDetalheEquipamento(request):
@@ -55,8 +53,7 @@ def editarEquipamento(request):
         return render(request, "editarEquipamento.html", {'form':form})
     else:
         details = equipamentoEditarForm(request.POST)
-        if details.is_valid():
-            
+        if details.is_valid():     
             e=Equipamento.objects.get(id=details.cleaned_data['id'],ativo=True)
             listaCampos=['nome_equipamento','modelo','fabricante','local','tipo_equipamento','data_compra',
                          'data_ultima_calibracao','data_cadastro','patrimonio','codigo',
@@ -64,19 +61,18 @@ def editarEquipamento(request):
                          'tensao_eletrica','projeto_compra','especificacao','outros_dados']
             alteracao=False
             for campo in listaCampos:
-                alterado=Log.foiAlterado(transacao='eq',movimento='ed',
-                                 objeto=e,atributo=campo,equipamento=e,
+                alterado=Log.foiAlterado(transacao='eq',objeto=e,atributo=campo,equipamento=e,
                                  valor=details.cleaned_data[campo],usuario=usuario) 
                 if alterado:
                     setattr(e,campo,details.cleaned_data[campo])
                 alteracao|=alterado
             if alteracao:
                 e.save()
-            usuario=Usuario.objects.get(id=request.session.get('usuario'))
+            
             lista_materiais=Material_consumo.objects.filter(equipamento__id=details.cleaned_data['id'])
             for material in details.cleaned_data['material_consumo']:
                 if material not in lista_materiais:
-                    log=Log(transacao='mc',movimento='cd',usuario=usuario,equipamento=e,alteracao=f'O usuario {usuario} cadastrou o material {material} no equipamento {e}')
+                    log=Log(transacao='mc',usuario=usuario,equipamento=e,alteracao=f'O usuario {usuario} cadastrou o material {material} no equipamento {e}')
                     log.save()
                     e.material_consumo.add(material)
             for material in lista_materiais:
@@ -129,12 +125,12 @@ def cadastrarEquipamento(request):
                             projeto_compra=projeto_compra,especificacao=especificacao,outros_dados=outros_dados,custo_aquisição=custo_aquisição,ativo=True)
             e.save()
             usuario=Usuario.objects.get(id=request.session.get('usuario'))
-            log=Log(transacao='eq',movimento='cd',usuario=usuario,equipamento=e,alteracao=f'{usuario} cadastrou equipamento{e}')
-            log.save()
+            Log.cadastramento(objeto=e,transacao='eq',usuario=usuario,equipamento=e)
+            
 
             for material in material_consumo:
                 e.material_consumo.add(material)
-                log=Log(transacao='mc',movimento='cd',usuario=usuario,equipmento=e,alteracao=f'{usuario} cadastrou {material} no {e}')
+                log=Log(transacao='mc',movimento='cd',usuario=usuario,equipmento=e,alteracao=f'o usuario {usuario} cadastrou o {material} no equipamento {e} id={e.id}')
                 log.save()
             
             form=equipamentoCadastrarForm(initial={'usuario':request.session.get('usuario')}) 
@@ -151,16 +147,8 @@ def excluirEquipamento(request):
     if request.GET.get('excluir')=='2':
         equipamento.ativo=False
         equipamento.save()
-        log=Log(transacao='eq',
-                movimento='dl',
-                usuario=usuario,
-                equipamento=equipamento,
-                alteracao=f'{usuario} excluiu equipamento: {equipamento}')
-
-        log.save()
+        Log.exclusao(objeto=equipamento,transacao='eq',usuario=usuario,equipamento=equipamento)
         return redirect('/equipamentos/listarEquipamentos')
-
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou excluir Equipamentos")
     
     materiais=Material_consumo.objects.filter(equipamento__id=id)
     arquivos= Media.objects.filter(equipamento__id=id)
@@ -198,6 +186,7 @@ def exibirDetalheFornecedor(request):
     return render(request, "exibirDetalhefornecedor.html", {'fornecedor':fornecedor})
 
 def cadastrarFornecedor(request):
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Cadastro Fornecedores")
@@ -249,6 +238,7 @@ def cadastrarFornecedor(request):
                                 site_Fabricante=post_site_Fabricante,
                                 dados_adicionais=post_dados_adicionais)
         fabricante.save()
+        Log.cadastramento(usuario=usuario,transacao='fn',objeto=fabricante)
         return render(request, "cadastrarFornecedor.html", {'status':0})
 
 def editarFornecedor(request):

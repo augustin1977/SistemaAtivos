@@ -29,17 +29,36 @@ class Log(models.Model):
         if self.alteracao:
             retorno+="."+self.alteracao
         return  retorno
-    def foiAlterado(objeto,atributo,valor,transacao,movimento,usuario,equipamento=None,nota_equipamento=None ):
+    def foiAlterado(objeto,atributo,valor,transacao,usuario,equipamento=None,nota_equipamento=None ):
         valorObjeto=getattr(objeto,atributo)
         if valor!=valorObjeto:
-            alteracao=f'O usuario {usuario} alterou {atributo} de {valorObjeto} para {valor} no {type(objeto).__name__} id={objeto.id}'
+            alteracao=f'O usuario {usuario} alterou {atributo} de {valorObjeto} para {valor} no {type(objeto).__name__} {objeto} id={objeto.id}'
             novo=Log(transacao=transacao,
-                     movimento=movimento,
+                     movimento='ed',
                      usuario=usuario,
                      equipamento=equipamento,
                      nota_equipamento=nota_equipamento,
-                     data_cadastro=None, alteracao=alteracao)
+                     alteracao=alteracao)
             novo.save()
             return True
         return False
-    
+    def cadastramento(objeto,usuario,transacao,equipamento=None,nota_equipamento=None):
+        alteracao=f'O usuario {usuario} cadastrou o {type(objeto).__name__} {objeto} id={objeto.id} '
+        novo=Log(transacao=transacao,
+                     movimento='cd',
+                     usuario=usuario,
+                     equipamento=equipamento,
+                     nota_equipamento=nota_equipamento,
+                     alteracao=alteracao)
+        novo.save()
+        return True
+    def exclusao(objeto,usuario,transacao,equipamento=None,nota_equipamento=None):
+        alteracao=f'O usuario {usuario} excluiu o {type(objeto).__name__} {objeto} id={objeto.id} '
+        novo=Log(transacao=transacao,
+                        movimento='dl',
+                        usuario=usuario,
+                        equipamento=equipamento,
+                        nota_equipamento=nota_equipamento,
+                        alteracao=alteracao)
+        novo.save()
+        return True 
