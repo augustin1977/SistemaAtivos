@@ -43,17 +43,23 @@
             </td> </tr>
             <th scope="row">Arquivos</th>
             <td>
+              <table class="table table-hover">
+              <thead>
+                <th> Nome Arquivo</th>
+                <th> Excluir Arquivo</th>
+              </thead>
             {% for arquivo in media %}   
                 {% if arquivo.documentos %}
-                <form method ="POST" action="{% url 'download_arquivo' %}"> {% csrf_token %}
+                <tr><th scope="row"> <form method ="POST" action="{% url 'download_arquivo' %}"> {% csrf_token %}
                 <input type="hidden" id="filename" name="filename" value="{{arquivo.documentos}}">
                 <button class="btn btn-link" type="submit">{{arquivo.nome}}</button>
                 <!-- <a href="{% url 'download_arquivo' %}?filename={{ arquivo.documentos }}">{{arquivo.nome}}</a>-->
-                </form>
+                </form></th>
+                <td> <a href="{% url 'excluiArquivo' %}?id={{ arquivo.id }}"><i class="bi bi-trash"></i></a></td></tr>
                               
                 {% endif %}
             {% endfor %}
-
+              </table>
             </td> 
           </tr>
           {% if confirmarexluir == '1' %}

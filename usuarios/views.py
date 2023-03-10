@@ -86,7 +86,7 @@ def valida_cadastro(request):
         senhacod= sha256(senha.encode()).hexdigest() # recuperando senha e codificando num hash sha256
         print("cria Senha")
         usuario=Usuario(nome=nome, senha=senhacod, email=email, tipo=tipo, chapa=chapa, primeiro_acesso=primeiro_acesso) # cria um objeto usuário com as informações recebidas do fomulario
-        log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'{usuario} se cadastrou no sistema')
+        log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'O usuario {usuario} se cadastrou no sistema')
         send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'ericaugustin@ipt.br']) 
         usuario.save() # salva o objeto usuário no banco de dados
         log.save()
@@ -133,9 +133,11 @@ def esqueci_senha(request):
             from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario[0].email,'ericaugustin@ipt.br'])  
         except:
             return redirect('/auth/esqueci_senha/?status=2') # Falha no envio
-        log=Log(transacao='us',movimento='ed',usuario=usuario[0],alteracao=f'{usuario[0]} recuperou a senha via e-mail - email enviado para {usuario[0].email}')
-        usuario[0].save()
+        
+        log=Log(transacao='us',movimento='ed',usuario=usuario[0],alteracao=f'O usuario {usuario[0]} recuperou a senha via e-mail - email enviado para {usuario[0].email}')
         log.save()
+        usuario[0].save()
+        
         return redirect('/auth/login/?status=51') # nova senha enviada por email com sucesso
 def sair(request):
     if not request.session.get('usuario'):

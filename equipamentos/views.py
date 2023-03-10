@@ -644,14 +644,17 @@ def editarMaterial(request):
         form = Material_consumo.objects.all()        
         details = materialCadastraForm(request.POST)
         if details.is_valid():
-            
             mat=Material_consumo.objects.get(id=details.cleaned_data['id'])
-            mat.nome_material=details.cleaned_data['nome_material']
-            mat.fornecedor=details.cleaned_data['fornecedor']
-            mat.especificacao_material=details.cleaned_data['especificacao_material']
-            mat.unidade_material=details.cleaned_data['unidade_material']
-            mat.simbolo_unidade_material=details.cleaned_data['simbolo_unidade_material']
-            mat.save()
+            usuario=Usuario.objects.get(id=request.session.get('usuario'))
+            listaCampos=['nome_material','fornecedor','especificacao_material','unidade_material','unidade_material','simbolo_unidade_material']
+            alteracao=False
+            for campo in listaCampos:
+                alterado=Log.foiAlterado(transacao='mc',objeto=mat,atributo=campo,valor=details.cleaned_data[campo],usuario=usuario) 
+                if alterado:
+                    setattr(mat,campo,details.cleaned_data[campo])
+                alteracao|=alterado
+            if alteracao:
+                mat.save() 
             return render(request, "listarMateriais.html", {'form':form,'status':1}) 
         else:
             return render(request, "listarMateriais.html", {'form':form,'status':2})
@@ -669,17 +672,32 @@ def cadastrarArquivo(request):
         return redirect('/auth/login/?status=2')
     if request.method == 'POST':
         form = mediaForm(request.POST, request.FILES)
-        print(request.FILES)
         if form.is_valid():
-            form.save()
-            print("arquivo gravado")
+            media=Media(nome=form.cleaned_data['nome'],
+                        documentos=form.cleaned_data['documentos'],
+                        equipamento=form.cleaned_data['equipamento'])
+            usuario=Usuario.objects.get(id=request.session.get('usuario'))
+            media.save()
+            Log.cadastramento(usuario=usuario,transacao='me',objeto=media)
+
             return redirect('cadastrarArquivo')
         else:
             print("Falhou")
     else:
         form = mediaForm()
     return render(request, 'cadastrarArquivo.html', {'form': form})
-
+def excluiArquivo(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    if request.method == 'GET':
+       media=Media.objects.get(id=request.GET.get('id'))
+       id_equipamento=media.equipamento.id
+       fullpath = os.path.normpath(os.path.join(MEDIA_ROOT, str(media.documentos)))
+       os.remove(fullpath)
+       media.delete()
+       return  redirect(f'/equipamentos/exibirDetalheEquipamento/?id={id_equipamento}')
+    
+    return HttpResponse("formulario de excluir arquivos")
 def download_arquivo(request):
     nome_arquivo=request.POST.get('filename')
     #caminho=os.path.join(MEDIA_ROOT,nome_arquivo)
