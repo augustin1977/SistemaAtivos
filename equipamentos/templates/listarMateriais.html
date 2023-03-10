@@ -29,6 +29,7 @@
                     <th scope="col">Material</th>
                     <th scope="col">Fornecedor</th>
                     <th scope="col">Especificação</th>
+                    <th scope="col">Editar</th>
                                       </tr>
                 </thead>
                 <tbody style="overflow-y: scroll;">
@@ -40,7 +41,7 @@
             <th scope="row">{{mat.nome_material}}</th>
           <th scope="row">{{mat.fabricante}}</th>
           <td>{{mat.especificacao_material}}</td>
-          <td><a href="{% url 'editarMaterial' %}?id={{ mat.id }}">Editar</a></td>
+          <td><a href="{% url 'editarMaterial' %}?id={{ mat.id }}"><i class="bi bi-pencil-square"></i></a></td>
                
         </tr>
         {% endfor %}

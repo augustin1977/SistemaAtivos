@@ -32,8 +32,8 @@
             <tr>
             <th scope="row">{{fornecedor.nome_fabricante}}</th>
             <td>{{fornecedor.nome_contato_fabricante}}</td>
-            <td><a href="{% url 'exibirDetalheFornecedor' %}?id={{ fornecedor.id }}">Visualizar</a></td>
-            <td><a href="{% url 'editarFornecedor' %}?id={{ fornecedor.id }}">Editar</a></td>
+            <td><a href="{% url 'exibirDetalheFornecedor' %}?id={{ fornecedor.id }}"><i class="bi bi-file-text"></i></a></td>
+            <td><a href="{% url 'editarFornecedor' %}?id={{ fornecedor.id }}"><i class="bi bi-pencil-square"></i></a></td>
           </tr>
           {% endfor %}
         </tbody>

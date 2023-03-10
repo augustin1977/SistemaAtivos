@@ -33,7 +33,7 @@
           <th scope="row">{{tipo.nome_tipo}}</th>
           <td>{{tipo.descricao_tipo}}</td>
           <td>{{tipo.sigla}}</td>
-          <td><a href="{% url 'editarTipo' %}?id={{ tipo.id }}">Link</a></td>
+          <td><a href="{% url 'editarTipo' %}?id={{ tipo.id }}"><i class="bi bi-pencil-square"></i></a></td>
                
         </tr>
         {% endfor %}
