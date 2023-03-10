@@ -619,10 +619,12 @@ def cadastrarMaterial(request):
         details = materialCadastraForm(request.POST)
         if details.is_valid():
             details.save()
-            equipto=details.cleaned_data['nome_material']
-            log=Log(transacao='mc',movimento='cd',usuario=usu,
-                alteracao=f'{usu.nome} cadastrou o material {equipto}')
-            log.save()
+            material=Material_consumo.objects.get(nome_material=details.cleaned_data['nome_material'],
+                                                  fornecedor=details.cleaned_data['fornecedor'],
+                                                  especificacao_material=details.cleaned_data['especificacao_material'],
+                                                  unidade_material=details.cleaned_data['unidade_material'])
+            Log.cadastramento(usuario=usu,transacao='mc',objeto=material)
+            
             form=materialCadastraForm
                         
             return render(request, "cadastrarMaterial.html", {'form':form,'status':1})
@@ -644,7 +646,6 @@ def editarMaterial(request):
         if details.is_valid():
             
             mat=Material_consumo.objects.get(id=details.cleaned_data['id'])
-            print(mat.id)
             mat.nome_material=details.cleaned_data['nome_material']
             mat.fornecedor=details.cleaned_data['fornecedor']
             mat.especificacao_material=details.cleaned_data['especificacao_material']
