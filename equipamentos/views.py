@@ -682,13 +682,15 @@ def cadastrarArquivo(request):
 
 def download_arquivo(request):
     nome_arquivo=request.POST.get('filename')
-    caminho=os.path.join(MEDIA_ROOT,nome_arquivo)
-    
-    print(nome_arquivo)
-    with open(caminho, 'rb') as arquivo:
+    #caminho=os.path.join(MEDIA_ROOT,nome_arquivo)
+    fullpath = os.path.normpath(os.path.join(MEDIA_ROOT, nome_arquivo))
+    print(fullpath, MEDIA_ROOT)
+    if not fullpath.startswith(MEDIA_ROOT[:-1]):
+        raise PermissionError
+    with open(fullpath, 'rb') as arquivo:
         figuras=["jpg","bmp",'gif','svg','png']
         if nome_arquivo[-3:].lower() in figuras:
-            print("imagem")
+            
             response = HttpResponse(arquivo.read(), content_type='image')
         else:
             response = HttpResponse(arquivo.read(), content_type='application/octet-stream')
