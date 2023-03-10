@@ -679,7 +679,6 @@ def cadastrarArquivo(request):
             usuario=Usuario.objects.get(id=request.session.get('usuario'))
             media.save()
             Log.cadastramento(usuario=usuario,transacao='me',objeto=media)
-
             return redirect('cadastrarArquivo')
         else:
             print("Falhou")
