@@ -109,57 +109,59 @@ def run():
                 fabricante.save()
         dados=arquivo.readline()
     arquivo.close()
-    
-    # elif request.GET.get('campo')=='equipamento':
-    #     caminho=os.path.join(BASE_DIR,"banco Migrado",'equipamentos.csv')
-    #     arquivo=open(caminho,'r', encoding='utf-8')
-    #     conteudo=""
-    #     dados=arquivo.readline()
-    #     dados=dados.split(";")
-    #     conteudo+="<h1>"
-    #     for i,dado in enumerate(dados):
-    #         conteudo+=str(i)+"-"+str(dado)+'  '
-    #     conteudo+="</h1><br>"
-    #     dados=arquivo.readline()
-    #     cont=0
-    #     while(dados):
-    #         dado=dados.split(";") 
-    #         if dado[0]!="" and len(dado[0])>=3:
-    #             print(cont)
-    #             cont+=1
-    #             conteudo+=str(dados)+"<br>"
-    #             fabricante=Fabricante.objects.filter(nome_fabricante__contains=dado[7])
-    #             if len(fabricante)==0:
-    #                 fabricante=[None]
-    #             local=Local_instalacao.objects.filter(laboratorio=dado[0],predio=dado[1])
-    #             if len(local)==0:
-    #                 local=[None]
-    #             tipo=Tipo_equipamento.objects.filter(nome_tipo=dado[6])
-    #             if len(tipo)==0:
-    #                 tipo=Tipo_equipamento.objects.filter(nome_tipo='outros')
-    #             usuario=Usuario.objects.filter(nome="System")
-    #             eqptos=Equipamento.objects.filter(tipo_equipamento=tipo[0],ativo=True)
-    #             numero=len(eqptos)+1
-    #             codigo=f'{tipo[0].sigla.upper()}{numero:03d}'
-    #             utc=pytz.UTC
-    #             BR = pytz.timezone(TIME_ZONE)
-    #             hoje=BR.localize( datetime.datetime.now())
-    #             if len(dado[15])>2:
-    #                 tensao=dado[15]
-    #             if len(dado[15])>2:
-    #                 tensao+="/"+dado[16]
-    #             tensao+="V"
-    #             if len(dados[17])>2:
-    #                 tensao+=f"-{dados[17]} - {dado[18]}"
-    #             try:
-    #                 ano=int(dado[25])
-    #             except:
-    #                 ano=1899
-    #             data_compra=BR.localize(datetime.datetime(year=ano,month=1,day=1))
-    #             try:
-    #                 valor=float(dado[9])
-    #             except:
-    #                 valor=0.01
+    caminho=os.path.join(BASE_DIR,"banco Migrado",'equipamentos.csv')
+    arquivo=open(caminho,'r', encoding='utf-8')
+
+    dados=arquivo.readline()
+    dados=dados.split(";")
+    " - ".join(str(i)+str(d) for i,d in enumerate(dados))
+    dados=arquivo.readline()
+    cont=0
+    while(dados):
+        dado=dados.split(";") 
+        if dado[0]!="" and len(dado[0])>=3:
+            print(cont)
+            cont+=1
+            usuario=Usuario.objects.filter(nome="System")
+            local=Local_instalacao.objects.filter(laboratorio=dado[0],predio=dado[1])
+            tipo=Tipo_equipamento.objects.filter(nome_tipo=dado[6])
+            fabricante=Fabricante.objects.filter(nome_fabricante__contains=dado[7])
+            print=str(dados)
+            if len(fabricante)==0:
+                fabricante=[None]
+            if len(local)==0:
+                local=[None]
+            if len(tipo)==0:
+                tipo=Tipo_equipamento.objects.filter(nome_tipo='outros')
+            eqptos=Equipamento.objects.filter(tipo_equipamento=tipo[0],ativo=True)
+            numero=len(eqptos)+1
+            codigo=f'{tipo[0].sigla.upper()}{numero:03d}'
+            utc=pytz.UTC
+            BR = pytz.timezone(TIME_ZONE)
+            hoje=BR.localize( datetime.datetime.now())
+            if len(dado[15])>2:
+                tensao=dado[15]
+            if len(dado[15])>2:
+                tensao+="/"+dado[16]
+                tensao+="V"
+            try:
+                valor=float(dado[9])
+            except:
+                valor=0.01
+            
+            if len(dados[17])>2:
+                tensao+=f"-{dados[17]} - {dado[18]}"
+            try:
+                ano=int(dado[25])
+            except:
+                try :
+                    data= datetime.
+                    dado[25]
+                except:
+                    ano=1899
+                
+                data_compra=BR.localize(datetime.datetime(year=ano,month=1,day=1))
+                
 
 
     #             equipamento=Equipamento(nome_equipamento=dado[4].capitalize(),fabricante=fabricante[0],local=local[0],modelo=dado[19],
