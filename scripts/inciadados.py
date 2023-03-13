@@ -94,20 +94,22 @@ def run():
     arquivo.close()
     
     print("Importanto cadastro de  Fabricantes")
-    #     caminho=os.path.join(BASE_DIR,"banco Migrado",'fabricante.csv')
-    #     arquivo=open(caminho,'r', encoding='utf-8')
-    #     dados=arquivo.readline()
-    #     dados=arquivo.readline()
-    #     conteudo=[]
-    #     while(dados):
-    #         dado=dados.split(";") 
-    #         if dado[0]!="" and len(dado[0])>=3:
-    #             conteudo.append(dado)   
-    #             fabricante=Fabricante(nome_fabricante=dado[0].capitalize())
-    #             fabricante.save()
-    #         dados=arquivo.readline()
-    #     arquivo.close()
-    #     return HttpResponse(conteudo)
+    caminho=os.path.join(BASE_DIR,"banco Migrado",'fabricante.csv')
+    arquivo=open(caminho,'r', encoding='utf-8')
+    dados=arquivo.readline()
+    dados=arquivo.readline()
+    conteudo=[]
+    while(dados):
+        dado=dados.split(";") 
+        if dado[0]!="" and len(dado[0])>=3:
+            buscaFabricante= Fabricante.objects.filter(nome_fabricante=dado[0].capitalize())
+            if len(buscaFabricante)==0:
+                conteudo.append(dado)   
+                fabricante=Fabricante(nome_fabricante=dado[0].capitalize())
+                fabricante.save()
+        dados=arquivo.readline()
+    arquivo.close()
+    
     # elif request.GET.get('campo')=='equipamento':
     #     caminho=os.path.join(BASE_DIR,"banco Migrado",'equipamentos.csv')
     #     arquivo=open(caminho,'r', encoding='utf-8')
