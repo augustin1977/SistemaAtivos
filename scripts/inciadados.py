@@ -2,6 +2,8 @@ from usuarios.models import *
 from usuarios.views import *
 from equipamentos.views import *
 from equipamentos.models import *
+import pytz
+import datetime
 
 
 def run():
@@ -75,7 +77,7 @@ def run():
         print("Erro ao extrair dados do local instalação", err)
     print ("Importando tipos de equipamento")
     caminho=os.path.join(BASE_DIR,"banco Migrado",'tipo.csv')
-    arquivo=open(caminho,'r')
+    arquivo=open(caminho,'r',encoding='utf-8')
     dados=arquivo.readline()
     dados=arquivo.readline()
     siglas=[]
@@ -86,41 +88,40 @@ def run():
     while(dados):
         dado=dados.split(";") 
         conteudo.append(dado)
-        print(dado[0], len(dados[0]))
+        temp=dado[0].capitalize()
         if dado[0]!="":
-            
-            buscatipo=Tipo_equipamento.objects.filter(nome_tipo=dado[0])
+            buscatipo=Tipo_equipamento.objects.filter(nome_tipo=temp)
+            print(temp)
             if len(buscatipo)==0:
                 sigla,siglas=funcoesAuxiliares.fazlista(dado[0],siglas)
-                tipo=Tipo_equipamento(nome_tipo=dado[0], sigla=sigla)
+                tipo=Tipo_equipamento(nome_tipo=temp, sigla=sigla)
                 tipo.save()
         dados=arquivo.readline()
     arquivo.close()
     
     print("Importanto cadastro de  Fabricantes")
     caminho=os.path.join(BASE_DIR,"banco Migrado",'fabricante.csv')
-    arquivo=open(caminho,'r', encoding='utf-8')
+    arquivo=open(caminho,'r')
     dados=arquivo.readline()
     dados=arquivo.readline()
-    conteudo=[]
     while(dados):
         dado=dados.split(";") 
+        tmp=dado[0].capitalize().strip()
         if dado[0]!="" and len(dado[0])>=3:
-            buscaFabricante= Fabricante.objects.filter(nome_fabricante=dado[0].capitalize())
-            if len(buscaFabricante)==0:
-                conteudo.append(dado)   
-                fabricante=Fabricante(nome_fabricante=dado[0].capitalize())
-                print(dado[0].capitalize())
+            buscaFabricante= Fabricante.objects.filter(nome_fabricante=tmp)
+            print(tmp)
+            if len(buscaFabricante)==0:  
+                fabricante=Fabricante(nome_fabricante=tmp,dados_adicionais=dado[1])
                 fabricante.save()
         dados=arquivo.readline()
     arquivo.close()
+    print("importanto cadastro Equipamentos")
     caminho=os.path.join(BASE_DIR,"banco Migrado",'equipamentos.csv')
     arquivo=open(caminho,'r')
-
     dados=arquivo.readline()
     dados=dados.split(";")
-    " - ".join(str(i)+str(d) for i,d in enumerate(dados))
-    
+    cabecalho=" - ".join(str(i)+str(d) for i,d in enumerate(dados))
+    print(cabecalho)
     cont=0
     while(dados):
         dados=arquivo.readline()
@@ -129,19 +130,17 @@ def run():
             cont+=1
             usuario=Usuario.objects.filter(nome="System")
             local=Local_instalacao.objects.filter(laboratorio=dado[0],predio=dado[1])
-            tipo=Tipo_equipamento.objects.filter(nome_tipo=dado[6])
+            tipo=Tipo_equipamento.objects.filter(nome_tipo=dado[6].capitalize())
+            print(tipo)
             fabricante=Fabricante.objects.filter(nome_fabricante__contains=dado[7])
-            print=str(dados)
+            eqptos=Equipamento.objects.filter(tipo_equipamento=tipo[0],ativo=True)
+            numero=len(eqptos)+1
             if len(fabricante)==0:
                 fabricante=[None]
             if len(local)==0:
                 local=[None]
-            if len(tipo)==0:
-                tipo=Tipo_equipamento.objects.filter(nome_tipo='outros')
-            eqptos=Equipamento.objects.filter(tipo_equipamento=tipo[0],ativo=True)
-            numero=len(eqptos)+1
+
             codigo=f'{tipo[0].sigla.upper()}{numero:03d}'
-            utc=pytz.UTC
             BR = pytz.timezone(TIME_ZONE)
             hoje=BR.localize( datetime.datetime.now())
             if len(dado[15])>2:
@@ -156,15 +155,17 @@ def run():
             
             if len(dados[17])>2:
                 tensao+=f"-{dados[17]} - {dado[18]}"
+            
             if "/" in dado[25]:
                 try:
-                    formato = "%d/%m/%Y"
-                    data_compra  = datetime.strptime(dado[25], formato)
+
+                    data_compra  = datetime.strptime(dado[25], "%d/%m/%Y")
                 except:
                     data_compra=BR.localize(datetime.datetime(year=1899,month=1,day=1))
             else:
                 try:
                     ano=int(dado[25])
+                    data_compra=BR.localize(datetime.datetime(year=ano,month=1,day=1))
                 except:
                     data_compra=BR.localize(datetime.datetime(year=1899,month=1,day=1))
             buscaequipamento=Equipamento.objects.filter(nome_equipamento=dado[4].capitalize(),fabricante=fabricante[0],local=local[0],modelo=dado[19],
@@ -179,6 +180,6 @@ def run():
                         codigo=codigo, custo_aquisição=valor,custo_aquisição_currency="BRL",responsavel=dado[12].capitalize(),
                         potencia_eletrica=dado[13]+dado[14],nacionalidade=dado[24],data_ultima_atualizacao= hoje,
                         tensao_eletrica=tensao,projeto_compra=dado[26],especificacao=dado[20]+" "+dado[22],
-                        outros_dados=dado[29])
+                        outros_dados=dado[29],ativo=True)
                 equipamento.save()
     arquivo.close()
