@@ -33,7 +33,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["gestaoativosma.ad.ipt.br","10.3.10.20","10.11.39.220","127.0.0.1"]
 
-# cmail commands
+# email commands
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST_USER = info_email.info_email['email']
 EMAIL_HOST_PASSWORD = info_email.info_email['senha']
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "notas",
     "usuarios",
     "log",
+    'django_extensions',
 
 ]
 
@@ -158,6 +159,5 @@ FILE_UPLOAD_HANDLERS=[
 ]
 
 # session rules
-
 SESSION_COOKIE_AGE = 14400 # 4 horas em segundos
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Encerra sessão ao fechar o browser
