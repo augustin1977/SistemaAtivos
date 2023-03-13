@@ -5,7 +5,7 @@ from equipamentos.models import *
 
 
 def run():
-    print('configurando o sistema')
+    print("configurando o sistema")
     print("Criando tipos de usuarios")
     tipos={'admin','user','superuser','especialuser'}
     for tipo in tipos :
@@ -25,53 +25,57 @@ def run():
     print("iniciando migração dos dados dos arquivos 'csv'")
     print("Importanto locais de instalação")
     caminho=os.path.join(BASE_DIR,"banco Migrado",'local.csv')
-    arquivo=open(caminho,'r', encoding='utf-8')
-    dados=arquivo.readline()
-    dados=arquivo.readline()
-    conteudo=[]
-    while(dados):
-        dado=dados.split(";")
-        piso=None
-        sala=None
-        armario=None
-        prateleira=None
-        apelido_local=None
-        predio=None
-        if not dado[0]=="":
-            conteudo.append(dado)
-            predio=dado[0]
-            if not dado[1]=="":
-                piso= dado[1]
-            if not dado[2]=="":
-                sala="Sala "+dado[2]
-            if not dado[3]=="":
-                armario=dados[3]
-            if not dado[4]=="":
-                prateleira=dados[4]
-            if not dado[5]=="" and dado[5]!="\n":
-                apelido_local=dados[5] 
-            buscalocal=Local_instalacao.objects.filter(laboratorio='LPM',
-                predio=predio,
-                piso=piso,
-                sala=sala,
-                armario=armario,
-                prateleira=prateleira,
-                apelido_local=apelido_local)
-            if len(buscalocal)==0:
-
-                local=Local_instalacao(laboratorio='LPM',
+    try:
+        arquivo=open(caminho,'r')
+        dados=arquivo.readline()
+        dados=arquivo.readline()
+        conteudo=[]
+        while(dados):
+            dado=dados.split(";")
+            piso=None
+            sala=None
+            armario=None
+            prateleira=None
+            apelido_local=None
+            predio=None
+            if not dado[0]=="":
+                conteudo.append(dado)
+                predio=dado[0]
+                if not dado[1]=="":
+                    piso= dado[1]
+                if not dado[2]=="":
+                    sala="Sala "+dado[2]
+                if not dado[3]=="":
+                    armario=dados[3]
+                if not dado[4]=="":
+                    prateleira=dados[4]
+                if not dado[5]=="" and dado[5]!="\n":
+                    apelido_local=dados[5] 
+                buscalocal=Local_instalacao.objects.filter(laboratorio='LPM',
                     predio=predio,
                     piso=piso,
                     sala=sala,
                     armario=armario,
                     prateleira=prateleira,
-                    apelido_local=apelido_local   )
-                local.save()
-        dados=arquivo.readline()
-    arquivo.close()
+                    apelido_local=apelido_local)
+                if len(buscalocal)==0:
+
+                    local=Local_instalacao(laboratorio='LPM',
+                        predio=predio,
+                        piso=piso,
+                        sala=sala,
+                        armario=armario,
+                        prateleira=prateleira,
+                        apelido_local=apelido_local   )
+                    print(predio,piso,sala,armario,prateleira,apelido_local)
+                    local.save()
+            dados=arquivo.readline()
+        arquivo.close()
+    except Exception as err:
+        print("Erro ao extrair dados do local instalação", err)
     print ("Importando tipos de equipamento")
     caminho=os.path.join(BASE_DIR,"banco Migrado",'tipo.csv')
-    arquivo=open(caminho,'r', encoding='utf-8')
+    arquivo=open(caminho,'r')
     dados=arquivo.readline()
     dados=arquivo.readline()
     siglas=[]
@@ -106,21 +110,22 @@ def run():
             if len(buscaFabricante)==0:
                 conteudo.append(dado)   
                 fabricante=Fabricante(nome_fabricante=dado[0].capitalize())
+                print(dado[0].capitalize())
                 fabricante.save()
         dados=arquivo.readline()
     arquivo.close()
     caminho=os.path.join(BASE_DIR,"banco Migrado",'equipamentos.csv')
-    arquivo=open(caminho,'r', encoding='utf-8')
+    arquivo=open(caminho,'r')
 
     dados=arquivo.readline()
     dados=dados.split(";")
     " - ".join(str(i)+str(d) for i,d in enumerate(dados))
-    dados=arquivo.readline()
+    
     cont=0
     while(dados):
+        dados=arquivo.readline()
         dado=dados.split(";") 
-        if dado[0]!="" and len(dado[0])>=2:
-            print(cont)
+        if (dado[0]!="" and len(dado[0])>=2):
             cont+=1
             usuario=Usuario.objects.filter(nome="System")
             local=Local_instalacao.objects.filter(laboratorio=dado[0],predio=dado[1])
@@ -176,6 +181,4 @@ def run():
                         tensao_eletrica=tensao,projeto_compra=dado[26],especificacao=dado[20]+" "+dado[22],
                         outros_dados=dado[29])
                 equipamento.save()
-        dados=arquivo.readline()
     arquivo.close()
-
