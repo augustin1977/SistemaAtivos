@@ -119,7 +119,7 @@ def run():
     cont=0
     while(dados):
         dado=dados.split(";") 
-        if dado[0]!="" and len(dado[0])>=3:
+        if dado[0]!="" and len(dado[0])>=2:
             print(cont)
             cont+=1
             usuario=Usuario.objects.filter(nome="System")
@@ -151,20 +151,18 @@ def run():
             
             if len(dados[17])>2:
                 tensao+=f"-{dados[17]} - {dado[18]}"
-            try:
-                ano=int(dado[25])
-            except:
-                try :
-                    data= datetime.
-                    dado[25]
+            if "/" in dado[25]:
+                try:
+                    formato = "%d/%m/%Y"
+                    data_compra  = datetime.strptime(dado[25], formato)
                 except:
-                    ano=1899
-                
-                data_compra=BR.localize(datetime.datetime(year=ano,month=1,day=1))
-                
-
-
-    #             equipamento=Equipamento(nome_equipamento=dado[4].capitalize(),fabricante=fabricante[0],local=local[0],modelo=dado[19],
+                    data_compra=BR.localize(datetime.datetime(year=1899,month=1,day=1))
+            else:
+                try:
+                    ano=int(dado[25])
+                except:
+                    data_compra=BR.localize(datetime.datetime(year=1899,month=1,day=1))
+            equipamento=Equipamento(nome_equipamento=dado[4].capitalize(),fabricante=fabricante[0],local=local[0],modelo=dado[19],
     #                     tipo_equipamento=tipo[0],data_compra=data_compra,usuario=usuario[0],patrimonio=dado[28],
     #                     codigo=codigo, custo_aquisição=valor,custo_aquisição_currency="BRL",responsavel=dado[12].capitalize(),
     #                     potencia_eletrica=dado[13]+dado[14],nacionalidade=dado[24],data_ultima_atualizacao= hoje,
