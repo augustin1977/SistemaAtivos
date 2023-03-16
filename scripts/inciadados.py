@@ -91,10 +91,10 @@ def run():
         temp=dado[0].capitalize()
         if dado[0]!="":
             buscatipo=Tipo_equipamento.objects.filter(nome_tipo=temp)
-            print(temp)
             if len(buscatipo)==0:
                 sigla,siglas=funcoesAuxiliares.fazlista(dado[0],siglas)
                 tipo=Tipo_equipamento(nome_tipo=temp, sigla=sigla)
+                print(tipo)
                 tipo.save()
         dados=arquivo.readline()
     arquivo.close()
@@ -109,9 +109,10 @@ def run():
         tmp=dado[0].capitalize().strip()
         if dado[0]!="" and len(dado[0])>=3:
             buscaFabricante= Fabricante.objects.filter(nome_fabricante=tmp)
-            print(tmp)
+
             if len(buscaFabricante)==0:  
                 fabricante=Fabricante(nome_fabricante=tmp,dados_adicionais=dado[1])
+                print(fabricante)
                 fabricante.save()
         dados=arquivo.readline()
     arquivo.close()
@@ -120,8 +121,7 @@ def run():
     arquivo=open(caminho,'r')
     dados=arquivo.readline()
     dados=dados.split(";")
-    cabecalho=" - ".join(str(i)+str(d) for i,d in enumerate(dados))
-    print(cabecalho)
+
     cont=0
     while(dados):
         dados=arquivo.readline()
@@ -131,7 +131,6 @@ def run():
             usuario=Usuario.objects.filter(nome="System")
             local=Local_instalacao.objects.filter(laboratorio=dado[0],predio=dado[1])
             tipo=Tipo_equipamento.objects.filter(nome_tipo=dado[6].capitalize())
-            print(tipo)
             fabricante=Fabricante.objects.filter(nome_fabricante__contains=dado[7])
             eqptos=Equipamento.objects.filter(tipo_equipamento=tipo[0],ativo=True)
             numero=len(eqptos)+1
@@ -139,7 +138,6 @@ def run():
                 fabricante=[None]
             if len(local)==0:
                 local=[None]
-
             codigo=f'{tipo[0].sigla.upper()}{numero:03d}'
             BR = pytz.timezone(TIME_ZONE)
             hoje=BR.localize( datetime.datetime.now())
@@ -181,5 +179,6 @@ def run():
                         potencia_eletrica=dado[13]+dado[14],nacionalidade=dado[24],data_ultima_atualizacao= hoje,
                         tensao_eletrica=tensao,projeto_compra=dado[26],especificacao=dado[20]+" "+dado[22],
                         outros_dados=dado[29],ativo=True)
+                print(equipamento)
                 equipamento.save()
     arquivo.close()
