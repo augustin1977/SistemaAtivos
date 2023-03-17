@@ -14,8 +14,6 @@ from log.models import Log
 from .forms import *
 from django.http import JsonResponse
 
-
-
 def notas(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -116,7 +114,6 @@ def cadastrarNota(request):
         else:
             print('invalido')
             return render(request, "cadastrarNota.html", {'form':form}) 
-
 
 def get_modos_de_falha(request):
     equipamento_id = request.GET.get('equipamento_id')
