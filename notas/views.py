@@ -130,10 +130,10 @@ def get_modos_de_falha(request):
     return JsonResponse(modos_falha, safe=False)
 
 def excluirDisciplina(request):
-    return HttpResponse(request.GET.get('id'))
+    return HttpResponse("<h1>Não implementado</h1>")
 
 def editarDisciplina(request):
-    return HttpResponse(request.GET.get('id'))
+    return HttpResponse("<h1>Não implementado</h1>")
 
 def exibirDisciplinas(request):
     if not request.session.get('usuario'):
@@ -143,10 +143,10 @@ def exibirDisciplinas(request):
 
 
 def excluirModoFalha(request):
-    return HttpResponse(request.GET.get('id'))
+    return HttpResponse("<h1>Não implementado</h1>")
 
 def editarModoFalha(request):
-    return HttpResponse(request.GET.get('id'))
+    return HttpResponse("<h1>Não implementado</h1>")
 
 def exibirModoFalha(request):
     if not request.session.get('usuario'):
@@ -157,7 +157,7 @@ def exibirModoFalha(request):
 
 
 def excluirModoFalhaEquipamento(request):
-    return HttpResponse(request.GET.get('id'))
+    return HttpResponse("<h1>Não implementado</h1>")
 
 def editarModoFalhaEquipamento(request):
     if not request.session.get('usuario'):
@@ -253,4 +253,4 @@ def editarNotas(request):
             return render(request, "editarNota.html", {'form':form})    
 
 def excluirNotas(request):
-    HttpResponse("<h1>Não implementado</h1>")
+    return HttpResponse("<h1>Não implementado</h1>")

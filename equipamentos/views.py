@@ -432,8 +432,6 @@ def listarTipo(request):
     form=Tipo_equipamento.objects.all()
     return render(request, "listarTipo.html", {'form':form,'status':0})
 
-
-
 def baixarRelatorioEquipamentos(request):
 
     if not request.session.get('usuario'):
@@ -540,6 +538,7 @@ def cadastrarArquivo(request):
     else:
         form = mediaForm()
     return render(request, 'cadastrarArquivo.html', {'form': form})
+
 def excluiArquivo(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -552,6 +551,7 @@ def excluiArquivo(request):
        return  redirect(f'/equipamentos/exibirDetalheEquipamento/?id={id_equipamento}')
     
     return HttpResponse("formulario de excluir arquivos")
+
 def download_arquivo(request):
     nome_arquivo=request.POST.get('filename')
     #caminho=os.path.join(MEDIA_ROOT,nome_arquivo)
