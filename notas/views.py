@@ -42,8 +42,7 @@ def cadastrarDisciplina(request):
             return render(request, "cadastrarDisciplina.html", {'form':form,'status':1})
         else:
             return render(request, "cadastrarDisciplina.html", {'form':details}) 
-
-        
+       
 def cadastrarModo_Falha(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
