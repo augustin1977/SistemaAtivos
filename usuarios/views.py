@@ -90,6 +90,7 @@ def valida_cadastro(request):
         send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'ericaugustin@ipt.br']) 
         usuario.save() # salva o objeto usuário no banco de dados
         log.save()
+        print("usuario criado")
         return redirect('/auth/login/?status=0') # retorna sem erro
     except:
         return redirect('/auth/cadastrar/?status=99') # retorna erro geral de gravação no banco de dados

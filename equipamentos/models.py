@@ -47,9 +47,7 @@ class Local_instalacao(models.Model):
     def dados_para_form(self):
         return {'id':self.id, 'laboratorio':self.laboratorio,'predio':self.predio,"piso":self.piso,"sala":self.sala,
         "armario":self.armario,'prateleira':self.prateleira}
-
-    
-    
+   
 class Tipo_equipamento(models.Model):
     nome_tipo=models.CharField(max_length=50)
     sigla=models.CharField(max_length=3,unique=True)

@@ -21,7 +21,8 @@ def run():
     if len(Usuario.objects.filter(nome="System"))==0:
         print("Criando usuario do sistema")
         senha=gera_senha(12)
-        usuario=Usuario(nome='System', email='ericaugustin@ipt.br',tipo=Tipo.objects.get(tipo='superuser'),primeiro_acesso=1, senha=senha)
+        usuario=Usuario(nome='System', email='ericaugustin@ipt.br',tipo=Tipo.objects.get(tipo='admin'),primeiro_acesso=1, senha=senha)
+        usuario.save()
     # importanto dados dos arquivos CSV
     print("Bancos de dados criados")
     print("iniciando migração dos dados dos arquivos 'csv'")
@@ -134,6 +135,7 @@ def run():
             fabricante=Fabricante.objects.filter(nome_fabricante__contains=dado[7])
             eqptos=Equipamento.objects.filter(tipo_equipamento=tipo[0],ativo=True)
             numero=len(eqptos)+1
+            #print(usuario,local,tipo,fabricante,eqptos,numero)
             if len(fabricante)==0:
                 fabricante=[None]
             if len(local)==0:
@@ -164,7 +166,7 @@ def run():
                 except:
                     data_compra=BR.localize(datetime.datetime(year=1899,month=1,day=1))
             buscaequipamento=Equipamento.objects.filter(nome_equipamento=dado[4].capitalize(),fabricante=fabricante[0],local=local[0],modelo=dado[19],
-                        tipo_equipamento=tipo[0],data_compra=data_compra,usuario=usuario[0],patrimonio=dado[28],
+                        tipo_equipamento=tipo[0],data_compra=data_compra,patrimonio=dado[28],
                         codigo=codigo, custo_aquisição=valor,custo_aquisição_currency="BRL",responsavel=dado[12].capitalize(),
                         potencia_eletrica=dado[13]+dado[14],nacionalidade=dado[24],data_ultima_atualizacao= hoje,
                         tensao_eletrica=tensao,projeto_compra=dado[26],especificacao=dado[20]+" "+dado[22],

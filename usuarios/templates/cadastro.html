@@ -3,7 +3,7 @@
 {% block 'titulo'%} Cadastro {% endblock %}
 {% block 'conteudo'%} 
 <div class ='container'>
-    
+    <br><br>
     {% if status == '1'%}
     <div class="alert alert-danger" role="alert">
         Usuario ou e-mail ja cadastrados, favor contactar o administrador para obter nova senha
@@ -26,8 +26,10 @@
         Email invalido, por favor verifique a grafia do email.
       </div>
     {% endif %}
-    {% if status == '99'%}
+
+    {% if status == '99' %}
     <div class="alert alert-danger" role="alert">
+  
         Erro Geral no cadastro de Usuários
       </div>
     {% endif %}
