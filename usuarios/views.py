@@ -153,6 +153,6 @@ def sair(request):
 
 
 def gera_senha(tamanho):
-    caracteres = string.ascii_letters + string.digits + string.punctuation
+    caracteres = string.ascii_letters + string.digits + string.punctuation + string.ascii_letters
     senha = ''.join(random.choice(caracteres) for i in range(tamanho))
     return senha
