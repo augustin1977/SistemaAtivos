@@ -149,14 +149,11 @@ def run():
             try:
                 valor=float(dado[9])
             except:
-                valor=0.01
-            
+                valor=0.01    
             if len(dados[17])>2:
-                tensao+=f"-{dados[17]} - {dado[18]}"
-            
+                tensao+=f"-{dados[17]} - {dado[18]}"     
             if "/" in dado[25]:
                 try:
-
                     data_compra  = datetime.strptime(dado[25], "%d/%m/%Y")
                 except:
                     data_compra=BR.localize(datetime.datetime(year=1899,month=1,day=1))
