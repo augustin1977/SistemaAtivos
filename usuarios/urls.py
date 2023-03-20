@@ -14,4 +14,8 @@ urlpatterns = [
     path("",views.login, name="vazio"),
     path("esqueci_senha/",views.esqueci_senha, name="esqueci_senha"),
     path("listarUsuarios/",views.listarUsuarios, name="listarUsuarios"),
+    path("exibirUsuario/",views.exibirUsuario, name="exibirUsuario"),
+    path("editarUsuario/",views.editarUsuario, name="editarUsuario"),
+    path("excluirUsuario/",views.excluirUsuario, name="excluirUsuario"),
 ]
+

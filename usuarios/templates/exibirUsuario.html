@@ -1,0 +1,40 @@
+
+{% extends 'base.html'%}
+{% block 'titulo'%} Cadastro {% endblock %}
+{% block 'conteudo'%} 
+<div class ='container'>
+    <br><br>
+    <div class='row'>
+    <div class='col-md-3'></div>
+    <div class="col-md">
+    <h1>  Exibir Usuário {{ usuario.nome}} </h1>
+    <hr>
+    <form> {% csrf_token %}
+        <label> nome</label>
+        <input name="nome" class="form-control" type="text" placeholder="Nome" value="{{ usuario.nome}}" readonly>
+        <br> 
+        <label> Numero crachá</label>
+        <input name="chapa" class="form-control" type="text" placeholder="Chapa" value="{{ usuario.chapa}}" readonly> 
+        <br>    
+        <label> Email </label>
+        <input name="email" class="form-control" type="text" placeholder="nome@servidor.com" value="{{ usuario.email }}" readonly>
+        <br>
+        <br>    
+        <label> primeiro Acesso </label>
+        {% if usuario.primeiro_acesso == True %}
+        <input name="email" class="form-control" name="primeiro_acesso" type="checkbox" placeholder="True" value="primeiroAcesso" checked disabled> 
+        {% elif usuario.primeiro_acesso == False %}
+        <input name="email" class="form-control" name="primeiro_acesso" type="checkbox" placeholder="True" value="primeiroAcesso"  disabled> 
+        {% endif %}
+        <br>
+        <a href="{% url 'listarUsuarios' %}"class="btn btn-warning btn-mg"> Voltar </a>
+    </form>
+    </hr>
+
+    </div>
+    <div class='col-md-3'></div>
+    
+</div>
+
+{% endblock %}
+<br>By Eric Augustin

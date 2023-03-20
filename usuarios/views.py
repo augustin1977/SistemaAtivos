@@ -5,6 +5,7 @@ from log.models import Log
 from django.shortcuts import redirect 
 from hashlib import sha256
 from django.core.mail import send_mail
+from usuarios.forms import *
 import re
 import string
 import random
@@ -160,11 +161,58 @@ def gera_senha(tamanho):
 def listarUsuarios(request):
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     tipo=Tipo.objects.get(tipo="admin")
-    print(usuario.nome,usuario.tipo,usuario.id)
     if not usuario:
-        return HttpResponse("Esse usuario não não está logado")
+        return redirect('/auth/login/?status=1')
     elif(usuario.tipo==tipo):
         usuarios=Usuario.objects.all()
         return render(request, "listaUsuarios.html", {'usuarios':usuarios})
     else:
-        return HttpResponse("Esse usuario "+str(usuario)+" não é Administrador - "+"<br>"+"tipo_admin="+str(tipo.id)+"<br>tipo_usuario="+str(usuario.tipo))
+        return redirect(f'/equipamentos/?status=50')
+
+def exibirUsuario(request):
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo=Tipo.objects.get(tipo="admin")
+    user=Usuario.objects.get(id=request.GET.get('usuario'))
+    print(usuario.nome,usuario.tipo,usuario.id)
+    if not usuario:
+        return redirect('/auth/login/?status=1')
+    elif(usuario.tipo==tipo):
+        return render(request, "exibirUsuario.html", {'usuario':user})
+    else:
+        return redirect(f'/equipamentos/?status=50')
+
+
+def editarUsuario(request):
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo=Tipo.objects.get(tipo="admin")
+    
+    if not usuario:
+        return redirect('/auth/login/?status=1')
+    elif(usuario.tipo==tipo):
+        if request.method=="GET":
+            user=Usuario.objects.get(id=request.GET.get('usuario'))
+            print(user)
+            form=EditaUsuarioForm(instance=user)
+            return render(request, "editarUsuario.html", {'form':form})
+        elif request.method=="POST":
+            details = EditaUsuarioForm(request.POST)
+            if details.is_valid():
+                user=Usuario.objects.get(id=details.cleaned_data['id'])
+                listaCampos=['nome','chapa','email','tipo','primeiro_acesso']
+                alteracao=False
+                for campo in listaCampos:
+                    alterado=Log.foiAlterado(transacao='us',objeto=user,atributo=campo,valor=details.cleaned_data[campo],usuario=usuario) 
+                    if alterado:
+                        setattr(user,campo,details.cleaned_data[campo])
+                    alteracao|=alterado
+                if alteracao:
+                    user.save() 
+            usuarios=Usuario.objects.all()
+            return render(request, "listaUsuarios.html", {'usuarios':usuarios})
+        else:
+            return redirect(f'/equipamentos/?status=99')
+    else:
+        return redirect(f'/equipamentos/?status=50')
+    
+def excluirUsuario(request):
+    return HttpResponse("ExcluirUsuario")
