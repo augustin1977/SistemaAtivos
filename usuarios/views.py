@@ -156,3 +156,15 @@ def gera_senha(tamanho):
     caracteres = string.ascii_letters + string.digits + string.punctuation + string.ascii_letters
     senha = ''.join(random.choice(caracteres) for i in range(tamanho))
     return senha
+
+def listarUsuarios(request):
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo=Tipo.objects.get(tipo="admin")
+    print(usuario.nome,usuario.tipo,usuario.id)
+    if not usuario:
+        return HttpResponse("Esse usuario não não está logado")
+    elif(usuario.tipo==tipo):
+        usuarios=Usuario.objects.all()
+        return render(request, "listaUsuarios.html", {'usuarios':usuarios})
+    else:
+        return HttpResponse("Esse usuario "+str(usuario)+" não é Administrador - "+"<br>"+"tipo_admin="+str(tipo.id)+"<br>tipo_usuario="+str(usuario.tipo))

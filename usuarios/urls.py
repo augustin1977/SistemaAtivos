@@ -13,4 +13,5 @@ urlpatterns = [
     path("sair/",views.sair, name="sair"),
     path("",views.login, name="vazio"),
     path("esqueci_senha/",views.esqueci_senha, name="esqueci_senha"),
+    path("listarUsuarios/",views.listarUsuarios, name="listarUsuarios"),
 ]
