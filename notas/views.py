@@ -35,6 +35,7 @@ def cadastrarDisciplina(request):
             data=form.cleaned_data
             disciplina=Disciplina(disciplina=data['disciplina'])
             disciplina.save()
+            Log.cadastramento(usuario=Usuario.objects.get(id=request.session.get('usuario')),transacao='dc',objeto=disciplina)
             form=cadastraDisciplinaForm
                         
             return render(request, "cadastrarDisciplina.html", {'form':form,'status':1})
@@ -53,8 +54,9 @@ def cadastrarModo_Falha(request):
         form=CadastraModo_FalhaForm(details)
         if form.is_valid():
             data=form.cleaned_data
-            disciplina=Modo_Falha(disciplina=data['disciplina'],modo_falha=data['modo_falha'])
-            disciplina.save()
+            modofalha=Modo_Falha(disciplina=data['disciplina'],modo_falha=data['modo_falha'])
+            modofalha.save()
+            Log.cadastramento(usuario=Usuario.objects.get(id=request.session.get('usuario')),transacao='mf',objeto=modofalha)
             form=CadastraModo_FalhaForm
                         
             return render(request, "cadastrarModo_Falha.html", {'form':form,'status':1})
@@ -73,8 +75,9 @@ def cadastrarModo_FalhaEquipamento(request):
         form=CadastraModo_falha_equipamentoForm(details)
         if form.is_valid():
             data=form.cleaned_data
-            disciplina=Modo_falha_equipamento(equipamento=data['equipamento'],modo_falha=data['modo_falha'])
-            disciplina.save()
+            modofalhaequipamento=Modo_falha_equipamento(equipamento=data['equipamento'],modo_falha=data['modo_falha'])
+            modofalhaequipamento.save()
+            Log.cadastramento(usuario=Usuario.objects.get(id=request.session.get('usuario')),transacao='me',objeto=modofalhaequipamento)
             form=CadastraModo_falha_equipamentoForm
                         
             return render(request, "cadastrarModoFalhaEquipamento.html", {'form':form,'status':1})
@@ -93,7 +96,6 @@ def cadastrarNota(request):
         details = (request.POST)
         form=CadastraNota_equipamentoForm(details)
         if form.is_valid():
-            print('valido')
             data=form.cleaned_data
             
             nota=Nota_equipamento(
@@ -109,7 +111,9 @@ def cadastrarNota(request):
                 usuario=usuario
             )
             nota.save()
+            Log.cadastramento(usuario=Usuario.objects.get(id=request.session.get('usuario')),transacao='ne',objeto=nota,nota_equipamento=nota)
             form=CadastraNota_equipamentoForm
+            
             return render(request, "cadastrarNota.html", {'form':form,'status':1})
         else:
             print('invalido')
@@ -175,7 +179,7 @@ def editarModoFalhaEquipamento(request):
         return  render(request, "editarModoFalhaEquipamento.html",
                         {'modosFalha':modosFalha,'perguntas':perguntas,'equipamento':equipamento,'status':0})
     
-    print(request.POST.get('id'))
+
     equipamento=Equipamento.objects.get(id=request.POST.get('id')) 
     modosFalha=Modo_falha_equipamento.objects.filter(equipamento=equipamento)
     
@@ -225,23 +229,21 @@ def editarNotas(request):
         form=CadastraNota_equipamentoForm(details)
         if form.is_valid():
             print('valido')
-            data=form.cleaned_data
-            print(data)
             id=request.POST.get('id')
-            print(id)
+
             nota= Nota_equipamento.objects.get(id=id)
-            print(nota)
-            nota.titulo=data['titulo']
-            nota.descricao=data['descricao']
-            nota.equipamento=data['equipamento']
-            nota.modo_Falha_equipamento=data['modo_Falha_equipamento']
-            nota.data_cadastro=data['data_cadastro']
-            nota.data_ocorrencia=data['data_ocorrencia']
-            nota.falha=data['falha']
-            nota.calibracao=data['calibracao']
-            nota.lubrificao=data['lubrificao']
-            nota.usuario=usuario
-            nota.save()
+            listaCampos=['titulo','descricao','equipamento','modo_Falha_equipamento','data_cadastro','data_ocorrencia','falha',
+                         'calibracao','lubrificao']
+            alteracao=False
+            for campo in listaCampos:
+                alterado=Log.foiAlterado(transacao='me',objeto=nota,atributo=campo,valor=form.cleaned_data[campo],usuario=usuario,nota_equipamento=nota) 
+                if alterado:
+                    setattr(nota,campo,form.cleaned_data[campo])
+                alteracao|=alterado
+            if alteracao:
+                nota.usuario=usuario
+                nota.save() 
+
             form=CadastraNota_equipamentoForm
             return redirect("/notas/exibirNotas")
         else:
