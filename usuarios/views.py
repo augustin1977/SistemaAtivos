@@ -181,7 +181,6 @@ def exibirUsuario(request):
     else:
         return redirect(f'/equipamentos/?status=50')
 
-
 def editarUsuario(request):
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     tipo=Tipo.objects.get(tipo="admin")
