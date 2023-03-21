@@ -89,7 +89,7 @@ class CadastraNota_equipamentoForm(ModelForm):
 class exibirDetalheNotaForm(ModelForm):
    class Meta:
         model = Nota_equipamento
-        fields = "_all_"
+        fields = "__all__"
         widgets = {
             'titulo': TextInput(attrs={'class': 'form-control'}),
             'descricao': Textarea(attrs={'class': 'form-control'}),
@@ -99,7 +99,7 @@ class exibirDetalheNotaForm(ModelForm):
             'data_ocorrencia': DateInput(attrs={'class': 'form-control'}),
             'falha': CheckboxInput(attrs={'class': 'form-control'}),
             'calibracao': CheckboxInput(attrs={'class': 'form-control'}),
-            'lubrificao': CheckboxInput(attrs={'class': 'form-control'}),}
+            'lubrificao': CheckboxInput(attrs={'class': 'form-control'})}
         
 
 
