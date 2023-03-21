@@ -71,7 +71,7 @@ def valida_cadastro(request):
     tipo=Tipo.objects.get(tipo="user")
     primeiro_acesso=True
     ativo=True
-    usuario= Usuario.objects.filter(email=email)
+    usuario= Usuario.objects.filter(email=email,ativo=True)
     
     if len(usuario)>0:
         return redirect('/auth/cadastrar/?status=1') # retorna erro de usuario ja existente
@@ -105,7 +105,7 @@ def validar_login(request):
     senha=request.POST.get('senha')
     #primeiro_acesso=False
     senha=sha256(senha.encode()).hexdigest()
-    usuario=Usuario.objects.filter(email=email).filter(senha=senha)
+    usuario=Usuario.objects.filter(email=email).filter(senha=senha).filter(ativo=True)
     
     if len(usuario)==0:
         return redirect('/auth/login/?status=1')
@@ -125,7 +125,7 @@ def esqueci_senha(request):
         return render(request, "esqueci_senha.html", {'status':status})
     else:
         email= request.POST.get('email')
-        usuario=Usuario.objects.filter(email=email)
+        usuario=Usuario.objects.filter(email=email,ativo=True)
         if len(usuario)==0:
             return redirect('/auth/esqueci_senha/?status=1') # Usuario não cadastrado
         novasenha=gera_senha(12)
