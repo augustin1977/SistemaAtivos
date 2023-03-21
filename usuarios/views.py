@@ -70,6 +70,7 @@ def valida_cadastro(request):
     chapa=request.POST.get("chapa")
     tipo=Tipo.objects.get(tipo="user")
     primeiro_acesso=True
+    ativo=True
     usuario= Usuario.objects.filter(email=email)
     
     if len(usuario)>0:
@@ -86,7 +87,7 @@ def valida_cadastro(request):
     try:    
         senhacod= sha256(senha.encode()).hexdigest() # recuperando senha e codificando num hash sha256
         print("cria Senha")
-        usuario=Usuario(nome=nome, senha=senhacod, email=email, tipo=tipo, chapa=chapa, primeiro_acesso=primeiro_acesso) # cria um objeto usuário com as informações recebidas do fomulario
+        usuario=Usuario(nome=nome, senha=senhacod, email=email, tipo=tipo, chapa=chapa, primeiro_acesso=primeiro_acesso,ativo=ativo) # cria um objeto usuário com as informações recebidas do fomulario
         log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'O usuario {usuario} se cadastrou no sistema')
         send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'ericaugustin@ipt.br']) 
         usuario.save() # salva o objeto usuário no banco de dados
@@ -110,7 +111,7 @@ def validar_login(request):
         return redirect('/auth/login/?status=1')
     else:
         request.session['usuario']= usuario[0].id
-        #print(f"{usuario[0].nome} logou no sistema")
+        print(f"{usuario[0].nome} logou no sistema")
         log=Log(transacao='us',movimento='lo',usuario=Usuario.objects.get(id=usuario[0].id),alteracao=f'{usuario[0]} logou no sistema')
         log.save()
         if usuario[0].primeiro_acesso==True:
@@ -164,7 +165,7 @@ def listarUsuarios(request):
     if not usuario:
         return redirect('/auth/login/?status=1')
     elif(usuario.tipo==tipo):
-        usuarios=Usuario.objects.all()
+        usuarios=Usuario.objects.filter(ativo=True)
         return render(request, "listaUsuarios.html", {'usuarios':usuarios})
     else:
         return redirect(f'/equipamentos/?status=50')
@@ -206,7 +207,7 @@ def editarUsuario(request):
                     alteracao|=alterado
                 if alteracao:
                     user.save() 
-            usuarios=Usuario.objects.all()
+            usuarios=Usuario.objects.filter(ativo=True)
             return render(request, "listaUsuarios.html", {'usuarios':usuarios})
         else:
             return redirect(f'/equipamentos/?status=99')

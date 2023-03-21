@@ -14,5 +14,6 @@ class Usuario(models.Model):
     senha=models.CharField(max_length=64)
     tipo = models.ForeignKey(Tipo,on_delete=models.DO_NOTHING)
     primeiro_acesso=models.BooleanField()
+    ativo=models.BooleanField()
     def __str__(self):
         return self.nome

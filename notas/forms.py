@@ -86,3 +86,35 @@ class CadastraNota_equipamentoForm(ModelForm):
                equipamento=Equipamento.objects.get(id=cd['equipamento'].id)
                equipamento.data_ultima_calibracao=utc.localize( datetime.datetime.now())
                equipamento.save()   
+class exibirDetalheNotaForm(ModelForm):
+   class Meta:
+        model = Nota_equipamento
+        fields = "_all_"
+        widgets = {
+            'titulo': TextInput(attrs={'class': 'form-control'}),
+            'descricao': Textarea(attrs={'class': 'form-control'}),
+            'equipamento':TextInput(attrs={'class': 'form-control'}),
+            'material': TextInput(attrs={'class': 'form-control'}),
+            'modo_Falha_equipamento': TextInput(attrs={'class': 'form-control'}),
+            'data_ocorrencia': DateInput(attrs={'class': 'form-control'}),
+            'falha': CheckboxInput(attrs={'class': 'form-control'}),
+            'calibracao': CheckboxInput(attrs={'class': 'form-control'}),
+            'lubrificao': CheckboxInput(attrs={'class': 'form-control'}),}
+        
+
+
+criar formulario em django para exibir dados do seguinte model:
+class Nota_equipamento(models.Model):
+    titulo=models.CharField(max_length=50)
+    descricao=models.TextField()
+    equipamento=models.ForeignKey( Equipamento, on_delete=models.DO_NOTHING)
+    modo_Falha_equipamento=models.ForeignKey(Modo_falha_equipamento, on_delete=models.DO_NOTHING)
+    material=models.ManyToManyField(Nota_material, blank=True)
+    data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False)
+    data_ocorrencia=models.DateField(auto_now=False, auto_now_add=False)
+    falha=models.BooleanField()
+    calibracao=models.BooleanField()
+    lubrificao=models.BooleanField()
+    usuario=models.ForeignKey( Usuario ,on_delete=models.SET_NULL,null=True, blank=True)
+
+
