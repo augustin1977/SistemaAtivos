@@ -110,7 +110,7 @@ def validar_login(request):
         return redirect('/auth/login/?status=1')
     else:
         request.session['usuario']= usuario[0].id
-        print(f"{usuario[0].nome} logou no sistema")
+        #print(f"{usuario[0].nome} logou no sistema")
         log=Log(transacao='us',movimento='lo',usuario=Usuario.objects.get(id=usuario[0].id),alteracao=f'{usuario[0]} logou no sistema')
         log.save()
         if usuario[0].primeiro_acesso==True:
