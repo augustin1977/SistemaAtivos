@@ -103,18 +103,5 @@ class exibirDetalheNotaForm(ModelForm):
         
 
 
-criar formulario em django para exibir dados do seguinte model:
-class Nota_equipamento(models.Model):
-    titulo=models.CharField(max_length=50)
-    descricao=models.TextField()
-    equipamento=models.ForeignKey( Equipamento, on_delete=models.DO_NOTHING)
-    modo_Falha_equipamento=models.ForeignKey(Modo_falha_equipamento, on_delete=models.DO_NOTHING)
-    material=models.ManyToManyField(Nota_material, blank=True)
-    data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False)
-    data_ocorrencia=models.DateField(auto_now=False, auto_now_add=False)
-    falha=models.BooleanField()
-    calibracao=models.BooleanField()
-    lubrificao=models.BooleanField()
-    usuario=models.ForeignKey( Usuario ,on_delete=models.SET_NULL,null=True, blank=True)
 
 
