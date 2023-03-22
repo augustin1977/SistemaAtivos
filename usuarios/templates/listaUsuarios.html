@@ -8,7 +8,7 @@
 <div class ='container'>
   <div class='row'>
       <div class='col-md-3'>
-        <br>
+        <br><br><br>
         <h2 class="sticky-top">  Lista Usuarios</h2>
       </div>
       <div class="col-md">
@@ -35,7 +35,7 @@
             <td>{{usuario.primeiro_acesso}}</td>
             <td><a href="{% url 'exibirUsuario' %}?usuario={{ usuario.id }}"><i class="bi bi-file-text"></i></a></td>
             <td><a href="{% url 'editarUsuario' %}?usuario={{ usuario.id }}"><i class="bi bi-pencil-square"></i></a></td>
-            <td><a href=""><i class="bi bi-trash"></i></a></td>
+            <td><a href="{% url 'excluirUsuario' %}?usuario={{ usuario.id }}"><i class="bi bi-trash"></i></a></td>
           </tr>
           {% endfor %}
         </tbody>

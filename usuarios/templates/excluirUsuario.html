@@ -7,11 +7,11 @@
     <div class='row'>
     <div class='col-md-3'></div>
     <div class="col-md">
-    <h1>  Exibir Usuário {{ usuario.nome}} </h1>
+    <h1>  Excluir usuario : {{ usuario.nome}} </h1>
     <hr>
-    <form> {% csrf_token %}
+    <form method ="POST" action="{% url 'excluirUsuario' %}"> {% csrf_token %}
+        <input name="id" class="form-control" type="hidden"  value="{{ usuario.id }}" readonly>
         <label> nome</label>
-        
         <input name="nome" class="form-control" type="text" placeholder="Nome" value="{{ usuario.nome}}" readonly>
         <br> 
         <label> Numero crachá</label>
@@ -28,6 +28,7 @@
         <input name="email" class="form-control" name="primeiro_acesso" type="checkbox" placeholder="True" value="primeiroAcesso"  disabled> 
         {% endif %}
         <br>
+        <input class="btn btn-danger btn-mg"type="submit" value="Excluir">
         <a href="{% url 'listarUsuarios' %}"class="btn btn-warning btn-mg"> Voltar </a>
     </form>
     </hr>

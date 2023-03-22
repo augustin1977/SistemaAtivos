@@ -215,4 +215,20 @@ def editarUsuario(request):
         return redirect(f'/equipamentos/?status=50')
     
 def excluirUsuario(request):
-    return HttpResponse("ExcluirUsuario")
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo=Tipo.objects.get(tipo="admin")
+    if not usuario:
+        return redirect('/auth/login/?status=1')
+    elif(usuario.tipo==tipo):
+        if request.method=="GET":
+            user=Usuario.objects.get(id=request.GET.get("usuario"))
+            return render(request, "excluirUsuario.html", {'usuario':user})
+        elif request.method=="POST":
+            user=Usuario.objects.get(id=request.POST.get('id'))
+            user.email="none@none.com"
+            user.ativo=False
+            user.save()
+            
+            return redirect('/listarUsuarios/')
+
+    return HttpResponse("funcionalidade não implementada")
