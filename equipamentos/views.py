@@ -13,6 +13,7 @@ import os,csv
 from log.models import Log
 from .forms import *
 import equipamentos.funcoesAuxiliares as funcoesAuxiliares
+from django.db.models import Q
 def home(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -575,3 +576,20 @@ def download_arquivo(request):
         filename=nome_arquivo.split("/")
         response['Content-Disposition'] = f'attachment; filename="{filename[1]}"'
     return response   
+
+
+def excluirTipo(request):
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo1=Q(tipo="especialuser")
+    tipo2=Q(tipo="superuser")
+    tipo3=Q(tipo="admin")
+    tipo=Tipo.objects.filter(tipo1 | tipo2| tipo3)
+    if not usuario:
+        return redirect('/auth/login/?status=1')
+    elif(usuario.tipo in tipo):
+        
+        return HttpResponse(str(usuario.nome)+"-"+str(usuario.tipo))
+           
+
+    return HttpResponse("funcionalidade não implementada")
+    

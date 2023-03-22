@@ -25,5 +25,6 @@ urlpatterns = [path("",views.home, name="home"),
                path('download_arquivo/',views.download_arquivo,name="download_arquivo"),
                path('excluirEquipamento/',views.excluirEquipamento,name="excluirEquipamento"),
                path('excluiArquivo/',views.excluiArquivo,name="excluiArquivo"),
+               path('excluirTipo/',views.excluirTipo,name="excluirTipo"),
 ]
 

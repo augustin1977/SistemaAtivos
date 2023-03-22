@@ -5,6 +5,10 @@
 {% include 'menufornecedor.html' %} 
 {% endblock %}
 {% block 'conteudo'%} 
+<div class="text-center">
+  <br><br>
+  <h1>  Cadastro Fornecedores  </h1>
+  </div>
 <div class ='container'>
   {% if status == 0 %}
   <div class="alert alert-success" role="alert">
@@ -13,12 +17,12 @@
   {% endif %}
     {% if status == 1 %}
     <div class="alert alert-danger" role="alert">
-        Forncedor ja cadastrado
+        Fornecedor já cadastrado
       </div>
     {% endif %}
     {% if status == 2 %}
     <div class="alert alert-danger" role="alert">
-        Campo obrigatório com valor nulo, varifique o formulário
+        Campo obrigatório com valor nulo, verifique o formulário
       </div>
     {% endif %}
     {% if status ==  3 %}
@@ -26,16 +30,15 @@
         Email com erro de digitação:
       </div>
     {% endif %}
-
     {% if status ==  99 %}
     <div class="alert alert-danger" role="alert">
-        Erro Geral no cadastro de Forncedores
+        Erro Geral no cadastro de Fornecedores
       </div>
     {% endif %}
+   
     <div class='row'>
     <div class='col-md-3'></div>
-    <div class="col-md">
-    <h1>  Cadastro Fornecedores</h1>
+    <div class="col-md">   
     <hr>
     <form method ="POST" action="{% url 'cadastrarFornecedor' %}"> {% csrf_token %}
       {% if status == 1  or status == 2 %}

@@ -1,23 +1,26 @@
 {% extends 'base.html'%}
 {% block 'titulo'%} Gestão Ativos MA  {% endblock %}
 {% block 'menu' %} 
-{% include 'menuequipamento.html' %} 
+{% include 'menutipo.html' %} 
 {% endblock %}
 {% block 'conteudo'%} 
 <div class="text-center">
     <br><br>
-    <h1>  Editar Equipamento </h1>
+    <h1>  Excluir Tipo de Equipamento </h1>
     </div>
 <div class ='container'>
     <div class='row'>
         <div class='col-md-3'></div>
         <div class="col-md">
-        <hr>
+            <hr>
+            
             {% if status == 1 %}
-                <div class="alert alert-success" role="alert">Fomulario Editado com sucesso</div>    
+                <div class="alert alert-success" role="alert">Fomulario cadatrados com sucesso</div>    
             {% endif %}
-            <form method ="POST" action="{% url 'editarEquipamento' %}"> {% csrf_token %}
-                {{ form }}
+            <form method ="POST" action="{% url 'editarTipo' %}"> {% csrf_token %}
+
+                   {{ form }}<br>
+
         <button class="btn btn-primary">Enviar</button>
             </form>
             </hr>
