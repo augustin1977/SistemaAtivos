@@ -228,6 +228,8 @@ def excluirUsuario(request):
             user.email="none@none.com"
             user.ativo=False
             user.save()
+            Log.exclusao(usuario=usuario,transacao='us')
+            
             
             return redirect('/listarUsuarios/')
 
