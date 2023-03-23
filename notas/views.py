@@ -232,7 +232,7 @@ def editarNotas(request):
             id=request.POST.get('id')
 
             nota= Nota_equipamento.objects.get(id=id)
-            listaCampos=['titulo','descricao','equipamento','modo_Falha_equipamento','data_cadastro','data_ocorrencia','falha',
+            listaCampos=['titulo','descricao','equipamento','modo_Falha_equipamento','data_ocorrencia','falha',
                          'calibracao','lubrificao']
             alteracao=False
             for campo in listaCampos:
