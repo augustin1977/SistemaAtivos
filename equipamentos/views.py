@@ -579,14 +579,15 @@ def download_arquivo(request):
 
 
 def excluirTipo(request):
+    
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=1')
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     tipo1=Q(tipo="especialuser")
     tipo2=Q(tipo="superuser")
     tipo3=Q(tipo="admin")
     tipo=Tipo.objects.filter(tipo1 | tipo2| tipo3)
-    if not usuario:
-        return redirect('/auth/login/?status=1')
-    elif(usuario.tipo in tipo):
+    if(usuario.tipo in tipo):
         if request.method=="GET":
             tipo_eq=request.GET.get("id")
             tipo_equipamento=Tipo_equipamento.objects.get(id=tipo_eq)
@@ -611,4 +612,28 @@ def excluirTipo(request):
            
 
     return HttpResponse("funcionalidade não implementada")
-    
+
+def excluirLocal(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=1')
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo1=Q(tipo="especialuser")
+    tipo2=Q(tipo="superuser")
+    tipo3=Q(tipo="admin")
+    tipo=Tipo.objects.filter(tipo1 | tipo2| tipo3)
+    if(usuario.tipo in tipo):
+        if request.method=="GET":
+            loc=request.GET.get("id")
+            local=Local_instalacao.objects.get(id=loc)
+            equipamentos=Equipamento.objects.filter(local=local)
+            return render (request,'excluirLocal.html',{'n':len(equipamentos),'equipamentos':equipamentos,'local':local})
+        elif request.method=="POST":
+            loc=request.POST.get("id")
+            local=Tipo_equipamento.objects.get(id=loc)
+            Log.exclusao(usuario=usuario,transacao="le",objeto=local)    
+            local.delete()
+            return redirect('/equipamentos/listarLocais')
+        
+           
+
+    return HttpResponse("funcionalidade não implementada")

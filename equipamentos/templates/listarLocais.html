@@ -55,6 +55,7 @@
           <td>{{local.prateleira}}</td>
           <td>{{local.apelido_local}}</td>
           <td><a href="{% url 'editarLocal' %}?id={{ local.id }}"><i class="bi bi-pencil-square"></i></a></td>
+          <td><a href="{% url 'excluirLocal' %}?id={{ local.id }}"><i class="bi bi-trash""></i></a></td> 
                
         </tr>
         {% endfor %}

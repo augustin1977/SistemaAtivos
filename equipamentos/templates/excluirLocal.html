@@ -1,0 +1,72 @@
+{% extends 'base.html'%}
+{% block 'titulo'%} Gestão Ativos MA  {% endblock %}
+{% block 'menu' %} 
+{% include 'menutipo.html' %} 
+{% endblock %}
+{% block 'conteudo'%} 
+<div class="text-center">
+    <br><br>
+    <h1>  Excluir Local Instalação </h1>
+    </div>
+<div class ='container'>
+    <div class='row'>
+        <div class='col-md-3'></div>
+        <div class="col-md">
+            <hr>
+            <form method ="POST" action="{% url 'excluirTipo' %}"> {% csrf_token %}
+                {% if n >= 1 %}
+                <h2> Equipamentos que estão neste local Instalação:</h2>
+                <table class="table table-hover" >
+                    <thead class="thead-light" > 
+                        <tr>
+                            <th scope="col">Equipamentos</th>
+                            <th scope="col">Código</th>
+                            <th scope="col">Modelo</th>
+                            <th scope="col">Local Instalação</th>
+                        </tr>
+                    </thead>
+                    <tbody style="overflow: auto;" >
+                        {% for equipamento in equipamentos %}
+                        <tr>
+            
+                        <th scope="row">{{equipamento.nome_equipamento}}</th>
+                        <td>{{equipamento.codigo}}</td>
+                        <td>{{equipamento.modelo}}</td>
+                        <td>{{equipamento.local}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                <h3> Não é possivel excluir pois ha equipamentos instalados neste local, por favor remova os equipamento antes da exclusão </h3>
+                {% endif %}
+                
+                <input TYPE="hidden" NAME="id" VALUE="{{tipo.id}}">
+                <label> Laboratório</label>
+                <input name="laboratorio" class="form-control" type="text" value="{{local.laboratorio}}" readonly>
+                <br> 
+                <label> Predio</label>
+                <input name="predio" class="form-control" type="text" value="{{local.predio}}" readonly> 
+                <br>    
+                <label> Piso</label>
+                <input name="descricao" class="form-control" type="text" value='{{local.piso}}' readonly >
+                <br>
+                <label> Sala</label>
+                <input name="sala" class="form-control" type="text" value='{{local.sala}}' readonly >
+                <br>
+                <label> Armário</label>
+                <input name="armario" class="form-control" type="text" value='{{local.armario}}' readonly >
+                <br>
+                <label> Prateleira</label>
+                <input name="prateleira" class="form-control" type="text" value='{{local.prateleira}}' readonly >
+                <br>
+                {% if n == 0 %}
+            <button class="btn btn-danger">excluir</button>
+            {% endif %}
+        <a href="{% url 'listarTipo' %}"class="btn btn-warning btn-mg"> cancelar </a>
+            </form>
+            </hr>
+</div>
+<div class='col-md-3'></div>
+</div>   
+</div>
+{% endblock %}
