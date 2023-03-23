@@ -234,4 +234,4 @@ def excluirUsuario(request):
             Log.exclusao(usuario=usuario,transacao='us')            
             return redirect('/listarUsuarios/')
 
-    return HttpResponse("funcionalidade não implementada")
+    return  redirect(f'/equipamentos/?status=50')

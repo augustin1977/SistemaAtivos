@@ -86,6 +86,7 @@ class CadastraNota_equipamentoForm(ModelForm):
                equipamento=Equipamento.objects.get(id=cd['equipamento'].id)
                equipamento.data_ultima_calibracao=utc.localize( datetime.datetime.now())
                equipamento.save()   
+
 class exibirDetalheNotaForm(ModelForm):
    class Meta:
         model = Nota_equipamento
