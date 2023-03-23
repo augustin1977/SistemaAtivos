@@ -27,6 +27,7 @@ urlpatterns = [path("",views.home, name="home"),
                path('excluiArquivo/',views.excluiArquivo,name="excluiArquivo"),
                path('excluirTipo/',views.excluirTipo,name="excluirTipo"),
                path('excluirLocal/',views.excluirLocal,name="excluirLocal"),
+               path('get_equipamentos/', views.get_equipamentos, name='get_equipamentos'),
 ]
 
 

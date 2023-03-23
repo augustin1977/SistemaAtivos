@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
 from django.contrib.staticfiles.views import serve
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import Usuario,Tipo,Equipamento,Material_consumo,Media,Fabricante
 from django.shortcuts import redirect 
 from cadastro_equipamentos import settings
 from django.http import HttpResponse, Http404
 from os import path
+from django.core import serializers
 import urllib.request
 from cadastro_equipamentos.settings import BASE_DIR,MEDIA_ROOT,TIME_ZONE
 import os,csv
@@ -14,6 +15,7 @@ from log.models import Log
 from .forms import *
 import equipamentos.funcoesAuxiliares as funcoesAuxiliares
 from django.db.models import Q
+import json
 def home(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -35,6 +37,25 @@ def lista_equipamentos(request):
     equipamentos=Equipamento.objects.filter(ativo=True)
     return render(request, "exibirEquipamentos.html", {'equipamentos':equipamentos})
 
+
+def get_equipamentos(request):
+    nome_equipamento = request.GET.get('nome_equipamento', '')
+    equipamentos = []
+
+    if len(nome_equipamento) > 1:
+        q1=Q(nome_equipamento__icontains=nome_equipamento)
+        q2=Q(codigo__icontains=nome_equipamento)
+        q3=Q(ativo=True)
+        filtro=(q1|q2)&q3
+        equipamentos = Equipamento.objects.filter(filtro)
+    else:
+        equipamentos = Equipamento.objects.filter(ativo=True)
+    equipamentos_json = list(equipamentos.values('id','nome_equipamento', 'modelo','tipo_equipamento','local'))
+    print(equipamentos_json)
+    equipamentos_json = json.dumps(equipamentos_json)
+    #equipamentos_json = serializers.serialize('json', equipamentos, fields=('id','nome_equipamento', 'modelo','tipo_equipamento','local'))
+    return HttpResponse(equipamentos_json, content_type='application/json')
+    
 def exibirDetalheEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
