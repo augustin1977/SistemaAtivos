@@ -50,9 +50,9 @@ def get_equipamentos(request):
         equipamentos = Equipamento.objects.filter(filtro)
     else:
         equipamentos = Equipamento.objects.filter(ativo=True)
-    equipamentos_json = list(equipamentos.values('id','nome_equipamento', 'modelo','tipo_equipamento','local'))
-    print(equipamentos_json)
-    equipamentos_json = json.dumps(equipamentos_json)
+    #equipamentos_json = list(equipamentos.values('id','nome_equipamento', 'modelo','tipo_equipamento__nome_tipo','local'))
+    equipamentos_json = json.dumps([equipamento.to_dic() for equipamento in equipamentos],ensure_ascii=False)
+    #equipamentos_json = json.dumps(equipamentos_json,ensure_ascii=False)
     #equipamentos_json = serializers.serialize('json', equipamentos, fields=('id','nome_equipamento', 'modelo','tipo_equipamento','local'))
     return HttpResponse(equipamentos_json, content_type='application/json')
     

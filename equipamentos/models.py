@@ -107,7 +107,9 @@ class Equipamento(models.Model):
          'responsavel':self.responsavel,'potencia_eletrica':self.potencia_eletrica,'nacionalidade':self.nacionalidade,'tensao_eletrica':self.tensao_eletrica,
          'data_ultima_atualizacao':self.data_ultima_atualizacao,'projeto_compra':self.projeto_compra,'especificacao':self.especificacao,
          'outros_dados':self.outros_dados}
-
+    def to_dic(self):
+        return {"id":self.id,"nome_equipamento":self.nome_equipamento,"modelo":self.modelo,"local":str(self.local),
+            "tipo_equipamento":str(self.tipo_equipamento),"codigo":self.codigo}
     class Meta:
         ordering = ['nome_equipamento']
     def __str__(self):
