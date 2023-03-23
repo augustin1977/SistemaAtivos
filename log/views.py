@@ -27,9 +27,14 @@ def listarLog(request):
     log=Log.objects.all().order_by('-data_cadastro')[:2000]
     lognovo=[]
     for i,item in enumerate(log):
-        lognovo.append({'id':i+1,'transacao':lista_transacoes[item.transacao],'movimento':lista_movimentos[item.movimento],
+        try:
+            lognovo.append({'id':i+1,'transacao':lista_transacoes[item.transacao],'movimento':lista_movimentos[item.movimento],
             'data_cadastro':item.data_cadastro,'usuario':item.usuario,'equipamento':item.equipamento,
             'nota_equipamento':item.nota_equipamento,'alteracao':item.alteracao})
+        except:
+            lognovo.append({'id':i+1,'transacao':"Erro",'movimento':"Erro",
+            'data_cadastro':item.data_cadastro,'usuario':item.usuario,'equipamento':"Erro",
+            'nota_equipamento':"Erro",'alteracao':item.alteracao})
     return render(request, "relatorioLog.html", {'lista_log':lognovo}) 
 
 def baixarRelatorioLog(request):

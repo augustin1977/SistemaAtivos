@@ -631,7 +631,7 @@ def excluirLocal(request):
             loc=request.POST.get("id")
             print(loc)
             local=Local_instalacao.objects.get(id=loc)
-            Log.exclusao(usuario=usuario,transacao="le",objeto=local)    
+            Log.exclusao(usuario=usuario,transacao="li",objeto=local)    
             local.delete()
             return redirect('/equipamentos/listarLocais')
         
