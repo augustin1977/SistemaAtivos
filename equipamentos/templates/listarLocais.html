@@ -39,6 +39,7 @@
                     <th scope="col">Prateleira </th>
                     <th scope="col">Apelido </th>
                     <th scope="col">Editar Detalhes </th> 
+                    <th scope="col">excluir </th> 
                   </tr>
                 </thead>
                 <tbody style="overflow-y: scroll;">
@@ -55,7 +56,7 @@
           <td>{{local.prateleira}}</td>
           <td>{{local.apelido_local}}</td>
           <td><a href="{% url 'editarLocal' %}?id={{ local.id }}"><i class="bi bi-pencil-square"></i></a></td>
-          <td><a href="{% url 'excluirLocal' %}?id={{ local.id }}"><i class="bi bi-trash""></i></a></td> 
+          <td><a href="{% url 'excluirLocal' %}?id={{ local.id }}"><i class="bi bi-trash"></i></a></td> 
                
         </tr>
         {% endfor %}
