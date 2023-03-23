@@ -160,11 +160,12 @@ def gera_senha(tamanho):
     return senha
 
 def listarUsuarios(request):
+    
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=1')
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     tipo=Tipo.objects.get(tipo="admin")
-    if not usuario:
-        return redirect('/auth/login/?status=1')
-    elif(usuario.tipo==tipo):
+    if(usuario.tipo==tipo):
         usuarios=Usuario.objects.filter(ativo=True)
         return render(request, "listaUsuarios.html", {'usuarios':usuarios})
     else:
@@ -183,12 +184,13 @@ def exibirUsuario(request):
         return redirect(f'/equipamentos/?status=50')
 
 def editarUsuario(request):
+    
+    
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=1')
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     tipo=Tipo.objects.get(tipo="admin")
-    
-    if not usuario:
-        return redirect('/auth/login/?status=1')
-    elif(usuario.tipo==tipo):
+    if(usuario.tipo==tipo):
         if request.method=="GET":
             user=Usuario.objects.get(id=request.GET.get('usuario'))
             print(user)
@@ -215,11 +217,12 @@ def editarUsuario(request):
         return redirect(f'/equipamentos/?status=50')
     
 def excluirUsuario(request):
+
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=1')
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     tipo=Tipo.objects.get(tipo="admin")
-    if not usuario:
-        return redirect('/auth/login/?status=1')
-    elif(usuario.tipo==tipo):
+    if(usuario.tipo==tipo):
         if request.method=="GET":
             user=Usuario.objects.get(id=request.GET.get("usuario"))
             return render(request, "excluirUsuario.html", {'usuario':user})
