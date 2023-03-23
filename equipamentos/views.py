@@ -587,8 +587,27 @@ def excluirTipo(request):
     if not usuario:
         return redirect('/auth/login/?status=1')
     elif(usuario.tipo in tipo):
+        if request.method=="GET":
+            tipo_eq=request.GET.get("id")
+            tipo_equipamento=Tipo_equipamento.objects.get(id=tipo_eq)
+            equipamentos=Equipamento.objects.filter(tipo_equipamento=tipo_equipamento)
+            return render (request,'excluirTipo.html',{'n':len(equipamentos),'equipamentos':equipamentos,'tipo':tipo_equipamento})
+        elif request.method=="POST":
+            tipo_eq=request.POST.get("id")
+            tipo_equipamento=Tipo_equipamento.objects.get(id=tipo_eq)
+            equipamentos=Equipamento.objects.filter(tipo_equipamento=tipo_equipamento)
+            outros=Tipo_equipamento.objects.get(nome_tipo="Outros")
+            for equipamento in equipamentos:
+                print(equipamento)
+                Log.foiAlterado(transacao='eq',objeto=equipamento,atributo="tipo_equipamento",equipamento=equipamento,
+                                 valor=outros,usuario=usuario) 
+                equipamento.tipo_equipamento=outros
+                equipamento.save()
+            Log.exclusao(usuario=usuario,transacao="te",objeto=tipo_equipamento)    
+            tipo_equipamento.delete()
+            
+            return redirect('/equipamentos/listarTipo')
         
-        return HttpResponse(str(usuario.nome)+"-"+str(usuario.tipo))
            
 
     return HttpResponse("funcionalidade não implementada")

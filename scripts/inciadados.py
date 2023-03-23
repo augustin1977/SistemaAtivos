@@ -77,6 +77,11 @@ def run():
     except Exception as err:
         print("Erro ao extrair dados do local instalação", err)
     print ("Importando tipos de equipamento")
+    # verifica se existe o tipo outros
+    outros=Tipo_equipamento.objects.get(nome_tipo="Outros")
+    if outros:
+        outro=Tipo_equipamento(nome_tipo="Outros",sigla="OUT",descricao_tipo="Outros equipamentos")
+        outro.save()
     caminho=os.path.join(BASE_DIR,"banco Migrado",'tipo.csv')
     arquivo=open(caminho,'r',encoding='utf-8')
     dados=arquivo.readline()
