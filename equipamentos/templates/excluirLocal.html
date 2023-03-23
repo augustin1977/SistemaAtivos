@@ -13,7 +13,7 @@
         <div class='col-md-3'></div>
         <div class="col-md">
             <hr>
-            <form method ="POST" action="{% url 'excluirTipo' %}"> {% csrf_token %}
+            <form method ="POST" action="{% url 'excluirLocal' %}"> {% csrf_token %}
                 {% if n >= 1 %}
                 <h2> Equipamentos que estão neste local Instalação:</h2>
                 <table class="table table-hover" >
@@ -40,7 +40,7 @@
                 <h3> Não é possivel excluir pois ha equipamentos instalados neste local, por favor remova os equipamento antes da exclusão </h3>
                 {% endif %}
                 
-                <input TYPE="hidden" NAME="id" VALUE="{{local.id}}">
+                <input type="text" NAME="id" value="{{local.id}}">
                 <label> Laboratório</label>
                 <input name="laboratorio" class="form-control" type="text" value="{{local.laboratorio}}" readonly>
                 <br> 

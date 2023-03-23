@@ -629,7 +629,8 @@ def excluirLocal(request):
             return render (request,'excluirLocal.html',{'n':len(equipamentos),'equipamentos':equipamentos,'local':local})
         elif request.method=="POST":
             loc=request.POST.get("id")
-            local=Tipo_equipamento.objects.get(id=loc)
+            print(loc)
+            local=Local_instalacao.objects.get(id=loc)
             Log.exclusao(usuario=usuario,transacao="le",objeto=local)    
             local.delete()
             return redirect('/equipamentos/listarLocais')
