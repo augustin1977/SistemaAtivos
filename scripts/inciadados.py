@@ -27,6 +27,17 @@ def run():
     print("Bancos de dados criados")
     print("iniciando migração dos dados dos arquivos 'csv'")
     print("Importanto locais de instalação")
+    # criando local de instalação descarte
+    local= Local_instalacao.objects.filter(laboratorio='Descarte')
+    if len(local)==0:
+        local=Local_instalacao(laboratorio='Descarte',
+                            predio="Descarte",
+                            piso="Descarte",
+                            sala="Descarte",
+                            armario="Descarte",
+                            prateleira="Descarte",
+                            apelido_local="Descarte"   )
+        local.save()
     caminho=os.path.join(BASE_DIR,"banco Migrado",'local.csv')
     try:
         arquivo=open(caminho,'r')

@@ -153,6 +153,8 @@ def excluirEquipamento(request):
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     if request.GET.get('excluir')=='2':
         equipamento.ativo=False
+        local=Local_instalacao.objects.get(laboratorio='Descarte')
+        equipamento.local=local
         equipamento.save()
         Log.exclusao(objeto=equipamento,transacao='eq',usuario=usuario,equipamento=equipamento)
         return redirect('/equipamentos/listarEquipamentos')
