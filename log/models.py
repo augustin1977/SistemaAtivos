@@ -32,7 +32,7 @@ class Log(models.Model):
     def foiAlterado(objeto,atributo,valor,transacao,usuario,equipamento=None,nota_equipamento=None ):
         valorObjeto=getattr(objeto,atributo)
         if valor!=valorObjeto:
-            alteracao=f'O usuario {usuario} alterou {atributo} de {valorObjeto} para {valor} no {type(objeto).__name__} {objeto} id={objeto.id}'
+            alteracao=f'O usuario {usuario} alterou {atributo} de "{valorObjeto}" para "{valor}" no {type(objeto).__name__} {objeto} id={objeto.id}'
             
             novo=Log(transacao=transacao,
                      movimento='ed',
