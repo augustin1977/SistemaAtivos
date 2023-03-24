@@ -440,6 +440,9 @@ def editarTipo(request):
         if details.is_valid():
             print('valido')
             tipo=Tipo_equipamento.objects.get(id=details.cleaned_data['id'] )
+            outros=Tipo_equipamento.objects.get(nome_tipo="Outros")
+            if tipo==outros:
+                return redirect('/equipamentos/listarTipo/?status=50')
             listaCampos=['nome_tipo','descricao_tipo']
             alteracao=False
             for campo in listaCampos:
@@ -459,9 +462,9 @@ def listarTipo(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro Tipo Equipamento")
-
+    status=request.GET.get('status')
     form=Tipo_equipamento.objects.all()
-    return render(request, "listarTipo.html", {'form':form,'status':0})
+    return render(request, "listarTipo.html", {'form':form,'status':status})
 
 def baixarRelatorioEquipamentos(request):
 
@@ -622,6 +625,9 @@ def excluirTipo(request):
             tipo_equipamento=Tipo_equipamento.objects.get(id=tipo_eq)
             equipamentos=Equipamento.objects.filter(tipo_equipamento=tipo_equipamento)
             outros=Tipo_equipamento.objects.get(nome_tipo="Outros")
+            if tipo_equipamento==outros:
+                return redirect('/equipamentos/listarTipo/?status=50')
+
             for equipamento in equipamentos:
                 print(equipamento)
                 Log.foiAlterado(transacao='eq',objeto=equipamento,atributo="tipo_equipamento",equipamento=equipamento,
@@ -632,10 +638,7 @@ def excluirTipo(request):
             tipo_equipamento.delete()
             
             return redirect('/equipamentos/listarTipo')
-        
-           
-
-    return HttpResponse("funcionalidade não implementada")
+    return HttpResponse("<h1> Erro na aplicação</h1> <br> <a href='gestatoativosma.ad.ipt.br/home'> Voltar</a><br>")
 
 def excluirLocal(request):
     if not request.session.get('usuario'):
