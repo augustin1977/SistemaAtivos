@@ -47,17 +47,26 @@
 <div class="form-group">
   <div class="col-md-3 mx-auto">
     <label for="nome-equipamento">Pesquisar Equipamento por Nome </label>
-    <input type="text" class="form-control text-left" id="nome-equipamento" placeholder="Pesquisar por nome de equipamento">
+    <input type="text" class="form-control text-left" id="nome-equipamento" placeholder="Pesquisar por nome de equipamento" value="">
   </div>
 </div>
 
 <div class ='container'>
   <div class='row'>
-      <div class='col-md-3'>
+      <div class='col-md-0'>
       </div>
       <div class="col-md">
-    <div class="table-responsive" style="max-height: 65vh;">
-    <table class="table table-hover" >
+    <div class="table-responsive" style="max-height: 65vh; ">
+      <table class="table table-hover" style="table-layout: fixed;">
+        <colgroup>
+          <col style="width: 30%">
+          <col style="width: 15%">
+          <col style="width: 15%">
+          <col style="width: 25%">
+          <col style="width: 8%">
+          <col style="width: 8%">
+          <col style="width: 8%">
+        </colgroup>
       <thead class="thead-light sticky-top" > 
           <tr>
             <th scope="col">Equipamentos</th>
@@ -87,9 +96,10 @@
     </div>
     <br>
     
-    <div class='col-md-3'></div> 
+    <div class='col-md-0'></div> 
     
 </div>
-<a href="{% url 'baixarRelatorioEquipamentos' %}"class="btn btn-success btn-mg"> Baixar Relatório </a>
 </div>
+<a href="{% url 'baixarRelatorioEquipamentos' %}"class="btn btn-success btn-mg"> Baixar Relatório </a>
+
 {% endblock %}

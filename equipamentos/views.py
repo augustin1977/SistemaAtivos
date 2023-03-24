@@ -16,6 +16,7 @@ from .forms import *
 import equipamentos.funcoesAuxiliares as funcoesAuxiliares
 from django.db.models import Q
 import json
+
 def home(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
