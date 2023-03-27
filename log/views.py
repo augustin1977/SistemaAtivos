@@ -10,6 +10,7 @@ from django.http import HttpResponse, Http404
 from os import path
 import csv
 import codecs
+from django.utils import timezone
 
 lista_transacoes={'eq':'Equipamento','te':'Tipo Equipamento','fn':'Fornecedor','li':'Local Instalação','mc':'Material Consumo',
                         'me':'media','dc':'Disciplina de Manutenção','mf':'Modo de Falha','me':'Modo de falha Equipamento',
@@ -22,9 +23,14 @@ def relatorioLog(request):
         return redirect('/auth/login/?status=2')
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     print(f"{Usuario.objects.get(id=usuario.id)} acessou Relatório de Logs")
-    log=Log(transacao='rt',movimento='lt',usuario=Usuario.objects.get(id=usuario.id),alteracao=f'{usuario.nome} visualisou relatório de logs')
-    log.save()
-    log=Log.objects.all().order_by('-data_cadastro')[:2000]
+    #log=Log(transacao='rt',movimento='lt',usuario=Usuario.objects.get(id=usuario.id),alteracao=f'{usuario.nome} visualisou relatório de logs')
+    #log.save()
+    try :
+        tempo=int(request.GET.get("tempo"))
+    except:
+        tempo=120
+    date_limit = timezone.now() - timezone.timedelta(days=tempo)
+    log=Log.objects.filter(data_cadastro__gte=date_limit).order_by('-data_cadastro')
     lognovo=[]
     for i,item in enumerate(log):
         try:
@@ -40,6 +46,12 @@ def relatorioLog(request):
 def baixarRelatorioLog(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
+    try :
+        teste=int(request.GET.get("tempo"))
+    except:
+        teste=60
+    date_limit = timezone.now() - timezone.timedelta(days=teste)
+    log=Log.objects.filter(data_cadastro__gte=date_limit).order_by('-data_cadastro')
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="relatorio.csv"'
     # Criar um objeto CSV Writer
@@ -50,17 +62,22 @@ def baixarRelatorioLog(request):
     writer.writerow(['Data', 'Transação', 'Movimento','Equipamento','Nota','Usuario','Alteração'])
 
     # Executar a consulta no banco de dados e adicione os resultados ao arquivo CSV
-    response.write(u'\ufeff'.encode('utf8'))
-    writer = csv.writer(response, delimiter=';')
-    writer.writerow(['Data', 'Transação', 'Movimento','Equipamento','Nota','Usuario','Alteração'])
-    for obj in Log.objects.all().order_by('-data_cadastro'):
+    
+    
+    for obj in log:
         writer.writerow([obj.data_cadastro, obj.transacao, obj.movimento,obj.equipamento,obj.nota_equipamento,
             obj.usuario,obj.alteracao])
-
     return response
-    def relatorioNotasData(request):
-        pass
-    def relatorioNotasEquipamento(request):
-        pass
-    def menuRelatorios(request):
-        pass
+
+
+
+def relatorioNotasData(request):
+    return HttpResponse("Não implementado")
+def relatorioNotasEquipamento(request):
+    return HttpResponse("Não implementado")
+def menuRelatorios(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    # cria a view do login do usuário
+    status=str(request.GET.get('status'))
+    return render(request, "homeRelatorio.html", {'status':status})
