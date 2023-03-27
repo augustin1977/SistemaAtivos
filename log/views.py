@@ -42,15 +42,9 @@ def baixarRelatorioLog(request):
         return redirect('/auth/login/?status=2')
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="relatorio.csv"'
-
-    # Crie um objeto CSV Writer
     response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response, delimiter=';')
-
-    # Escreva o cabeçalho do arquivo CSV
     writer.writerow(['Data', 'Transação', 'Movimento','Equipamento','Nota','Usuario','Alteração'])
-
-    # Execute a consulta no banco de dados e adicione os resultados ao arquivo CSV
     for obj in Log.objects.all().order_by('-data_cadastro'):
         writer.writerow([obj.data_cadastro, obj.transacao, obj.movimento,obj.equipamento,obj.nota_equipamento,
             obj.usuario,obj.alteracao])
