@@ -6,7 +6,7 @@
 {% endblock %}
 {% block 'conteudo'%} 
 <div class ='container'>
-    <br><br>
+    <br><br><br>
     {% if status == '50'%}
     <div class="alert alert-danger" role="alert">
         Você não tem permissão para acessar essa funcionalidade do sistema.
@@ -20,6 +20,7 @@
     
     <div class='row'>
         <div class='col-md-3'></div>
+
         <form method ="POST" action="{% url 'relatorioNotasEquipamento' %}"> {% csrf_token %}
             <div class="form-group">
                 <label for="selectCampo">Selecione o Equipamento:</label>
@@ -40,6 +41,9 @@
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">OK</button>
                 <button type="button" class="btn btn-secondary">Cancelar</button>
+                {% if selected > 0 %}
+                <a href="{% url 'baixarRelatorioEquipamento' %}?equipamentoid={{selected}}"class="btn btn-success btn-mg"> Baixar Relatório <i class="bi bi-filetype-csv"></i></a>
+        {% endif %}
             </div>
         </form>
         
@@ -73,18 +77,19 @@
             {% endfor %}
           </tbody>
         </table>
-            <div class="col-md">
-            </div>
-        <div class='col-md-3'></div>
+            
+                
+        </div>
+        <div class='col-md-3'>
+        
+        </div>
         </div>
     
-        <a href="{% url 'baixarRelatorioEquipamento' %}?equipamentoid={{selected}}"class="btn btn-success btn-mg"> Baixar Relatório 
-            <i class="bi bi-filetype-csv"></i>
-          </a>
+        
 
     
     </div>
-
+   
         
 </div>
 
