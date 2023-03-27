@@ -17,7 +17,7 @@ lista_transacoes={'eq':'Equipamento','te':'Tipo Equipamento','fn':'Fornecedor','
 lista_movimentos={'cd':'Cadastro','lt':'Listagem','ed':'Edição','dl':'Delete','lo':'logon','lf':'logoff'}
 
 
-def listarLog(request):
+def relatorioLog(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
@@ -58,3 +58,9 @@ def baixarRelatorioLog(request):
             obj.usuario,obj.alteracao])
 
     return response
+    def relatorioNotasData(request):
+        pass
+    def relatorioNotasEquipamento(request):
+        pass
+    def menuRelatorios(request):
+        pass

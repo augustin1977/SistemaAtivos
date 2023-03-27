@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 
-urlpatterns = [path("listarLog/",views.listarLog, name="listarLog"),
+urlpatterns = [path("relatorioLog/",views.relatorioLog, name="relatorioLog"),
                 path("baixarRelatorioLog/",views.baixarRelatorioLog, name="baixarRelatorioLog"),   
                
 
