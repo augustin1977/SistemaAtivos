@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.contrib.staticfiles.views import serve
 from django.http import HttpResponse
 from equipamentos.models import Usuario,Tipo,Equipamento,Material_consumo,Media,Fabricante
+from.models import *
+
+
 from log.models import Log
 from django.shortcuts import redirect 
 from hashlib import sha256
@@ -57,13 +60,9 @@ def baixarRelatorioLog(request):
     # Criar um objeto CSV Writer
     response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response, delimiter=';')
-
     # Escrever o cabeçalho do arquivo CSV
     writer.writerow(['Data', 'Transação', 'Movimento','Equipamento','Nota','Usuario','Alteração'])
-
     # Executar a consulta no banco de dados e adicione os resultados ao arquivo CSV
-    
-    
     for obj in log:
         writer.writerow([obj.data_cadastro, obj.transacao, obj.movimento,obj.equipamento,obj.nota_equipamento,
             obj.usuario,obj.alteracao])
@@ -73,8 +72,46 @@ def baixarRelatorioLog(request):
 
 def relatorioNotasData(request):
     return HttpResponse("Não implementado")
+
+
+
 def relatorioNotasEquipamento(request):
-    return HttpResponse("Não implementado")
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    if request.method=="GET":
+        equipamento=Equipamento.objects.filter(ativo=True)
+        return render(request,'relatorioNotasEquipamento.html',{'form':equipamento, 'lista_log':[],'selected':0})
+    else:
+        equipamentoid=request.POST.get('equipamento')
+        log=Log.objects.filter(equipamento=equipamentoid).order_by('-data_cadastro')
+        equipamento=Equipamento.objects.filter(ativo=True)
+        return render(request,'relatorioNotasEquipamento.html',{'form':equipamento, 'lista_log':log,'selected':int(equipamentoid)})
+        
+        return HttpResponse(equipamentoid)
+    return HttpResponse("Parcialmente implementado")
+
+
+def baixarRelatorioEquipamento(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    try :
+        teste=int(request.GET.get("equipamentoid"))
+    except:
+        teste=0
+    log=Log.objects.filter(equipamento=teste).order_by('-data_cadastro')
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="relatorio.csv"'
+    # Criar um objeto CSV Writer
+    response.write(u'\ufeff'.encode('utf8'))
+    writer = csv.writer(response, delimiter=';')
+    # Escrever o cabeçalho do arquivo CSV
+    writer.writerow(['Data', 'Transação', 'Movimento','Equipamento','Nota','Usuario','Alteração'])
+    # Executar a consulta no banco de dados e adicione os resultados ao arquivo CSV   
+    for obj in log:
+        writer.writerow([obj.data_cadastro, obj.transacao, obj.movimento,obj.equipamento,obj.nota_equipamento,
+            obj.usuario,obj.alteracao])
+    return response
+
 def menuRelatorios(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
