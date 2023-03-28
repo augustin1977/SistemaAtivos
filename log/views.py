@@ -2,18 +2,19 @@ from django.shortcuts import render
 from django.contrib.staticfiles.views import serve
 from django.http import HttpResponse
 from equipamentos.models import Usuario,Tipo,Equipamento,Material_consumo,Media,Fabricante
-from.models import *
-
-
+from .models import *
+from django.db.models import Q
 from log.models import Log
 from django.shortcuts import redirect 
-from hashlib import sha256
 from cadastro_equipamentos import settings
 from django.http import HttpResponse, Http404
 from os import path
 import csv
 import codecs
 from django.utils import timezone
+from cadastro_equipamentos.settings import TIME_ZONE
+import datetime
+import pytz
 
 lista_transacoes={'eq':'Equipamento','te':'Tipo Equipamento','fn':'Fornecedor','li':'Local Instalação','mc':'Material Consumo',
                         'me':'media','dc':'Disciplina de Manutenção','mf':'Modo de Falha','me':'Modo de falha Equipamento',
@@ -71,7 +72,25 @@ def baixarRelatorioLog(request):
 
 
 def relatorioNotasData(request):
-    return HttpResponse("Não implementado")
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    if request.method=="GET":
+        utc=pytz.timezone(TIME_ZONE)
+        hoje=utc.localize( (datetime.datetime.now()))
+        inicio="01/01/1900"
+        return render(request,'relatorioNotasData.html',{'data_inicio':inicio, 'data_fim':hoje,'selected':0})
+    else:
+        equipamentoid=request.POST.get('equipamento')
+        datainicio=request.POST.get("data_inicio")
+        datafim=request.POST.get("data_fim")
+        print(datainicio,datafim)
+        filtro1=Q(data_cadastro__gte=datainicio)
+        filtro2=Q(data_cadastro__lte=datafim)
+        notas=Nota_equipamento.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
+        print(notas)
+
+        return render(request,'relatorioNotasData.html',{'form':notas,'data_inicio':datainicio, 'data_fim':datafim,'selected':0})
+    return HttpResponse("Parcialmente implementado")
 
 
 
