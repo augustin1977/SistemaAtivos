@@ -22,21 +22,19 @@
         <div class='col-md-3'></div>
 
         <form method ="POST" action="{% url 'relatorioNotasData' %}"> {% csrf_token %}
-            <div class="form-group">
-                
+            <div class="form-group"> 
             </div>
             <div class="form-group">
-                    <label for="data_inicio">Data Início:</label>
-                    <input type="date" name="data_inicio" required>
-                    <br>
-                    <label for="data_fim">Data Fim:</label>
-                    <input type="date" name="data_fim" required>
+                    <label for="data_inicio">Data_Início:</label>
+                    <input type="date" name="data_inicio" required value="{{ data_inicio }}">
+                    
+                    <label for="data_fim">   Data_Fim:</label>
+                    <input type="date" name="data_fim" required value="{{ data_fim }}">
                 <button type="submit" class="btn btn-primary">OK</button>
                 <button type="button" class="btn btn-secondary">Cancelar</button>
                 
             </div>
         </form>
-        <!-- falta resolver o resto daqui pra baixo -->
         <div class="table-responsive" style="max-height: 85vh;">
             <table class="table table-hover table-sm">
               <thead class="thead-light sticky-top">
@@ -53,7 +51,7 @@
             </tr>
           </thead>
           <tbody style="overflow-y: scroll;">
-              {% for nota in lista_notas %}
+              {% for nota in form %}
               <tr>
                <td>{{ nota.id }}</td>
               <th scope="row">{{ nota.data_ocorrencia }}</th>

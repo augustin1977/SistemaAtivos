@@ -13,8 +13,9 @@ import csv
 import codecs
 from django.utils import timezone
 from cadastro_equipamentos.settings import TIME_ZONE
-import datetime
+from datetime import datetime
 import pytz
+
 
 lista_transacoes={'eq':'Equipamento','te':'Tipo Equipamento','fn':'Fornecedor','li':'Local Instalação','mc':'Material Consumo',
                         'me':'media','dc':'Disciplina de Manutenção','mf':'Modo de Falha','me':'Modo de falha Equipamento',
@@ -76,20 +77,21 @@ def relatorioNotasData(request):
         return redirect('/auth/login/?status=2')
     if request.method=="GET":
         utc=pytz.timezone(TIME_ZONE)
-        hoje=utc.localize( (datetime.datetime.now()))
-        inicio="01/01/1900"
-        return render(request,'relatorioNotasData.html',{'data_inicio':inicio, 'data_fim':hoje,'selected':0})
+        hoje=utc.localize(datetime.combine((datetime.today()), datetime.min.time()))
+        inicio="1900-01-01"
+        return render(request,'relatorioNotasData.html',{'data_inicio':str(inicio), 'data_fim':str(hoje.date()),'selected':0})
     else:
-        equipamentoid=request.POST.get('equipamento')
-        datainicio=request.POST.get("data_inicio")
-        datafim=request.POST.get("data_fim")
+        utc=pytz.timezone(TIME_ZONE)
+     
+        datainicio=utc.localize(datetime.combine(datetime.strptime(request.POST.get("data_inicio"),'%Y-%m-%d').date(),datetime.min.time()))
+        datafim=utc.localize(datetime.combine(datetime.strptime(request.POST.get("data_fim"),'%Y-%m-%d').date(),datetime.min.time()))
         print(datainicio,datafim)
         filtro1=Q(data_cadastro__gte=datainicio)
         filtro2=Q(data_cadastro__lte=datafim)
         notas=Nota_equipamento.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
         print(notas)
 
-        return render(request,'relatorioNotasData.html',{'form':notas,'data_inicio':datainicio, 'data_fim':datafim,'selected':0})
+        return render(request,'relatorioNotasData.html',{'form':notas,'data_inicio':str(datainicio.date()), 'data_fim':str(datafim.date()),'selected':0})
     return HttpResponse("Parcialmente implementado")
 
 
