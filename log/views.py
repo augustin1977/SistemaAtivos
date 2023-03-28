@@ -75,23 +75,21 @@ def relatorioNotasData(request):
 
 
 
-def relatorioNotasEquipamento(request):
+def relatorioLogEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     if request.method=="GET":
         equipamento=Equipamento.objects.filter(ativo=True)
-        return render(request,'relatorioNotasEquipamento.html',{'form':equipamento, 'lista_log':[],'selected':0})
+        return render(request,'relatorioLogEquipamento.html',{'form':equipamento, 'lista_log':[],'selected':0})
     else:
         equipamentoid=request.POST.get('equipamento')
         log=Log.objects.filter(equipamento=equipamentoid).order_by('-data_cadastro')
         equipamento=Equipamento.objects.filter(ativo=True)
-        return render(request,'relatorioNotasEquipamento.html',{'form':equipamento, 'lista_log':log,'selected':int(equipamentoid)})
-        
-        return HttpResponse(equipamentoid)
+        return render(request,'relatorioLogEquipamento.html',{'form':equipamento, 'lista_log':log,'selected':int(equipamentoid)})
     return HttpResponse("Parcialmente implementado")
 
 
-def baixarRelatorioEquipamento(request):
+def baixarRelatorioLogEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     try :
@@ -118,3 +116,16 @@ def menuRelatorios(request):
     # cria a view do login do usuário
     status=str(request.GET.get('status'))
     return render(request, "homeRelatorio.html", {'status':status})
+
+def relatorioNotasEquipamento(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    if request.method=="GET":
+        equipamento=Equipamento.objects.filter(ativo=True)
+        return render(request,'relatorioNotasEquipamento.html',{'form':equipamento, 'lista_notas':[],'selected':0})
+    else:
+        equipamentoid=request.POST.get('equipamento')
+        notas=Nota_equipamento.objects.filter(equipamento=equipamentoid).order_by('-data_cadastro')
+        equipamento=Equipamento.objects.filter(ativo=True)
+        return render(request,'relatorioNotasEquipamento.html',{'form':equipamento, 'lista_notas':notas,'selected':int(equipamentoid)})
+    return HttpResponse("Parcialmente implementado")
