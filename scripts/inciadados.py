@@ -5,7 +5,6 @@ from equipamentos.models import *
 import pytz
 import datetime
 
-
 def run():
     print("configurando o sistema")
     print("Criando tipos de usuarios")
@@ -126,7 +125,6 @@ def run():
         tmp=dado[0].capitalize().strip()
         if dado[0]!="" and len(dado[0])>=3:
             buscaFabricante= Fabricante.objects.filter(nome_fabricante=tmp)
-
             if len(buscaFabricante)==0:  
                 fabricante=Fabricante(nome_fabricante=tmp,dados_adicionais=dado[1])
                 print(fabricante)
