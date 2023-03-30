@@ -48,15 +48,17 @@ def run():
     eletronica=['Placa queimada/defeito','botão/ botoeira com defeito','Falha sensor','PLC travado/queimado','Preventiva','Calibração','outros' ]
     
     disciplinas={'Elétrica':eletrica,'Mecânica':mecanica,'Hidraulica':hidraulica,"Civil":civil,'Eletrônica':eletronica,'Informática':TI,'Geral':geral,'Outros':outros}
+    
     print("Cadastrando modos de falha")
     for disciplina in disciplinas:
-        d=Disciplina.objects.get(disciplina=disciplina)
-        modos=Modo_Falha.objects.filter(disciplina=disciplina)
-        for i in disciplinas[i]:
+        d=Disciplina.objects.filter(disciplina=disciplina)
+        modos=Modo_Falha.objects.filter(disciplina=d[0])
+        for i in disciplinas[disciplina]:
             if i not in modos:
-                m=Modo_Falha(disciplina=disciplina,Modo_Falha=i.capitalize() )
+                print(f"Cadastrando o modo de falha {disciplinas[disciplina]}.{i}")
+                m=Modo_Falha(disciplina=d[0],modo_falha=i.capitalize() )
                 m.save()
-                print(f"Cadastrando o modo de falha {disciplina[i]}.{i}")
+                
 
 
     print("Bancos de dados  básicos criados")
