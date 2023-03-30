@@ -2,6 +2,7 @@ from usuarios.models import *
 from usuarios.views import *
 from equipamentos.views import *
 from equipamentos.models import *
+from notas.models import *
 import pytz
 import datetime
 
@@ -23,7 +24,42 @@ def run():
         usuario=Usuario(nome='System', email='ericaugustin@ipt.br',tipo=Tipo.objects.get(tipo='admin'),primeiro_acesso=1, senha=senha)
         usuario.save()
     # importanto dados dos arquivos CSV
-    print("Bancos de dados criados")
+    print("Criando arvore de falhas")
+    disciplinas=['Elétrica','Mecânica','Hidraulica',"Civil",'Eletrônica','Informática','Geral','Outros']
+    cadastradas=Disciplina.objects.all()
+
+    for disciplina in disciplinas:
+        print(f"Cadastrando a disciplina {disciplina}")
+        if disciplina not in cadastradas:
+            d=Disciplina(disciplina=disciplina)
+            d.save()
+    
+
+    eletrica=["Defeito Painel",'Problema no cabo Alimentação',"Sem energia","Fusivel Queimado","Falha Motor","Preventiva",
+              'Falha na botoeira','Falha no inversor','Falha Disjuntor','Resistencia Queimada','outros']
+    mecanica=['Quebra de componente', 'Falha estrutural','Travamento','Entupimento','Lubrificação','vazamento','calibração',
+              'Preventiva','Ajustes','outros']
+    hidraulica=['Mangueira vazando/rompida','vazamento','falta de oleo','baixa pressão de óleo','Manômetro','Entupimento','preventiva',
+                'Calibração','Sensor vazão','outros']
+    civil=['Problema Base fixação','Chummbar equipamento','Pitura','outros']
+    TI=['Erro sistema Operacional',"computador não liga/inicia",'Tela Azul','Sistema travado','Erro comunicação','calibração','outros']
+    outros=["Outros", 'Falta energia','Equipamento sem componentes']
+    geral=['Falha geral', 'problema não identificado','outros']
+    eletronica=['Placa queimada/defeito','botão/ botoeira com defeito','Falha sensor','PLC travado/queimado','Preventiva','Calibração','outros' ]
+    
+    disciplinas={'Elétrica':eletrica,'Mecânica':mecanica,'Hidraulica':hidraulica,"Civil":civil,'Eletrônica':eletronica,'Informática':TI,'Geral':geral,'Outros':outros}
+    print("Cadastrando modos de falha")
+    for disciplina in disciplinas:
+        d=Disciplina.objects.get(disciplina=disciplina)
+        modos=Modo_Falha.objects.filter(disciplina=disciplina)
+        for i in disciplinas[i]:
+            if i not in modos:
+                m=Modo_Falha(disciplina=disciplina,Modo_Falha=i.capitalize() )
+                m.save()
+                print(f"Cadastrando o modo de falha {disciplina[i]}.{i}")
+
+
+    print("Bancos de dados  básicos criados")
     print("iniciando migração dos dados dos arquivos 'csv'")
     print("Importanto locais de instalação")
     # criando local de instalação descarte
