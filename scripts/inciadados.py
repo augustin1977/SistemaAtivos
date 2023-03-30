@@ -52,9 +52,10 @@ def run():
         modos=Modo_Falha.objects.filter(disciplina=d[0])
         for i in disciplinas[disciplina]:
             if i not in modos:
-                print(f"Cadastrando o modo de falha {disciplinas[disciplina]}.{i}")
+                print(f"Cadastrando o modo de falha {disciplina}.{i}")
                 m=Modo_Falha(disciplina=d[0],modo_falha=i.capitalize() )
-                m.save()       
+                m.save()  
+                     
     print("Bancos de dados  básicos criados")
     print("iniciando migração dos dados dos arquivos 'csv'")
     print("Importanto locais de instalação")
