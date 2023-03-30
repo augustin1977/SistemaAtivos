@@ -3,6 +3,7 @@ from usuarios.views import *
 from equipamentos.views import *
 from equipamentos.models import *
 from notas.models import *
+from django.db.models import Q
 import pytz
 import datetime
 def run():
@@ -55,7 +56,7 @@ def run():
                 print(f"Cadastrando o modo de falha {disciplina}.{i}")
                 m=Modo_Falha(disciplina=d[0],modo_falha=i.capitalize() )
                 m.save()  
-                     
+
     print("Bancos de dados  básicos criados")
     print("iniciando migração dos dados dos arquivos 'csv'")
     print("Importanto locais de instalação")
@@ -227,4 +228,15 @@ def run():
                         outros_dados=dado[29],ativo=True)
                 print(equipamento)
                 equipamento.save()
+                filtro1=Q(disciplina='Mecânica')
+                filtro2=Q(disciplina='Geral')
+                filtro3=Q(disciplina='Outros')
+                modos=Modo_Falha.objects.filter(disciplina='Mecânica')
+                for modo in modos:
+                    Modo_falha_equipamento(equipamento=equipamento,modo_falha=modo)
+                if equipamento.potencia_eletrica and equipamento.tensao_eletrica:
+                    modos=Modo_Falha.objects.filter(disciplina='Elétrica')
+                    for modo in modos:
+                        Modo_falha_equipamento(equipamento=equipamento,modo_falha=modo)
+        
     arquivo.close()

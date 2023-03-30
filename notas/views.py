@@ -125,8 +125,7 @@ def get_modos_de_falha(request):
     modos_falha=list(modos_falha)
     
     for modo_falha in modos_falha:
-        modo_falha['modo_falha']=str(Modo_Falha.objects.get(id=modo_falha['modo_falha']))
-    print(modos_falha)    
+        modo_falha['modo_falha']=str(Modo_Falha.objects.get(id=modo_falha['modo_falha'])) 
     return JsonResponse(modos_falha, safe=False)
 
 def excluirDisciplina(request):
@@ -194,7 +193,6 @@ def editarModoFalhaEquipamento(request):
             respostas.append(None)   
         
     resposta="-".join( str(valor) for valor in respostas)
-    print(modosFalha[0].equipamento, resposta)
 
     return redirect('/notas/exibirModoFalhaEquipamento')
 
@@ -219,7 +217,7 @@ def editarNotas(request):
     if request.method=="GET":
         id=request.GET.get('id')
         nota= get_object_or_404(Nota_equipamento, pk=id)
-        print(nota)
+        #print(nota)
         form=CadastraNota_equipamentoForm(instance=nota)
         if form.is_valid():
             pass
