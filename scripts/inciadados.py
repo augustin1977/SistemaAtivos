@@ -231,12 +231,17 @@ def run():
                 filtro1=Q(disciplina='Mecânica')
                 filtro2=Q(disciplina='Geral')
                 filtro3=Q(disciplina='Outros')
-                modos=Modo_Falha.objects.filter(disciplina='Mecânica')
+                modos=Modo_Falha.objects.filter(filtro1|filtro2|filtro3)
                 for modo in modos:
-                    Modo_falha_equipamento(equipamento=equipamento,modo_falha=modo)
+                    m=Modo_falha_equipamento(equipamento=equipamento,modo_falha=modo)
+                    m.save()
+                    print(modo,m)
                 if equipamento.potencia_eletrica and equipamento.tensao_eletrica:
                     modos=Modo_Falha.objects.filter(disciplina='Elétrica')
                     for modo in modos:
-                        Modo_falha_equipamento(equipamento=equipamento,modo_falha=modo)
+                        m=Modo_falha_equipamento(equipamento=equipamento,modo_falha=modo)
+                        m.save()
+                        print(modo,m)
+
         
     arquivo.close()
