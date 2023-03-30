@@ -5,7 +5,6 @@ from equipamentos.models import *
 from notas.models import *
 import pytz
 import datetime
-
 def run():
     print("configurando o sistema")
     print("Criando tipos de usuarios")
@@ -33,8 +32,6 @@ def run():
         if disciplina not in cadastradas:
             d=Disciplina(disciplina=disciplina)
             d.save()
-    
-
     eletrica=["Defeito Painel",'Problema no cabo Alimentação',"Sem energia","Fusivel Queimado","Falha Motor","Preventiva",
               'Falha na botoeira','Falha no inversor','Falha Disjuntor','Resistencia Queimada','outros']
     mecanica=['Quebra de componente', 'Falha estrutural','Travamento','Entupimento','Lubrificação','vazamento','calibração',
@@ -57,10 +54,7 @@ def run():
             if i not in modos:
                 print(f"Cadastrando o modo de falha {disciplinas[disciplina]}.{i}")
                 m=Modo_Falha(disciplina=d[0],modo_falha=i.capitalize() )
-                m.save()
-                
-
-
+                m.save()       
     print("Bancos de dados  básicos criados")
     print("iniciando migração dos dados dos arquivos 'csv'")
     print("Importanto locais de instalação")
