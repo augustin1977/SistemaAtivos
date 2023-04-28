@@ -606,7 +606,6 @@ def download_arquivo(request):
         response['Content-Disposition'] = f'attachment; filename="{filename[1]}"'
     return response   
 
-
 def excluirTipo(request):
     
     if not request.session.get('usuario'):
