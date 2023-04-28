@@ -34,7 +34,7 @@ def lista_equipamentos(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     usu=Usuario.objects.get(id=request.session.get('usuario'))
-    print(f"{usu.nome} acessou Lista Equipamentos")
+    #print(f"{usu.nome} acessou Lista Equipamentos")
     equipamentos=Equipamento.objects.filter(ativo=True)
     return render(request, "exibirEquipamentos.html", {'equipamentos':equipamentos})
 
@@ -60,7 +60,7 @@ def get_equipamentos(request):
 def exibirDetalheEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Detalhe Equipamentos")
+    #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Detalhe Equipamentos")
     id=str(request.GET.get('id'))
     equipamento=Equipamento.objects.get(id=id,ativo=True)
     materiais=Material_consumo.objects.filter(equipamento__id=id)
@@ -116,7 +116,7 @@ def editarEquipamento(request):
 def cadastrarEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Cadastro Equipamentos")
+    #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Cadastro Equipamentos")
     if request.method=="GET":
         form=equipamentoCadastrarForm(initial={'usuario':request.session.get('usuario')})      
 
@@ -183,7 +183,7 @@ def excluirEquipamento(request):
     
     materiais=Material_consumo.objects.filter(equipamento__id=id)
     arquivos= Media.objects.filter(equipamento__id=id)
-    print('excluir',request.GET.get('excluir'))
+    #print('excluir',request.GET.get('excluir'))
     return render(request, "exibirDetalheEquipamento.html", {'equipamento':equipamento, 
                                                              'materiais':materiais, 
                                                              'media':arquivos, 
@@ -192,14 +192,14 @@ def excluirEquipamento(request):
 def listarFornecedores(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Lista Fornecedores")
+    #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Lista Fornecedores")
     fornecedores=Fabricante.objects.all()
     return render(request, "listarFornecedores.html", {'fornecedores':fornecedores})
 
 def exibirDetalheFornecedor(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Detalhe Fornecedores")
+    #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Detalhe Fornecedores")
     id=str(request.GET.get('id'))
     fornecedor=Fabricante.objects.get(id=id)
     if fornecedor.endereco_fabricante==None: 
@@ -220,7 +220,7 @@ def cadastrarFornecedor(request):
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Cadastro Fornecedores")
+    #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Cadastro Fornecedores")
     status=str(request.GET.get('status'))
     if request.method=="GET":
         return render(request, "cadastrarFornecedor.html")
@@ -275,7 +275,7 @@ def cadastrarFornecedor(request):
 def editarFornecedor(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Edição Fornecedores")
+    #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Edição Fornecedores")
     id=request.GET.get('id')
 
     if id:
@@ -309,7 +309,7 @@ def editarFornecedor(request):
         nome=Fabricante.objects.filter(nome_fabricante=post_nome_fabricante).first()
         site=Fabricante.objects.filter(site_Fabricante=post_site_Fabricante).first()
         email=Fabricante.objects.filter(email_contato_fabricante=post_email_contato_fabricante).first()
-        #print(post_nome_fabricante)
+        ##print(post_nome_fabricante)
         # verifica se forncedor ja existe
         if (nome and nome.id!=fornecedor.id) and site and email: 
             return render(request, "editarFornecedor.html", {'fornecedor':fornecedor,'status':1}) # fornecedor ja cadastrado
@@ -345,14 +345,14 @@ def editarFornecedor(request):
 def cadastrarLocal(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro local")
+    #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro local")
     if request.method=="GET":
         form=localFormCadastro
         return render(request, "cadastrarLocal.html", {'form':form,'status':0})
     else:
         details = localFormCadastro(request.POST)
         if details.is_valid():
-            print(details)
+            #print(details)
             details.save()
             form=localFormCadastro
             usuario=Usuario.objects.get(id=request.session.get('usuario'))
@@ -363,13 +363,13 @@ def cadastrarLocal(request):
             Log.cadastramento(usuario=usuario,transacao='li',objeto=local)            
             return render(request, "cadastrarLocal.html", {'form':form,'status':1})
         else:
-            print('invalido')
+            #print('invalido')
             return render(request, "cadastrarLocal.html", {'form':details}) 
 
 def listarLocais(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Listar local")
+    #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Listar local")
     if request.method=="GET":
         form = Local_instalacao.objects.all()
         return render(request, "listarLocais.html", {'form':form,'status':0}) 
@@ -378,7 +378,7 @@ def editarLocal(request):
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{usuario.nome} acessou Editar local")
+    #print(f"{usuario.nome} acessou Editar local")
     if request.method=="GET":
         dados = Local_instalacao.objects.get(id=request.GET.get("id")).dados_para_form()
         form=localFormEditar(initial=dados) 
@@ -405,7 +405,7 @@ def cadastrarTipo(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     usuario =Usuario.objects.get(id=request.session.get('usuario'))
-    print(f"{usuario.nome} acessou cadastro Tipo Equipamento")
+    #print(f"{usuario.nome} acessou cadastro Tipo Equipamento")
     
     if request.method=="GET":
         form=cadastraTipo_equipamento
@@ -413,7 +413,7 @@ def cadastrarTipo(request):
     else:
         details = cadastraTipo_equipamento(request.POST)
         if details.is_valid():
-            print('valido')
+            #print('valido')
             
             tipo=Tipo_equipamento(nome_tipo=details.cleaned_data['nome'],sigla=details.cleaned_data['sigla'],descricao_tipo=details.cleaned_data['descricao'])
             tipo.save()
@@ -422,23 +422,23 @@ def cadastrarTipo(request):
                         
             return render(request, "cadastrarTipo.html", {'form':form,'status':1})
         else:
-            print('invalido')
+            #print('invalido')
             return render(request, "cadastrarTipo.html", {'form':details}) 
 
 def editarTipo(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     usuario =Usuario.objects.get(id=request.session.get('usuario'))
-    print(f"{usuario.nome} acessou cadastro Tipo Equipamento")
+    #print(f"{usuario.nome} acessou cadastro Tipo Equipamento")
     if request.method=="GET":
         dados = Tipo_equipamento.objects.get(id=request.GET.get("id")).dados_para_form()
-        print(dados)
+        #print(dados)
         form=TipoEquipamentoForm(initial=dados)
         return render(request, "editarTipo.html",{'form':form,'id':request.GET.get("id"),'status':0}) 
     else:
         details = TipoEquipamentoForm(request.POST)
         if details.is_valid():
-            print('valido')
+            #print('valido')
             tipo=Tipo_equipamento.objects.get(id=details.cleaned_data['id'] )
             outros=Tipo_equipamento.objects.get(nome_tipo="Outros")
             if tipo==outros:
@@ -455,13 +455,13 @@ def editarTipo(request):
             form=Tipo_equipamento.objects.all()
             return render(request, "listarTipo.html", {'form':form,'status':1})
         else:
-            print('invalido')
+            #print('invalido')
             return render(request, "editarTipo.html", {'form':details}) 
 
 def listarTipo(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro Tipo Equipamento")
+    #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro Tipo Equipamento")
     status=request.GET.get('status')
     form=Tipo_equipamento.objects.all()
     return render(request, "listarTipo.html", {'form':form,'status':status})
@@ -497,7 +497,7 @@ def cadastrarMaterial(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     usu=Usuario.objects.get(id=request.session.get('usuario'))
-    print(f"{usu.nome} acessou cadastro Cadastro Material")
+    #print(f"{usu.nome} acessou cadastro Cadastro Material")
     
     if request.method=="GET":
         form=materialCadastraForm
@@ -516,13 +516,13 @@ def cadastrarMaterial(request):
                         
             return render(request, "cadastrarMaterial.html", {'form':form,'status':1})
         else:
-            print('invalido')
+            #print('invalido')
             return render(request, "cadastrarMaterial.html", {'form':details,'status':2}) 
 
 def editarMaterial(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Editar Material")
+    #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Editar Material")
     if request.method=="GET":
         dados = Material_consumo.objects.get(id=request.GET.get("id")).dados_para_form()
         form=materialCadastraForm(initial=dados) 
@@ -549,7 +549,7 @@ def editarMaterial(request):
 def listarMaterial(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Listar materiais")
+    #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Listar materiais")
     if request.method=="GET":
         form = Material_consumo.objects.all()
         return render(request, "listarMateriais.html", {'form':form,'status':0})
@@ -568,7 +568,7 @@ def cadastrarArquivo(request):
             Log.cadastramento(usuario=usuario,transacao='me',objeto=media)
             return redirect('cadastrarArquivo')
         else:
-            print("Falhou")
+            #print("Falhou")
     else:
         form = mediaForm()
     return render(request, 'cadastrarArquivo.html', {'form': form})
@@ -590,7 +590,7 @@ def download_arquivo(request):
     nome_arquivo=request.POST.get('filename')
     #caminho=os.path.join(MEDIA_ROOT,nome_arquivo)
     fullpath = os.path.normpath(os.path.join(MEDIA_ROOT, nome_arquivo))
-    print(fullpath, MEDIA_ROOT)
+    #print(fullpath, MEDIA_ROOT)
     if not fullpath.startswith(MEDIA_ROOT[:-1]):
         raise PermissionError
     with open(fullpath, 'rb') as arquivo:
@@ -629,7 +629,7 @@ def excluirTipo(request):
                 return redirect('/equipamentos/listarTipo/?status=50')
 
             for equipamento in equipamentos:
-                print(equipamento)
+                #print(equipamento)
                 Log.foiAlterado(transacao='eq',objeto=equipamento,atributo="tipo_equipamento",equipamento=equipamento,
                                  valor=outros,usuario=usuario) 
                 equipamento.tipo_equipamento=outros
@@ -656,7 +656,7 @@ def excluirLocal(request):
             return render (request,'excluirLocal.html',{'n':len(equipamentos),'equipamentos':equipamentos,'local':local})
         elif request.method=="POST":
             loc=request.POST.get("id")
-            print(loc)
+            #print(loc)
             local=Local_instalacao.objects.get(id=loc)
             Log.exclusao(usuario=usuario,transacao="li",objeto=local)    
             local.delete()
