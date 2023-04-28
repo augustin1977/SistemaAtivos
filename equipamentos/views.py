@@ -568,7 +568,9 @@ def cadastrarArquivo(request):
             Log.cadastramento(usuario=usuario,transacao='me',objeto=media)
             return redirect('cadastrarArquivo')
         else:
+            pass
             #print("Falhou")
+            
     else:
         form = mediaForm()
     return render(request, 'cadastrarArquivo.html', {'form': form})
