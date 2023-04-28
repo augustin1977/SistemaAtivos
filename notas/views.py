@@ -215,7 +215,7 @@ def editarNotas(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
-    print(f"{usuario.nome} acessou edição Notas")
+    #print(f"{usuario.nome} acessou edição Notas")
     if request.method=="GET":
         id=request.GET.get('id')
         nota= get_object_or_404(Nota_equipamento, pk=id)
@@ -228,7 +228,7 @@ def editarNotas(request):
         details = (request.POST)
         form=CadastraNota_equipamentoForm(details)
         if form.is_valid():
-            print('valido')
+            #print('valido')
             id=request.POST.get('id')
 
             nota= Nota_equipamento.objects.get(id=id)
@@ -247,7 +247,7 @@ def editarNotas(request):
             form=CadastraNota_equipamentoForm
             return redirect("/notas/exibirNotas")
         else:
-            print('invalido')
+            #print('invalido')
             return render(request, "editarNota.html", {'form':form})    
 
 def excluirNotas(request):

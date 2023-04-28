@@ -86,13 +86,13 @@ def valida_cadastro(request):
 
     try:    
         senhacod= sha256(senha.encode()).hexdigest() # recuperando senha e codificando num hash sha256
-        print("cria Senha")
+        ##print("cria Senha")
         usuario=Usuario(nome=nome, senha=senhacod, email=email, tipo=tipo, chapa=chapa, primeiro_acesso=primeiro_acesso,ativo=ativo) # cria um objeto usuário com as informações recebidas do fomulario
         log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'O usuario {usuario} se cadastrou no sistema')
         send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'ericaugustin@ipt.br']) 
         usuario.save() # salva o objeto usuário no banco de dados
         log.save()
-        print("usuario criado")
+        ##print("usuario criado")
         return redirect('/auth/login/?status=0') # retorna sem erro
     except:
         return redirect('/auth/cadastrar/?status=99') # retorna erro geral de gravação no banco de dados
@@ -111,7 +111,7 @@ def validar_login(request):
         return redirect('/auth/login/?status=1')
     else:
         request.session['usuario']= usuario[0].id
-        print(f"{usuario[0].nome} logou no sistema")
+        ##print(f"{usuario[0].nome} logou no sistema")
         log=Log(transacao='us',movimento='lo',usuario=Usuario.objects.get(id=usuario[0].id),alteracao=f'{usuario[0]} logou no sistema')
         log.save()
         if usuario[0].primeiro_acesso==True:
@@ -175,7 +175,7 @@ def exibirUsuario(request):
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     tipo=Tipo.objects.get(tipo="admin")
     user=Usuario.objects.get(id=request.GET.get('usuario'))
-    print(usuario.nome,usuario.tipo,usuario.id)
+    ##print(usuario.nome,usuario.tipo,usuario.id)
     if not usuario:
         return redirect('/auth/login/?status=1')
     elif(usuario.tipo==tipo):
@@ -193,7 +193,7 @@ def editarUsuario(request):
     if(usuario.tipo==tipo):
         if request.method=="GET":
             user=Usuario.objects.get(id=request.GET.get('usuario'))
-            print(user)
+            ##print(user)
             form=EditaUsuarioForm(instance=user)
             return render(request, "editarUsuario.html", {'form':form})
         elif request.method=="POST":
