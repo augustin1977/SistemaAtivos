@@ -24,7 +24,7 @@ def notas(request):
 def cadastrarDisciplina(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro cadastro Disciplina")
+    #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro cadastro Disciplina")
     if request.method=="GET":
         form=cadastraDisciplinaForm
         return render(request, "cadastrarDisciplina.html", {'form':form,'status':0})
@@ -45,7 +45,7 @@ def cadastrarDisciplina(request):
 def cadastrarModo_Falha(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro cadastro Modo de Falha")
+    #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro cadastro Modo de Falha")
     if request.method=="GET":
         form=CadastraModo_FalhaForm
         return render(request, "cadastrarModo_Falha.html", {'form':form,'status':0})
@@ -66,7 +66,7 @@ def cadastrarModo_Falha(request):
 def cadastrarModo_FalhaEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro cadastro Modo de Falha Equipamento")
+    #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro cadastro Modo de Falha Equipamento")
     if request.method=="GET":
         form=CadastraModo_falha_equipamentoForm
         return render(request, "cadastrarModoFalhaEquipamento.html", {'form':form,'status':0})
@@ -88,7 +88,7 @@ def cadastrarNota(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
-    print(f"{usuario.nome} acessou cadastro Notas")
+    #print(f"{usuario.nome} acessou cadastro Notas")
     if request.method=="GET":
         form=CadastraNota_equipamentoForm
         return render(request, "cadastrarNota.html", {'form':form,'status':0})
@@ -116,7 +116,7 @@ def cadastrarNota(request):
             
             return render(request, "cadastrarNota.html", {'form':form,'status':1})
         else:
-            print('invalido')
+            #print('invalido')
             return render(request, "cadastrarNota.html", {'form':form}) 
 
 def get_modos_de_falha(request):
@@ -215,11 +215,11 @@ def editarNotas(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
-    #print(f"{usuario.nome} acessou edição Notas")
+    ##print(f"{usuario.nome} acessou edição Notas")
     if request.method=="GET":
         id=request.GET.get('id')
         nota= get_object_or_404(Nota_equipamento, pk=id)
-        #print(nota)
+        ##print(nota)
         form=CadastraNota_equipamentoForm(instance=nota)
         if form.is_valid():
             pass
@@ -228,7 +228,7 @@ def editarNotas(request):
         details = (request.POST)
         form=CadastraNota_equipamentoForm(details)
         if form.is_valid():
-            #print('valido')
+            ##print('valido')
             id=request.POST.get('id')
 
             nota= Nota_equipamento.objects.get(id=id)
@@ -247,7 +247,7 @@ def editarNotas(request):
             form=CadastraNota_equipamentoForm
             return redirect("/notas/exibirNotas")
         else:
-            #print('invalido')
+            ##print('invalido')
             return render(request, "editarNota.html", {'form':form})    
 
 def excluirNotas(request):

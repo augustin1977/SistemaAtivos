@@ -27,7 +27,7 @@ def relatorioLog(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
-    print(f"{Usuario.objects.get(id=usuario.id)} acessou Relatório de Logs")
+    #print(f"{Usuario.objects.get(id=usuario.id)} acessou Relatório de Logs")
     #log=Log(transacao='rt',movimento='lt',usuario=Usuario.objects.get(id=usuario.id),alteracao=f'{usuario.nome} visualisou relatório de logs')
     #log.save()
     try :
@@ -70,8 +70,6 @@ def baixarRelatorioLog(request):
             obj.usuario,obj.alteracao])
     return response
 
-
-
 def relatorioNotasData(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -85,16 +83,14 @@ def relatorioNotasData(request):
      
         datainicio=utc.localize(datetime.combine(datetime.strptime(request.POST.get("data_inicio"),'%Y-%m-%d').date(),datetime.min.time()))
         datafim=utc.localize(datetime.combine(datetime.strptime(request.POST.get("data_fim"),'%Y-%m-%d').date(),datetime.min.time()))
-        print(datainicio,datafim)
+        #print(datainicio,datafim)
         filtro1=Q(data_cadastro__gte=datainicio)
         filtro2=Q(data_cadastro__lte=datafim)
         notas=Nota_equipamento.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
-        print(notas)
+        #print(notas)
 
         return render(request,'relatorioNotasData.html',{'form':notas,'data_inicio':str(datainicio.date()), 'data_fim':str(datafim.date()),'selected':0})
     return HttpResponse("Parcialmente implementado")
-
-
 
 def relatorioLogEquipamento(request):
     if not request.session.get('usuario'):
@@ -108,7 +104,6 @@ def relatorioLogEquipamento(request):
         equipamento=Equipamento.objects.filter(ativo=True)
         return render(request,'relatorioLogEquipamento.html',{'form':equipamento, 'lista_log':log,'selected':int(equipamentoid)})
     return HttpResponse("Parcialmente implementado")
-
 
 def baixarRelatorioLogEquipamento(request):
     if not request.session.get('usuario'):
