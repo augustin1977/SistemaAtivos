@@ -190,7 +190,8 @@ def sair(request):
 
 def gera_senha(tamanho):
     caracteres = string.ascii_letters + string.digits + string.punctuation + string.ascii_letters
-    senha = ''.join(random.choice(caracteres) for i in range(tamanho))
+    senha = ''.join(random.choice(caracteres) for i in range(tamanho-1))
+    senha=random.choice(string.ascii_uppercase)+senha
     return senha
 
 def listarUsuarios(request):
