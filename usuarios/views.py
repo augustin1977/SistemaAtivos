@@ -74,7 +74,28 @@ def valida_cadastro(request):
     usuario= Usuario.objects.filter(email=email,ativo=True)
     
     if len(usuario)>0:
-        return redirect('/auth/cadastrar/?status=1') # retorna erro de usuario ja existente
+        if (usuario[0].ativo==True):
+            return redirect('/auth/cadastrar/?status=1') # retorna erro de usuario ja existente
+        else:
+            usuario[0].ativo=True
+            usuario[0].primeiro_acesso=True
+            usuario[0].senha=gera_senha(12)
+            try :
+                usuario_cadastro=Usuario.objects.get(id=request.session.get('usuario'))
+            except:
+                usuario_cadastro=False
+
+            try:
+                send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória é <b> {senha} </b>", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'ericaugustin@ipt.br']) 
+            except:
+                raise Http404("Impossivel enviar o e-mail com a senha, favor contactar o Administrador")
+            usuario[0].save() # salva o objeto usuário no banco de dados
+            if usuario_cadastro:
+                log=Log(transacao='us',movimento='cd',usuario=usuario_cadastro,alteracao=f'O usuario {usuario_cadastro} cadastrou {usuario[0]} no sistema')
+            else:
+                log=Log(transacao='us',movimento='cd',usuario=usuario[0],alteracao=f'O usuario {usuario[0]} se cadastrou no sistema')
+            log.save()
+            
 
     if len(nome.strip())==0 :
         return redirect('/auth/cadastrar/?status=2') # retorna erro valor nulo
