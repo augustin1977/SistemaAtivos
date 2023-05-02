@@ -80,6 +80,8 @@ def valida_cadastro(request):
             usuario[0].ativo=True
             usuario[0].primeiro_acesso=True
             usuario[0].senha=gera_senha(12)
+            usuario[0].email=email
+            usuario[0].chapa=chapa
             try :
                 usuario_cadastro=Usuario.objects.get(id=request.session.get('usuario'))
             except:
@@ -263,7 +265,6 @@ def excluirUsuario(request):
             return render(request, "excluirUsuario.html", {'usuario':user})
         elif request.method=="POST":
             user=Usuario.objects.get(id=request.POST.get('id'))
-            user.email="none@none.com"
             user.ativo=False
             user.save()
             Log.exclusao(objeto=user,usuario=usuario,transacao='us')            
