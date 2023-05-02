@@ -9,6 +9,8 @@ from usuarios.forms import *
 import re
 import string
 import random
+from django.http import Http404
+
 def vazio(request):
     return redirect('/auth/cadastrar/') 
 def login(request):
@@ -86,9 +88,20 @@ def valida_cadastro(request):
         senhacod= sha256(senha.encode()).hexdigest() # recuperando senha e codificando num hash sha256
         ##print("cria Senha")
         usuario=Usuario(nome=nome, senha=senhacod, email=email, tipo=tipo, chapa=chapa, primeiro_acesso=primeiro_acesso,ativo=ativo) # cria um objeto usuário com as informações recebidas do fomulario
-        log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'O usuario {usuario} se cadastrou no sistema')
-        send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'ericaugustin@ipt.br']) 
+        try :
+            usuario_cadastro=Usuario.objects.get(id=request.session.get('usuario'))
+        except:
+            usuario_cadastro=False
+
+        try:
+            send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'ericaugustin@ipt.br']) 
+        except:
+            raise Http404("Impossivel enviar o e-mail com a senha, favor contactar o Administrador")
         usuario.save() # salva o objeto usuário no banco de dados
+        if usuario:
+            log=Log(transacao='us',movimento='cd',usuario=usuario_cadastro,alteracao=f'O usuario {usuario} se cadastrou no sistema')
+        else:
+            log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'O usuario {usuario} se cadastrou no sistema')
         log.save()
         ##print("usuario criado")
         return redirect('/auth/login/?status=0') # retorna sem erro
