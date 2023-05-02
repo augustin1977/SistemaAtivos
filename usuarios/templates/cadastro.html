@@ -26,7 +26,12 @@
         Email invalido, por favor verifique a grafia do email.
       </div>
     {% endif %}
-
+    {% if status == '98' %}
+    <div class="alert alert-danger" role="alert">
+  
+        Usuário já existe
+      </div>
+    {% endif %}
     {% if status == '99' %}
     <div class="alert alert-danger" role="alert">
   
