@@ -60,8 +60,6 @@ def editar(request):
             return render(request, "editar.html",{'usuario':usuario,'status':3})
     return render(request, "editar.html",{'usuario':usuario,'status':1})
     
-
-
 def valida_cadastro(request):
     # validar cadastro, falta implementar verificação de e-mail
     nome=request.POST.get('nome')
@@ -142,6 +140,7 @@ def esqueci_senha(request):
         usuario[0].save()
         
         return redirect('/auth/login/?status=51') # nova senha enviada por email com sucesso
+
 def sair(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -150,9 +149,6 @@ def sair(request):
     log.save()
     request.session.flush() # sair do usuário
     return redirect('/auth/login')
-
-
-
 
 def gera_senha(tamanho):
     caracteres = string.ascii_letters + string.digits + string.punctuation + string.ascii_letters
