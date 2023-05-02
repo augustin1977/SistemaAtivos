@@ -86,7 +86,7 @@ def valida_cadastro(request):
                 usuario_cadastro=False
 
             try:
-                send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória é <b> {senha} </b>", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'ericaugustin@ipt.br']) 
+                send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória é {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'ericaugustin@ipt.br']) 
             except:
                 raise Http404("Impossivel enviar o e-mail com a senha, favor contactar o Administrador")
             usuario[0].save() # salva o objeto usuário no banco de dados
