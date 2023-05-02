@@ -29,7 +29,7 @@ MEDIA_ROOT=os.path.join(BASE_DIR,"images/")
 SECRET_KEY = "django-insecure-v9c%xo1#yue!c*b8i13(42@-jhz^burrb@foq^q_ixmowch=mm"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["gestaoativosma.ad.ipt.br","10.3.10.20","10.11.39.220","127.0.0.1"]
 
@@ -143,7 +143,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_URL = "/static"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
     '/home/admin/SistemaAtivos/SistemaAtivos/static/']
