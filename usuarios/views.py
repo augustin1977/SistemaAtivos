@@ -82,37 +82,33 @@ def valida_cadastro(request):
     padrao = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
     if not re.fullmatch(padrao, email):
         return redirect('/auth/cadastrar/?status=4') # email invalido
-
-
     try:    
         senhacod= sha256(senha.encode()).hexdigest() # recuperando senha e codificando num hash sha256
         ##print("cria Senha")
-        testausuario=Usuario.objects.filter(nome=nome,email=email)
-        if len(testausuario)==0:
-            usuario=Usuario(nome=nome, senha=senhacod, email=email, tipo=tipo, chapa=chapa, primeiro_acesso=primeiro_acesso,ativo=ativo) # cria um objeto usuário com as informações recebidas do fomulario
-            try :
-                usuario_cadastro=Usuario.objects.get(id=request.session.get('usuario'))
-            except:
-                usuario_cadastro=False
 
-            try:
-                send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória é <b> {senha} </b>", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'ericaugustin@ipt.br']) 
-            except:
-                raise Http404("Impossivel enviar o e-mail com a senha, favor contactar o Administrador")
-            usuario.save() # salva o objeto usuário no banco de dados
-            if usuario_cadastro:
-                log=Log(transacao='us',movimento='cd',usuario=usuario_cadastro,alteracao=f'O usuario {usuario_cadastro} cadastrou {usuario} no sistema')
-            else:
-                log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'O usuario {usuario} se cadastrou no sistema')
-            log.save()
-            ##print("usuario criado")
-            if usuario_cadastro:
-                return redirect('/listarUsuarios') # retorna sem  e com usuario
-            
-            else:
-                return redirect('/auth/login/?status=0') # retorna sem erro e sem usuario
+        usuario=Usuario(nome=nome, senha=senhacod, email=email, tipo=tipo, chapa=chapa, primeiro_acesso=primeiro_acesso,ativo=ativo) # cria um objeto usuário com as informações recebidas do fomulario
+        try :
+            usuario_cadastro=Usuario.objects.get(id=request.session.get('usuario'))
+        except:
+            usuario_cadastro=False
+
+        try:
+            send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória é <b> {senha} </b>", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'ericaugustin@ipt.br']) 
+        except:
+            raise Http404("Impossivel enviar o e-mail com a senha, favor contactar o Administrador")
+        usuario.save() # salva o objeto usuário no banco de dados
+        if usuario_cadastro:
+            log=Log(transacao='us',movimento='cd',usuario=usuario_cadastro,alteracao=f'O usuario {usuario_cadastro} cadastrou {usuario} no sistema')
         else:
-            redirect('/auth/cadastrar/?status=98')
+            log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'O usuario {usuario} se cadastrou no sistema')
+        log.save()
+        ##print("usuario criado")
+        if usuario_cadastro:
+            return redirect('/listarUsuarios') # retorna sem  e com usuario
+        
+        else:
+            return redirect('/auth/login/?status=0') # retorna sem erro e sem usuario
+
     except:
         return redirect('/auth/cadastrar/?status=99') # retorna erro geral de gravação no banco de dados
   
@@ -248,7 +244,6 @@ def excluirUsuario(request):
             user.email="none@none.com"
             user.ativo=False
             user.save()
-            Log.exclusao(usuario=usuario,transacao='us')            
+            Log.exclusao(objeto=user,usuario=usuario,transacao='us')            
             return redirect('/listarUsuarios/')
-
     return  redirect(f'/equipamentos/?status=50')
