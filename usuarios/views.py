@@ -104,7 +104,11 @@ def valida_cadastro(request):
             log=Log(transacao='us',movimento='cd',usuario=usuario,alteracao=f'O usuario {usuario} se cadastrou no sistema')
         log.save()
         ##print("usuario criado")
-        return redirect('/auth/login/?status=0') # retorna sem erro
+        if usuario:
+            return redirect('/listarUsuarios') # retorna sem  e com usuario
+        
+        else:
+            return redirect('/auth/login/?status=0') # retorna sem erro e sem usuario
     except:
         return redirect('/auth/cadastrar/?status=99') # retorna erro geral de gravação no banco de dados
   
