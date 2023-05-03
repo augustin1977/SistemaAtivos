@@ -2,8 +2,6 @@
 from django import forms
 from django.forms import *
 from .models import *
-from django.forms import modelform_factory
-from django.forms import BaseModelFormSet
 from djmoney.forms.fields import MoneyField,MoneyWidget
 from cadastro_equipamentos.settings import TIME_ZONE
 import datetime
@@ -90,7 +88,7 @@ class equipamentoCadastrarForm(Form):
     local=ModelChoiceField(queryset=Local_instalacao.objects.all(),widget=Select(attrs={'class': "form-control"}))
     tipo_equipamento=ModelChoiceField(queryset= Tipo_equipamento.objects.all(),widget=Select(attrs={'class': "form-control"}))
     data_compra=DateField(widget=DateInput(attrs={'type': 'date','class': 'form-control'})),
-    data_ultima_calibracao=DateField(widget=DateInput(attrs={'type': 'date','class': 'form-control'})),
+    data_ultima_calibracao=DateInput(widget=DateInput(attrs={'type': 'date','class': 'form-control'})),
     patrimonio=CharField(widget= TextInput(attrs={'class': "form-control"}))
     material_consumo=ModelMultipleChoiceField(required=False,blank=True,queryset= Material_consumo.objects.all(),widget=SelectMultiple(attrs={'class': "form-control"}))
     usuario=CharField(label="",widget=HiddenInput())
