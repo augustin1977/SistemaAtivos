@@ -23,6 +23,7 @@ def home(request):
     # cria a view do login do usuário
     status=str(request.GET.get('status'))
     return render(request, "home.html", {'status':status})
+
 def menuEquipoamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
