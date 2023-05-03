@@ -53,8 +53,8 @@ class equipamentoEditarForm(Form):
     fabricante=ModelChoiceField(queryset=Fabricante.objects.all() ,widget=Select (attrs={'class': "form-control"}))
     local=ModelChoiceField(queryset=Local_instalacao.objects.all(),widget=Select(attrs={'class': "form-control"}))
     tipo_equipamento=ModelChoiceField(queryset= Tipo_equipamento.objects.all(),widget=Select(attrs={'class': "form-control"}))
-    data_compra=DateField(widget=DateInput(attrs={'type': 'date','class': 'form-control'})),
-    data_ultima_calibracao=DateField(widget=DateInput(attrs={'type': 'date','class': 'form-control'})),
+    data_compra=DateTimeField(widget=DateInput( attrs={'class': 'form-control'}))
+    data_ultima_calibracao=DateTimeField(widget=DateInput( attrs={'class': 'form-control'}))
     patrimonio=CharField(widget= TextInput(attrs={'class': "form-control"}))
     material_consumo=ModelMultipleChoiceField(required=False,blank=True,queryset= Material_consumo.objects.all(),widget=SelectMultiple(attrs={'class': "form-control"}))
     usuario=CharField(label="",widget=HiddenInput())
@@ -87,19 +87,19 @@ class equipamentoCadastrarForm(Form):
     fabricante=ModelChoiceField(queryset=Fabricante.objects.all() ,widget=Select (attrs={'class': "form-control"}))
     local=ModelChoiceField(queryset=Local_instalacao.objects.all(),widget=Select(attrs={'class': "form-control"}))
     tipo_equipamento=ModelChoiceField(queryset= Tipo_equipamento.objects.all(),widget=Select(attrs={'class': "form-control"}))
-    data_compra=DateField(widget=DateInput( attrs={'type': 'date', 'class': 'form-control'}))
-    data_ultima_calibracao=DateField(widget=DateInput( attrs={'type': 'date', 'class': 'form-control'}))
+    data_compra=DateTimeField(widget=DateInput( attrs={'type': 'date', 'class': 'form-control'}))
+    data_ultima_calibracao=DateTimeField(widget=DateInput( attrs={'type': 'date', 'class': 'form-control'}))
     patrimonio=CharField(widget= TextInput(attrs={'class': "form-control"}))
     material_consumo=ModelMultipleChoiceField(required=False,blank=True,queryset= Material_consumo.objects.all(),widget=SelectMultiple(attrs={'class': "form-control"}))
     usuario=CharField(label="",widget=HiddenInput())
-    custo_aquisição=MoneyField(default_currency='BRL',required=False,widget= MoneyWidget(attrs={'class': "form-control"}))
+    custo_aquisição=MoneyField(default_currency='BRL',required=True,widget= MoneyWidget(attrs={'class': "form-control"}))
     responsavel=CharField(widget= TextInput(attrs={'class': "form-control"}))
     potencia_eletrica=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
     nacionalidade=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
     tensao_eletrica=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
     projeto_compra=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
     especificacao=CharField(required=False,widget= Textarea(attrs={'class': "form-control"}))
-    outros_dados=CharField(widget= Textarea(attrs={'class': "form-control"}))
+    outros_dados=CharField(required=False,widget= Textarea(attrs={'class': "form-control"}))
 
     
     def clean(self):
