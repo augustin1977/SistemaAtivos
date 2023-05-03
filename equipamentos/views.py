@@ -39,7 +39,6 @@ def lista_equipamentos(request):
     equipamentos=Equipamento.objects.filter(ativo=True)
     return render(request, "exibirEquipamentos.html", {'equipamentos':equipamentos})
 
-
 def get_equipamentos(request):
     nome_equipamento = request.GET.get('nome_equipamento', '')
     equipamentos = []
