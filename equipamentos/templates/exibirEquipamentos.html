@@ -31,8 +31,8 @@
                         var local = $('<td>').text(equipamento.local);
                         var detalhes = $('<td>').html('<a href="{% url "exibirDetalheEquipamento" %}?id=' + equipamento.id + '"><i class="bi bi-file-text"></i></a>');
                         var editar = $('<td>').html('<a href="{% url "editarEquipamento" %}?equipamento=' + equipamento.id + '"><i class="bi bi-pencil"></i></a>');
-                        var excluir = $('<td>').html('<a href="{% url "excluirEquipamento" %}?id=' + equipamento.id+ '"><i class="bi bi-trash"></i></a>');
-                        row.append(nome, modelo, tipo, local, detalhes, editar, excluir);
+                        var excluir = $('<td>').html('<a href="{% url "excluirEquipamento" %}?id=' + equipamento.id+ '&excluir=1"><i class="bi bi-trash"></i></a>');
+                          row.append(nome, modelo, tipo, local, detalhes, editar, excluir);
                         $('#equipamentos_list').append(row);
                     });
                 }
