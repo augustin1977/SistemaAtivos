@@ -55,8 +55,8 @@ class equipamentoEditarForm(Form):
     fabricante=ModelChoiceField(queryset=Fabricante.objects.all() ,widget=Select (attrs={'class': "form-control"}))
     local=ModelChoiceField(queryset=Local_instalacao.objects.all(),widget=Select(attrs={'class': "form-control"}))
     tipo_equipamento=ModelChoiceField(queryset= Tipo_equipamento.objects.all(),widget=Select(attrs={'class': "form-control"}))
-    data_compra=DateTimeField(widget=SelectDateWidget(years=tuple(range(1900,anoAtual+1)),attrs={'class': "form-control"}))
-    data_ultima_calibracao=DateTimeField(widget=SelectDateWidget(years=tuple(range(1900,anoAtual+1)),attrs={'class': "form-control"}))
+    data_compra=DateField(widget=DateInput(attrs={'type': 'date','class': 'form-control'})),
+    data_ultima_calibracao=DateField(widget=DateInput(attrs={'type': 'date','class': 'form-control'})),
     patrimonio=CharField(widget= TextInput(attrs={'class': "form-control"}))
     material_consumo=ModelMultipleChoiceField(required=False,blank=True,queryset= Material_consumo.objects.all(),widget=SelectMultiple(attrs={'class': "form-control"}))
     usuario=CharField(label="",widget=HiddenInput())
