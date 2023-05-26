@@ -56,11 +56,7 @@ def run():
                 print(f"Cadastrando o modo de falha {disciplina}.{i}")
                 m=Modo_Falha(disciplina=d[0],modo_falha=i.capitalize() )
                 m.save()  
-
-    print("Bancos de dados  básicos criados")
-    print("iniciando migração dos dados dos arquivos 'csv'")
-    print("Importanto locais de instalação")
-    # criando local de instalação descarte
+    #Criando local descarte
     local= Local_instalacao.objects.filter(laboratorio='Descarte')
     if len(local)==0:
         local=Local_instalacao(laboratorio='Descarte',
@@ -71,6 +67,12 @@ def run():
                             prateleira="Descarte",
                             apelido_local="Descarte"   )
         local.save()
+    ##### Editar daqui pra baixo a migração dos dados######
+    print("Bancos de dados  básicos criados")
+    print("iniciando migração dos dados dos arquivos 'csv'")
+    print("Importanto locais de instalação")
+    # criando local de instalação descarte
+    
     caminho=os.path.join(BASE_DIR,"banco Migrado",'local.csv')
     try:
         arquivo=open(caminho,'r')

@@ -1,4 +1,5 @@
 import random
+
 def retiraespacos(palavra):
     resultado=""
     for letra in palavra:
