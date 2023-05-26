@@ -6,6 +6,7 @@ from notas.models import *
 from django.db.models import Q
 import pytz
 import datetime
+
 def run():
     print("configurando o sistema")
     print("Criando tipos de usuarios")
