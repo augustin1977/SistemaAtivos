@@ -1,7 +1,8 @@
 import pandas as pd
 import datetime
+import cv2 as cv
 # instalar pandas e openpyxl para funcionar esse codigo
-
+ 
 def pandas_to_dic(linha,cabecalho):
 	dado={}
 	for k,j in enumerate(cabecalho):
@@ -23,10 +24,7 @@ nomes_cabecalho = df.columns.tolist()
 dados=[]
 for i in array_dados:
 	dados.append(pandas_to_dic(i,nomes_cabecalho))
+arquivo=dados[1]['endereço']
+print(arquivo)
 
-for i,linha in enumerate(dados):
-	for j,campo in enumerate(linha):
 
-		if linha[campo]=="- ":
-			print(i,j)
-	
