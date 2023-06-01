@@ -39,4 +39,4 @@ def fazlista(palavra,lista):
         sigla="XXX"
     siglas.append(sigla)
        
-    return sigla,siglas
+    return sigla
