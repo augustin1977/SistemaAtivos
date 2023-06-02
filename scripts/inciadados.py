@@ -107,7 +107,7 @@ def run():
         dados.append(dado)
     print("dados lido e carregados na memória")   
     print("Iniciando a gravação para o banco de dados")  
-    for registro in dados:
+    for counter,registro in enumerate(dados):
         print(f"registrando Equipamento -> {registro['nomeEq']}")
         # Verificando se local de instalação existe e caso contrario fazendo o cadastro do local de instalação
         buscalocal=Local_instalacao.objects.filter(laboratorio=registro["Lab"],
@@ -152,57 +152,61 @@ def run():
         BR = pytz.timezone(TIME_ZONE)
         hoje=BR.localize( datetime.datetime.now())
         # codificado até aqui
-        if len(dado[15])>2:
-            tensao=dado[15]
-        if len(dado[15])>2:
-                tensao+="/"+dado[16]
-                tensao+="V"
+        if len(registro['Tensão elétrica minima (V)'])>1:
+            tensao=registro['Tensão elétrica minima (V)']
+        if len(registro['Tensão elétrica máxima (V)'])>1 and tensao:                    
+            tensao+="/"+registro['Tensão elétrica máxima (V)'] 
+        if tensao:
+            tensao+="V"
+        potencia=str(registro['Potência elétrica'])+str(registro['Unidade potencia elétrica'])
+        if registro['Ano_compra']:
             try:
-                valor=float(dado[9])
+                data_compra  = datetime.strptime(dado[25], "%d/%m/%Y")
             except:
-                valor=0.01    
-            if len(dados[17])>2:
-                tensao+=f"-{dados[17]} - {dado[18]}"     
-            if "/" in dado[25]:
-                try:
-                    data_compra  = datetime.strptime(dado[25], "%d/%m/%Y")
-                except:
-                    data_compra=BR.localize(datetime.datetime(year=1899,month=1,day=1))
-            else:
-                try:
-                    ano=int(dado[25])
-                    data_compra=BR.localize(datetime.datetime(year=ano,month=1,day=1))
-                except:
-                    data_compra=BR.localize(datetime.datetime(year=1899,month=1,day=1))
-            buscaequipamento=Equipamento.objects.filter(nome_equipamento=dado[4].capitalize(),fabricante=fabricante[0],local=local[0],modelo=dado[19],
-                        tipo_equipamento=tipo[0],data_compra=data_compra,patrimonio=dado[28],
-                        codigo=codigo, custo_aquisição=valor,custo_aquisição_currency="BRL",responsavel=dado[12].capitalize(),
-                        potencia_eletrica=dado[13]+dado[14],nacionalidade=dado[24],data_ultima_atualizacao= hoje,
-                        tensao_eletrica=tensao,projeto_compra=dado[26],especificacao=dado[20]+" "+dado[22],
-                        outros_dados=dado[29])
-            if len(buscaequipamento)==0:
-                equipamento=Equipamento(nome_equipamento=dado[4].capitalize(),fabricante=fabricante[0],local=local[0],modelo=dado[19],
-                        tipo_equipamento=tipo[0],data_compra=data_compra,usuario=usuario[0],patrimonio=dado[28],
-                        codigo=codigo, custo_aquisição=valor,custo_aquisição_currency="BRL",responsavel=dado[12].capitalize(),
-                        potencia_eletrica=dado[13]+dado[14],nacionalidade=dado[24],data_ultima_atualizacao= hoje,
-                        tensao_eletrica=tensao,projeto_compra=dado[26],especificacao=dado[20]+" "+dado[22],
-                        outros_dados=dado[29],ativo=True)
-                print(equipamento)
-                equipamento.save()
-                filtro1=Q(disciplina='Mecânica')
-                filtro2=Q(disciplina='Geral')
-                filtro3=Q(disciplina='Outros')
-                modos=Modo_Falha.objects.filter(filtro1|filtro2|filtro3)
-                for modo in modos:
-                    m=Modo_falha_equipamento(equipamento=equipamento,modo_falha=modo)
-                    m.save()
-                    print(modo,m)
-                if equipamento.potencia_eletrica and equipamento.tensao_eletrica:
-                    modos=Modo_Falha.objects.filter(disciplina='Elétrica')
-                    for modo in modos:
-                        m=Modo_falha_equipamento(equipamento=equipamento,modo_falha=modo)
-                        m.save()
-                        print(modo,m)
+                data_compra=BR.localize(datetime.datetime(year=1899,month=1,day=1))
+        else:
+            data_compra=BR.localize(datetime.datetime(year=1899,month=1,day=1))
+        try:
+            valor=int(registro['Custo de aquisição'])
+            if valor<0.01:
+                valor=0.01
+        except:
+            valor=0.01
+        moeda=registro['Moeda']
+        nome=registro['NomeEq']
+        modelo=registro['Modelo']
+        patrimonio=registro['Patrimonio']
+        responsavel=registro['Responsável']
+        nacionalidade=registro['Nacionalidade']
+        projeto=registro['Projeto_financiador']
+        especificacao=f"modelo:{modelo}, tensão: {tensao}, potencia: {potencia}, alimentação: {registro['Outras alimentações (ar, água, etc)']}"
+        outrosDados=f"Sistema de patrimonop:{ registro['Sist_patrimonio']}, Finalidade:{registro['Finalidade']}, observação>{ registro['OBS']}, registro importado de planinha excel em: {hoje}"
+        equipamento=Equipamento(nome_equipamento=nome.capitalize(),fabricante=fabricante,local=local,modelo=modelo,
+                        tipo_equipamento=tipo,data_compra=data_compra,usuario=usuario,patrimonio=patrimonio,
+                        codigo=codigo, custo_aquisição=valor,custo_aquisição_currency=moeda,responsavel=responsavel.capitalize(),
+                        potencia_eletrica=potencia,nacionalidade=nacionalidade,data_ultima_atualizacao= hoje,
+                        tensao_eletrica=tensao,projeto_compra=projeto,especificacao=especificacao,
+                        outros_dados=outrosDados,ativo=True)
+        equipamento.save()
+        print(f"{equipamento} cadastrado com sucesso!")
+        print("Criando modos de falha para o Equipamento")        
+        filtro1=Q(disciplina='Mecânica')
+        filtro2=Q(disciplina='Geral')
+        filtro3=Q(disciplina='Outros')
+        modos=Modo_Falha.objects.filter(filtro1|filtro2|filtro3)
+        for modo in modos:
+            m=Modo_falha_equipamento(equipamento=equipamento,modo_falha=modo)
+            m.save()
+            print(modo,m)
+        if equipamento.potencia_eletrica or equipamento.tensao_eletrica:
+            modos=Modo_Falha.objects.filter(disciplina='Elétrica')
+            for modo in modos:
+                m=Modo_falha_equipamento(equipamento=equipamento,modo_falha=modo)
+                m.save()
+        print("Modos de falha criados!")
+        print(f"Registro {counter} finalizado, iniciando proximo Registro!")
+    print(f"{counter} registros adicionados ao Banco de dados\nFinalizando script!\n\n")
+
 
         
-    arquivo.close()
+
