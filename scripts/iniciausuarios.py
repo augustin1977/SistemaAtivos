@@ -5,7 +5,6 @@ from usuarios.models import *
 from cadastro_equipamentos.settings import BASE_DIR
 def run():
     print("importando dados do excel!")
-    caminho=os.getcwd()
     #print(caminho)
     remetentes={}
     try:
@@ -32,13 +31,13 @@ def run():
     for nome in remetentes:
         if nome and remetentes[nome]:
             if re.search(pattern, remetentes[nome]):
-                print(nome,remetentes[nome])
+
                 senha=gera_senha(12)
                 senha_cripto=sha256(senha.encode()).hexdigest()
                 if len(Usuario.objects.filter(email=remetentes[nome]))==0:
                     usuario=Usuario(nome=nome,chapa=0,email=remetentes[nome],senha=senha_cripto,tipo=tipo[0],primeiro_acesso=True,ativo=True)
                     usuario.save()
-                    print(usuario,"-",senha)
+                    print(usuario,"-",remetentes[nome],'-',senha)
                     """try:
                         send_mail(subject='Cadastro no Sistema de Gestão de Ativos',
                             message=f"Foi gerado um cadastro para seu e-mail e sua senha é provisoria é {senha}",
