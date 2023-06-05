@@ -180,6 +180,9 @@ class mediaForm(ModelForm):
             'documentos':ClearableFileInput(attrs={'multiple': True,'class': "form-control"}),
             
         }
+        labels = {
+            'nome': 'Nome do arquivo','equipamento':'Equipamento','documentos':'Documento'
+        }
 
     
 
