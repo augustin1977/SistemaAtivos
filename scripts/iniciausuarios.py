@@ -3,6 +3,8 @@ import re
 from usuarios.views import *
 from usuarios.models import *
 from cadastro_equipamentos.settings import BASE_DIR
+import time
+import random
 def run():
     print("importando dados do excel!")
     #print(caminho)
@@ -38,12 +40,15 @@ def run():
                     usuario=Usuario(nome=nome,chapa=0,email=remetentes[nome],senha=senha_cripto,tipo=tipo[0],primeiro_acesso=True,ativo=True)
                     usuario.save()
                     print(usuario,"-",remetentes[nome],'-',senha)
+                    time.sleep(random.randint(1,4)+random.randint(0,9))
                     """try:
                         send_mail(subject='Cadastro no Sistema de Gestão de Ativos',
                             message=f"Foi gerado um cadastro para seu e-mail e sua senha é provisoria é {senha}",
                             from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario.email,'gestaodeativos@ipt.br'])  
                     except:
                         print("#######Erro no envio do email############")"""
+                else:
+                    print(f"email {remetentes[nome]} já existe")
             else:
                 print("##################Email incorreto##################")
         else:
