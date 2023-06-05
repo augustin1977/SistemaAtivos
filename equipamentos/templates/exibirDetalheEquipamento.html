@@ -57,7 +57,7 @@
                 <tr><th scope="row"> <form method ="POST" action="{% url 'download_arquivo' %}"> {% csrf_token %}
                 <input type="hidden" id="filename" name="filename" value="{{arquivo.documentos}}">
                 <button class="btn btn-link" type="submit">{{arquivo.nome}}</button>
-                <!-- <a href="{% url 'download_arquivo' %}?filename={{ arquivo.documentos }}">{{arquivo.nome}}</a>-->
+                <!-- <a href="{% url 'download_arquivo' %}?filename='{{ arquivo.documentos }}'">{{arquivo.nome}}</a>-->
                 </form></th>
                 <td> <a href="{% url 'excluiArquivo' %}?id={{ arquivo.id }}"><i class="bi bi-trash"></i></a></td></tr>
                               
