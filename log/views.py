@@ -19,7 +19,7 @@ import pytz
 
 lista_transacoes={'eq':'Equipamento','te':'Tipo Equipamento','fn':'Fornecedor','li':'Local Instalação','mc':'Material Consumo',
                         'me':'media','dc':'Disciplina de Manutenção','mf':'Modo de Falha','me':'Modo de falha Equipamento',
-                        'nm':'Nota Material','ne':'Nota Equipamento','us':'usuario','tu':'Tipo de Usuario','rt':"Relatório"}
+                        'nm':'Ocorrência Material','ne':'Ocorrência Equipamento','us':'usuario','tu':'Tipo de Usuario','rt':"Relatório"}
 lista_movimentos={'cd':'Cadastro','lt':'Listagem','ed':'Edição','dl':'Delete','lo':'logon','lf':'logoff'}
 
 
@@ -41,11 +41,11 @@ def relatorioLog(request):
         try:
             lognovo.append({'id':i+1,'transacao':lista_transacoes[item.transacao],'movimento':lista_movimentos[item.movimento],
             'data_cadastro':item.data_cadastro,'usuario':item.usuario,'equipamento':item.equipamento,
-            'nota_equipamento':item.nota_equipamento,'alteracao':item.alteracao})
+            'ocorrencia_equipamento':item.nota_equipamento,'alteracao':item.alteracao})
         except:
             lognovo.append({'id':i+1,'transacao':"Erro",'movimento':"Erro",
             'data_cadastro':item.data_cadastro,'usuario':item.usuario,'equipamento':"Erro",
-            'nota_equipamento':"Erro",'alteracao':item.alteracao})
+            'ocorrencia_equipamento':"Erro",'alteracao':item.alteracao})
     return render(request, "relatorioLog.html", {'lista_log':lognovo}) 
 
 def baixarRelatorioLog(request):
@@ -63,7 +63,7 @@ def baixarRelatorioLog(request):
     response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response, delimiter=';')
     # Escrever o cabeçalho do arquivo CSV
-    writer.writerow(['Data', 'Transação', 'Movimento','Equipamento','Nota','Usuario','Alteração'])
+    writer.writerow(['Data', 'Transação', 'Movimento','Equipamento','Ocorrência','Usuario','Alteração'])
     # Executar a consulta no banco de dados e adicione os resultados ao arquivo CSV
     for obj in log:
         writer.writerow([obj.data_cadastro, obj.transacao, obj.movimento,obj.equipamento,obj.nota_equipamento,
@@ -119,7 +119,7 @@ def baixarRelatorioLogEquipamento(request):
     response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response, delimiter=';')
     # Escrever o cabeçalho do arquivo CSV
-    writer.writerow(['Data', 'Transação', 'Movimento','Equipamento','Nota','Usuario','Alteração'])
+    writer.writerow(['Data', 'Transação', 'Movimento','Equipamento','Ocorrência','Usuario','Alteração'])
     # Executar a consulta no banco de dados e adicione os resultados ao arquivo CSV   
     for obj in log:
         writer.writerow([obj.data_cadastro, obj.transacao, obj.movimento,obj.equipamento,obj.nota_equipamento,
