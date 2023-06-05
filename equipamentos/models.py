@@ -118,7 +118,7 @@ class Equipamento(models.Model):
 
 
 class Media(models.Model):
-    nome=models.CharField(max_length=50,null=False, blank=False)
+    nome=models.CharField(label="Nome do Arquivo",max_length=100,null=False, blank=False)
     documentos= models.FileField(upload_to ='files/',max_length=255,null=False, blank=False)
     equipamento=models.ForeignKey(Equipamento,on_delete=models.DO_NOTHING, null=False, blank=False)
     data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False,null=False, blank=False)
