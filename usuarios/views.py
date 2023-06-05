@@ -88,7 +88,7 @@ def valida_cadastro(request):
                 usuario_cadastro=False
 
             try:
-                send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória é {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'gestaodeativos@ipt.br']) 
+                send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória é {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'gestaodeativos@outlook.com.br']) 
             except:
                 raise Http404("Impossivel enviar o e-mail com a senha, favor contactar o Administrador")
             usuario[0].save() # salva o objeto usuário no banco de dados
@@ -116,7 +116,7 @@ def valida_cadastro(request):
             usuario_cadastro=False
 
         try:
-            send_mail(subject='Senha Sistema de gestão de ativos',message=f"A sua senha provisória é {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'gestaodeativos@ipt.br']) 
+            send_mail(subject='Senha Sistema de gestão de ativos',message=f"A sua senha provisória é {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'gestaodeativos@outlook.com.br']) 
         except:
             raise Http404("Impossivel enviar o e-mail com a senha, favor contactar o Administrador")
         usuario.save() # salva o objeto usuário no banco de dados
@@ -171,7 +171,7 @@ def esqueci_senha(request):
         usuario[0].primeiro_acesso=True
         try:
             send_mail(subject='Recuperação de Senha Sistema de gestão de ativos',message=f"A sua nova senha é {novasenha}",
-            from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario[0].email,'gestaodeativos@ipt.br'])  
+            from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario[0].email,'gestaodeativos@outlook.com.br'])  
         except:
             return redirect('/auth/esqueci_senha/?status=2') # Falha no envio
         

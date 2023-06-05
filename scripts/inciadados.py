@@ -12,6 +12,7 @@ import datetime
 import os
 import shutil
 
+
 def run():
     print("configurando o sistema")
     print("Criando tipos de usuarios")
