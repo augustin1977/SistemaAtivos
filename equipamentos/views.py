@@ -603,7 +603,7 @@ def download_arquivo(request):
         else:
             response = HttpResponse(arquivo.read(), content_type='application/octet-stream')
         filename=nome_arquivo.split("/")
-        response['Content-Disposition'] = f'attachment; filename="{filename[1]}"'
+        response['Content-Disposition'] = f'attachment; filename="{filename[-1]}"'
     return response   
 
 def excluirTipo(request):
