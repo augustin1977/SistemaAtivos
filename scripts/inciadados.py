@@ -27,7 +27,7 @@ def run():
     if len(Usuario.objects.filter(nome="System"))==0:
         print("Criando usuario do sistema")
         senha=gera_senha(12)
-        usuario=Usuario(nome='System', email='ericaugustin@ipt.br',tipo=Tipo.objects.get(tipo='admin'),primeiro_acesso=1, senha=senha)
+        usuario=Usuario(nome='System', email='ericaugustin@ipt.br',tipo=Tipo.objects.get(tipo='admin'),primeiro_acesso=1, senha=senha, ativo=True)
         usuario.save()
     print("Criando arvore de falhas")
     disciplinas=['Elétrica','Mecânica','Hidraulica',"Civil",'Eletrônica','Informática','Geral','Outros']
