@@ -43,8 +43,6 @@ def run():
 		local=f"{registro['Lab']}.{registro['Predio']}.{registro['Sala']}"
 		if local not in banco_dados['local']:
 			banco_dados['local'][local]=len(banco_dados['fabricante'])
-		codigo=registro['Tipo'][0:3]
-		
 		
 		# ~ pastaAtual=os.getcwd()
 		# ~ novaPasta=os.path.join(pastaAtual,"arquivos",arquivo)

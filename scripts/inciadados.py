@@ -3,12 +3,15 @@ from usuarios.views import *
 from equipamentos.views import *
 from equipamentos.models import *
 from notas.models import *
+from django.core.files import File
 from django.db.models import Q
 import pytz
 import datetime
 import pandas as pd
 import datetime
 import os
+import shutil
+
 def run():
     print("configurando o sistema")
     print("Criando tipos de usuarios")
@@ -71,9 +74,9 @@ def run():
                             apelido_local="Descarte"   )
         local.save()
     print("Cadastrando tipo 'Outros'")
-    # verifica se existe o tipo de equipamento 'outros'
-    outros=Tipo_equipamento.objects.get(nome_tipo="Outros")
-    if outros:
+    # verifica se existe o tipo de equipamento 'Outros'
+    tipo=Tipo_equipamento.objects.filter(nome_tipo="Outros")
+    if len(tipo)==0:
         outro=Tipo_equipamento(nome_tipo="Outros",sigla="OUT",descricao_tipo="Outros equipamentos")
         outro.save()
     ##### Editar daqui pra baixo a migração dos dados######
@@ -84,19 +87,20 @@ def run():
         caminho=os.path.join(BASE_DIR,"banco Migrado",'NovoBanco','planilha_mestra_ativos_2.0v.exp.xlsm')
         df = pd.read_excel(caminho, sheet_name='input')
         df = df.fillna(0)
-
+        print(df.columns.tolist())
         tipos_variavel = {'Lab':str, 'Predio':int, 'Sala':str,'Piso':str, 'DetalheLocal':str, 'NomeEq':str, 'Apelido':str, 'Tipo':str, 'Cod_auto_raster':str, 'Fabricante':str,
                             'Moeda':str, 'Custo de aquisição':float, 'Agência financiadora':str, 'ID_grupo':str, 'Responsável':str, 'Potência elétrica':str, 
                             'Unidade potencia elétrica':str,'Tensão elétrica minima (V)':int, 'Tensão elétrica máxima (V)':int,
                             'Detalhe da alimentação elétrica (bivolt, trifásico, etc)':str, 'Outras alimentações (ar, água, etc)':str, 'Modelo':str, 
                             'Spec1':str, 'Unidade Spec1':str, 'Spec2':str, 'Unidade Spec2':str, 'Nacionalidade':str, 'Ano_compra':str, 'Projeto_financiador':str, 
                             'Sist_patrimonio':str, 'Patrimonio':str, 'Finalidade':str, 'inter_calib':str, 'Condição Equipamento':str,
-                            'Data Atualização':str, 'Pasta_arquivos':str, 'OBS':str, 'Unnamed: 36':str, 'endereço':str}
+                            'Data Atualização':str, 'Pasta_arquivos':str, 'OBS':str, 'endereço':str}
         df = df.astype(tipos_variavel)	
         array_dados = df.values
         nomes_cabecalho = df.columns.tolist()
-    except:
+    except Exception as erro:
         print("erro de importação do arquivo excel")
+        print(erro)
         return 
     dados=[]
     # montando dados em um dicionário
@@ -108,31 +112,43 @@ def run():
     print("dados lido e carregados na memória")   
     print("Iniciando a gravação para o banco de dados")  
     for counter,registro in enumerate(dados):
-        print(f"registrando Equipamento -> {registro['nomeEq']}")
+        print(f"registrando Equipamento -> {registro['NomeEq']}")
         # Verificando se local de instalação existe e caso contrario fazendo o cadastro do local de instalação
-        buscalocal=Local_instalacao.objects.filter(laboratorio=registro["Lab"],
-                predio=registro['Predio'].capitalize(),
-                piso=registro["piso"].capitalize(),
-                sala=registro['sala'].capitalize())
+        piso=None
+        sala=None
+        apelido_local=None
+        laboratorio=str(registro["Lab"])
+        predio=str(registro['Predio'])
+        if registro['DetalheLocal']:
+            apelido_local=str(registro['DetalheLocal'].capitalize() )
+        if registro["Piso"]:
+            piso=str(registro["Piso"].capitalize())
+        if registro["Sala"]:
+            sala=str(registro["Sala"].capitalize())
+        
+        buscalocal=Local_instalacao.objects.filter(laboratorio=laboratorio,
+                predio=predio,
+                piso=piso,
+                sala=sala)
         if len(buscalocal)==0:
-            local=Local_instalacao(laboratorio='LPM',
-                predio=registro['Predio'].capitalize(),
-                piso=registro["piso"].capitalize(),
-                sala=registro['sala'].capitalize(),
+            local=Local_instalacao(laboratorio=laboratorio,
+                predio=predio,
+                piso=piso,
+                sala=sala,
                 armario=None,
                 prateleira=None,
-                apelido_local=registro['DetalheLocal'].capitalize()   )
+                apelido_local=apelido_local  )
             print(f"registrando Local Instalação-> {local}")
             local.save()
         else:
              local=buscalocal[0]
         # verificando se a sigla ja existe e caso contrario fazendo o cadastro da sigla
         nome_tipo=registro["Tipo"].capitalize()
-        buscatipo=Tipo_equipamento.objects.filter(nome_tipo=nome_tipo.capitalize())
+        buscatipo=Tipo_equipamento.objects.filter(nome_tipo=nome_tipo)
         siglas= list(Tipo_equipamento.objects.values_list('sigla',flat=True))
         if len(buscatipo)==0:
             sigla=funcoesAuxiliares.fazlista(nome_tipo,siglas)
-            tipo=Tipo_equipamento(nome_tipo=nome_tipo.capitalize(), sigla=sigla)
+            tipo=Tipo_equipamento(nome_tipo=nome_tipo, sigla=sigla)
             print(f"registrando Tipo Equipamento-> {tipo}")
             tipo.save()
         else: 
@@ -151,11 +167,10 @@ def run():
         codigo=f'{tipo.sigla.upper()}{numero:03d}'
         BR = pytz.timezone(TIME_ZONE)
         hoje=BR.localize( datetime.datetime.now())
-        # codificado até aqui
-        if len(registro['Tensão elétrica minima (V)'])>1:
-            tensao=registro['Tensão elétrica minima (V)']
-        if len(registro['Tensão elétrica máxima (V)'])>1 and tensao:                    
-            tensao+="/"+registro['Tensão elétrica máxima (V)'] 
+        if registro['Tensão elétrica minima (V)']:
+            tensao=str(registro['Tensão elétrica minima (V)'])
+        if (registro['Tensão elétrica máxima (V)']) and tensao:                    
+            tensao+="/"+str(registro['Tensão elétrica máxima (V)'] )
         if tensao:
             tensao+="V"
         potencia=str(registro['Potência elétrica'])+str(registro['Unidade potencia elétrica'])
@@ -172,7 +187,7 @@ def run():
                 valor=0.01
         except:
             valor=0.01
-        moeda=registro['Moeda']
+        moeda='BRL'
         nome=registro['NomeEq']
         modelo=registro['Modelo']
         patrimonio=registro['Patrimonio']
@@ -190,20 +205,41 @@ def run():
         equipamento.save()
         print(f"{equipamento} cadastrado com sucesso!")
         print("Criando modos de falha para o Equipamento")        
-        filtro1=Q(disciplina='Mecânica')
-        filtro2=Q(disciplina='Geral')
-        filtro3=Q(disciplina='Outros')
+        mecanica= Disciplina.objects.get(disciplina='Mecânica')
+        geral= Disciplina.objects.get(disciplina='Geral')
+        outros= Disciplina.objects.get(disciplina='Outros')
+
+        filtro1=Q(disciplina=mecanica)
+        filtro2=Q(disciplina=geral)
+        filtro3=Q(disciplina=outros)
         modos=Modo_Falha.objects.filter(filtro1|filtro2|filtro3)
         for modo in modos:
             m=Modo_falha_equipamento(equipamento=equipamento,modo_falha=modo)
             m.save()
-            print(modo,m)
         if equipamento.potencia_eletrica or equipamento.tensao_eletrica:
-            modos=Modo_Falha.objects.filter(disciplina='Elétrica')
+            modos=Modo_Falha.objects.filter(disciplina=Disciplina.objects.get(disciplina='Elétrica'))
             for modo in modos:
                 m=Modo_falha_equipamento(equipamento=equipamento,modo_falha=modo)
                 m.save()
         print("Modos de falha criados!")
+        if registro['Pasta_arquivos']:
+            nomePasta=os.path.join(BASE_DIR,"banco Migrado",'NovoBanco',"arquivos",registro['Pasta_arquivos'])
+        else:
+            nomePasta=None
+        print(nomePasta)
+        if os.path.isdir(nomePasta):
+            listaArquivos=os.listdir(nomePasta)
+            print("registrando arquivos")
+            for arquivo in listaArquivos:
+                detalheArquivo=os.path.join(nomePasta,arquivo)
+                if os.path.isfile(detalheArquivo):
+                    print(detalheArquivo)
+                    novonome=str(codigo)+"_"+arquivo
+                    destino = os.path.join(settings.MEDIA_ROOT, 'files', novonome)
+                    shutil.copy(detalheArquivo, destino)
+                    media1 = Media(nome=arquivo, documentos=destino, equipamento=equipamento)
+                    media1.save()    
+            print("Arquivos armazenados")
         print(f"Registro {counter} finalizado, iniciando proximo Registro!")
     print(f"{counter} registros adicionados ao Banco de dados\nFinalizando script!\n\n")
 

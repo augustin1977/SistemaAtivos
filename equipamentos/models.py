@@ -34,15 +34,15 @@ class Local_instalacao(models.Model):
         ordering = ['predio','piso','-sala','-armario','prateleira']
         unique_together=['laboratorio','predio','piso','sala','armario','prateleira']
     def __str__(self):
-        retorno= self.laboratorio+"."+self.predio
+        retorno= self.laboratorio+"."+str(self.predio)
         if self.piso:
-            retorno+="."+self.piso
+            retorno+="."+str(self.piso)
         if self.sala:
-            retorno+="."+self.sala
+            retorno+="."+str(self.sala)
         if self.armario:
-            retorno+="."+self.armario
+            retorno+="."+str(self.armario)
         if self.prateleira:
-            retorno+="."+self.prateleira
+            retorno+="."+str(self.prateleira)
         return  retorno
     def dados_para_form(self):
         return {'id':self.id, 'laboratorio':self.laboratorio,'predio':self.predio,"piso":self.piso,"sala":self.sala,
@@ -119,7 +119,7 @@ class Equipamento(models.Model):
 
 class Media(models.Model):
     nome=models.CharField(max_length=50,null=False, blank=False)
-    documentos= models.FileField(upload_to ='files/',null=False, blank=False)
+    documentos= models.FileField(upload_to ='files/',max_length=255,null=False, blank=False)
     equipamento=models.ForeignKey(Equipamento,on_delete=models.DO_NOTHING, null=False, blank=False)
     data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False,null=False, blank=False)
 
