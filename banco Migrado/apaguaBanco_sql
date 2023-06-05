@@ -1,9 +1,0 @@
-delete from log_log;
-delete from notas_modo_falha_equipamento;
-delete from notas_modo_falha;
-delete from notas_disciplina;
-delete from equipamentos_equipamento;
-delete from equipamentos_fabricante;
-delete from equipamentos_local_instalacao;
-delete from equipamentos_media;
-delete from equipamentos_tipo_equipamento;
