@@ -194,7 +194,9 @@ def relatorioLogData(request):
         utc=pytz.timezone(TIME_ZONE)
         hoje=utc.localize(datetime.combine((datetime.today()), datetime.min.time()))
         inicio="1900-01-01"
-        return render(request,'relatorioLogData.html',{'data_inicio':str(inicio), 'data_fim':str(hoje.date()),'selected':0})
+        log=[]
+   
+        return render(request,'relatorioLogData.html',{'lista_log':log,'data_inicio':str(inicio), 'data_fim':str(hoje.date()),'selected':0})
     else:
         utc=pytz.timezone(TIME_ZONE)
      
@@ -206,6 +208,17 @@ def relatorioLogData(request):
         filtro2=Q(data_cadastro__lte=data_fim)
         log=Log.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
         #print(notas)
+        lognovo=[]
+        for i,item in enumerate(log):
+            try:
+                lognovo.append({'id':i+1,'transacao':lista_transacoes[item.transacao],'movimento':lista_movimentos[item.movimento],
+                'data_cadastro':item.data_cadastro,'usuario':item.usuario,'equipamento':item.equipamento,
+                'ocorrencia_equipamento':item.nota_equipamento,'alteracao':item.alteracao})
+            except:
+                lognovo.append({'id':i+1,'transacao':"Erro",'movimento':"Erro",
+                'data_cadastro':item.data_cadastro,'usuario':item.usuario,'equipamento':"Erro",
+                'ocorrencia_equipamento':"Erro",'alteracao':item.alteracao})
 
-        return render(request,'relatorioLogData.html',{'lista_log':log,'data_inicio':str(datainicio.date()), 'data_fim':str(datafim.date()),'selected':0})
+
+        return render(request,'relatorioLogData.html',{'lista_log':lognovo,'data_inicio':str(datainicio.date()), 'data_fim':str(datafim.date()),'selected':0})
     

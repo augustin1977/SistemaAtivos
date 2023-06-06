@@ -4,24 +4,7 @@
 {% include 'menurelatorio.html' %}
 {% endblock %}
 {% block 'conteudo' %}
-<style>
-    .table-container {
-      overflow-x: auto;
-      max-height: 70vh;
-    }
-    
-    .bottom-button {
-      position: relative;
-      margin-top: 3px;
-    }
-    
-    .bottom-button a {
-      display: inline-block;
-      position: absolute;
-      max-height: 6vh;
-      left: 0;
-    }
-</style>
+
 <div class='container'>
     <br><br><br>
     <div class='row'>
@@ -40,10 +23,10 @@
 
             </div>
         </form>
-        <div class="table-container">
-            <div class="table-responsive" style="max-height: 65vh;overflow-y: auto;">
-                <table class="table table-hover table-sm">
-                    <thead class="thead-light sticky-top">
+        <div class="table-container mx-auto">
+            <div class="table-responsive" style="max-height: 65vh;">
+                <table class="table table-hover table-resposive-sm">
+                    <thead class="thead-light sticky-top ">
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Data</th>
@@ -70,13 +53,16 @@
                         {% endfor %}
                     </tbody>
                 </table>
+
             </div>
         </div>
-        <div class="bottom-button">
-            <a href="{% url 'baixarRelatorioLog' %}?dataInicio={{ data_inicio }}&dataFim={{ data_fim }}&tempo=-1" class="btn btn-success btn-mg text-nowrap"> Baixar Relatório 
-                <i class="bi bi-filetype-csv"></i>
-            </a>
-        </div>
+    </div>
+    <div class="bottom-button">
+            
+        <a href="{% url 'baixarRelatorioLog' %}?dataInicio={{ data_inicio }}&dataFim={{ data_fim }}&tempo=-1" class="btn btn-success btn-mg text-nowrap" style="bottom: auto;"> Baixar Relatório 
+            <i class="bi bi-filetype-csv"></i>
+        </a>
     </div>
 </div>
+
 {% endblock %}
