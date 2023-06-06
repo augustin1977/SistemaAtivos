@@ -6,9 +6,9 @@ from cadastro_equipamentos.settings import BASE_DIR
 import time
 import random
 from django.core.mail import send_mail
+from info_email import *
 def run():
     print("importando dados do excel!")
-    #print(caminho)
     remetentes={}
     try:
         nome_arquivo=os.path.join(BASE_DIR,"banco Migrado",'Lista_LPM.txt')
@@ -59,7 +59,7 @@ def run():
                     conteudo_plain=f"Seu cadastro foi concluido com sucesso, sua senha é {senha}"
                     try:
                         send_mail(subject='Cadastro no Sistema de Gestão de Ativos',message=conteudo_plain,
-                            from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario.email,'gestaodeativos@outlook.com.br'],
+                            from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario.email,info_email['email']],
                             html_message=conteudo_html)  
                         #time.sleep(random.randint(1,2)+random.randint(0,5))
                     except Exception as erro:

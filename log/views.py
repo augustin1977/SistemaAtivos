@@ -102,11 +102,11 @@ def relatorioNotasData(request):
      
         datainicio=utc.localize(datetime.combine(datetime.strptime(request.POST.get("data_inicio"),'%Y-%m-%d').date(),datetime.min.time()))
         datafim=utc.localize(datetime.combine(datetime.strptime(request.POST.get("data_fim"),'%Y-%m-%d').date(),datetime.min.time()))
-        #print(datainicio,datafim)
+        data_fim =datafim+ timedelta(days=1)
         filtro1=Q(data_cadastro__gte=datainicio)
-        filtro2=Q(data_cadastro__lte=datafim)
+        filtro2=Q(data_cadastro__lte=data_fim)
         notas=Nota_equipamento.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
-        #print(notas)
+        # print(notas)
 
         return render(request,'relatorioNotasData.html',{'form':notas,'data_inicio':str(datainicio.date()), 'data_fim':str(datafim.date()),'selected':0})
 

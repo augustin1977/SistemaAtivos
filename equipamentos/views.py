@@ -405,7 +405,14 @@ def cadastrarTipo(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     usuario =Usuario.objects.get(id=request.session.get('usuario'))
-    #print(f"{usuario.nome} acessou cadastro Tipo Equipamento")
+    # Controle de acesso, usuario comum não pode acessar essa funç~~ao
+    tipo1=Q(tipo="superuser")
+    tipo2=Q(tipo='especialuser')
+    tipo3=Q(tipo='admin')
+
+    tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
+    if(usuario.tipo not in tipo):
+          return redirect(f'/equipamentos/?status=50')
     
     if request.method=="GET":
         form=cadastraTipo_equipamento
@@ -429,7 +436,15 @@ def editarTipo(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     usuario =Usuario.objects.get(id=request.session.get('usuario'))
-    #print(f"{usuario.nome} acessou cadastro Tipo Equipamento")
+    # Controle de acesso, usuario comum não pode acessar essa função
+    tipo1=Q(tipo="superuser")
+    tipo2=Q(tipo='especialuser')
+    tipo3=Q(tipo='admin')
+
+    tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
+    if(usuario.tipo not in tipo):
+          return redirect(f'/equipamentos/?status=50')
+    
     if request.method=="GET":
         dados = Tipo_equipamento.objects.get(id=request.GET.get("id")).dados_para_form()
         #print(dados)
@@ -639,7 +654,7 @@ def excluirTipo(request):
             tipo_equipamento.delete()
             
             return redirect('/equipamentos/listarTipo')
-    return HttpResponse("<h1> Erro na aplicação</h1> <br> <a href='gestatoativosma.ad.ipt.br/home'> Voltar</a><br>")
+    return redirect(f'/equipamentos/?status=50')
 
 def excluirLocal(request):
     if not request.session.get('usuario'):
@@ -662,7 +677,4 @@ def excluirLocal(request):
             Log.exclusao(usuario=usuario,transacao="li",objeto=local)    
             local.delete()
             return redirect('/equipamentos/listarLocais')
-        
-           
-
-    return HttpResponse("funcionalidade não implementada")
+        return redirect(f'/equipamentos/?status=50')

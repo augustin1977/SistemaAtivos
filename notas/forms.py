@@ -36,14 +36,14 @@ class CadastraModo_falha_equipamentoForm (ModelForm):
             }
         
         
-class CadastraNota_materialForm (ModelForm):
-    class Meta:
-        model = Nota_material
-        fields = '__all__'
-        widgets = {
-            'material': Select (attrs={'class': "form-control"}),
-            'quantidade':NumberInput (attrs={'class': "form-control"})
-            }
+# class CadastraNota_materialForm (ModelForm):
+#     class Meta:
+#         model = Nota_material
+#         fields = '__all__'
+#         widgets = {
+#             'material': Select (attrs={'class': "form-control"}),
+#             'quantidade':NumberInput (attrs={'class': "form-control"})
+#             }
     
 class CadastraNota_equipamentoForm(ModelForm):
     equipamento = ModelChoiceField(
@@ -54,14 +54,17 @@ class CadastraNota_equipamentoForm(ModelForm):
         queryset=Modo_falha_equipamento.objects.none(),
         widget=Select(attrs={'class': 'form-control'})
     )
+    """material=ModelMultipleChoiceField(
+        queryset=Material_consumo.objects.all(),
+        widget=SelectMultiple(attrs={'class': 'form-control'})
+        )"""
 
     class Meta:
         model = Nota_equipamento
-        fields = ['titulo', 'descricao', 'equipamento', 'modo_Falha_equipamento', 'material', 'data_ocorrencia', 'falha', 'calibracao', 'lubrificao']
+        fields = ['titulo', 'descricao', 'equipamento', 'modo_Falha_equipamento',  'data_ocorrencia', 'falha', 'calibracao', 'lubrificao']
         widgets = {
             'titulo': TextInput(attrs={'class': 'form-control'}),
             'descricao': Textarea(attrs={'class': 'form-control'}),
-            'material': CheckboxSelectMultiple(attrs={'class': 'form-control'}),
             'data_ocorrencia': DateInput(attrs={'class': 'form-control'}),
             'falha': CheckboxInput(attrs={'class': 'form-control'}),
             'calibracao': CheckboxInput(attrs={'class': 'form-control'}),

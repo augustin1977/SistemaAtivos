@@ -13,6 +13,7 @@ import os,csv
 from log.models import Log
 from .forms import *
 from django.http import JsonResponse
+from django.db.models import Q
 
 def notas(request):
     if not request.session.get('usuario'):
@@ -25,6 +26,17 @@ def cadastrarDisciplina(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro cadastro Disciplina")
+    
+    # verificado o tipo de usuario - controle de acesso a algumas funções
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo1=Q(tipo="superuser")
+    tipo2=Q(tipo='especialuser')
+    tipo3=Q(tipo='admin')
+
+    tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
+    if(usuario.tipo not in tipo):
+          return redirect(f'/equipamentos/?status=50')
+
     if request.method=="GET":
         form=cadastraDisciplinaForm
         return render(request, "cadastrarDisciplina.html", {'form':form,'status':0})
@@ -46,6 +58,15 @@ def cadastrarModo_Falha(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro cadastro Modo de Falha")
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo1=Q(tipo="superuser")
+    tipo2=Q(tipo='especialuser')
+    tipo3=Q(tipo='admin')
+
+    tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
+    if(usuario.tipo not in tipo):
+          return redirect(f'/equipamentos/?status=50')
+    
     if request.method=="GET":
         form=CadastraModo_FalhaForm
         return render(request, "cadastrarModo_Falha.html", {'form':form,'status':0})
@@ -67,6 +88,16 @@ def cadastrarModo_FalhaEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro cadastro Modo de Falha Equipamento")
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo1=Q(tipo="superuser")
+    tipo2=Q(tipo='especialuser')
+    tipo3=Q(tipo='admin')
+
+    tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
+    if(usuario.tipo not in tipo):
+          return redirect(f'/equipamentos/?status=50')
+    
+    
     if request.method=="GET":
         form=CadastraModo_falha_equipamentoForm
         return render(request, "cadastrarModoFalhaEquipamento.html", {'form':form,'status':0})
@@ -111,6 +142,10 @@ def cadastrarNota(request):
                 usuario=usuario
             )
             nota.save()
+            for material in data['material']:
+                Nota_material
+                nota.material.add(material)
+                
             Log.cadastramento(usuario=Usuario.objects.get(id=request.session.get('usuario')),transacao='ne',objeto=nota,nota_equipamento=nota)
             form=CadastraNota_equipamentoForm
             
@@ -129,9 +164,25 @@ def get_modos_de_falha(request):
     return JsonResponse(modos_falha, safe=False)
 
 def excluirDisciplina(request):
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo1=Q(tipo="superuser")
+    tipo2=Q(tipo='especialuser')
+    tipo3=Q(tipo='admin')
+
+    tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
+    if(usuario.tipo not in tipo):
+          return redirect(f'/equipamentos/?status=50')
     return HttpResponse("<h1>Não implementado</h1>")
 
 def editarDisciplina(request):
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo1=Q(tipo="superuser")
+    tipo2=Q(tipo='especialuser')
+    tipo3=Q(tipo='admin')
+
+    tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
+    if(usuario.tipo not in tipo):
+          return redirect(f'/equipamentos/?status=50')
     return HttpResponse("<h1>Não implementado</h1>")
 
 def exibirDisciplinas(request):
@@ -142,9 +193,25 @@ def exibirDisciplinas(request):
 
 
 def excluirModoFalha(request):
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo1=Q(tipo="superuser")
+    tipo2=Q(tipo='especialuser')
+    tipo3=Q(tipo='admin')
+
+    tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
+    if(usuario.tipo not in tipo):
+          return redirect(f'/equipamentos/?status=50')
     return HttpResponse("<h1>Não implementado</h1>")
 
 def editarModoFalha(request):
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo1=Q(tipo="superuser")
+    tipo2=Q(tipo='especialuser')
+    tipo3=Q(tipo='admin')
+
+    tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
+    if(usuario.tipo not in tipo):
+          return redirect(f'/equipamentos/?status=50')
     return HttpResponse("<h1>Não implementado</h1>")
 
 def exibirModoFalha(request):
@@ -156,11 +223,29 @@ def exibirModoFalha(request):
 
 
 def excluirModoFalhaEquipamento(request):
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo1=Q(tipo="superuser")
+    tipo2=Q(tipo='especialuser')
+    tipo3=Q(tipo='admin')
+
+    tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
+    if(usuario.tipo not in tipo):
+          return redirect(f'/equipamentos/?status=50')
     return HttpResponse("<h1>Não implementado</h1>")
 
 def editarModoFalhaEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo1=Q(tipo="superuser")
+    tipo2=Q(tipo='especialuser')
+    tipo3=Q(tipo='admin')
+
+    tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
+    if(usuario.tipo not in tipo):
+          return redirect(f'/equipamentos/?status=50')
+    
+    
     perguntas=[{'numero':1,'texto':"É ligado na energia?","resposta":"resposta1",'sim':'sim1','nao':'nao1'},
             {'numero':2,'texto':"Tem partes eletronicas?","resposta":"resposta2",'sim':'sim2','nao':'nao2'},
             {'numero':3,'texto':"Tem alguns sistema hidraulico?","resposta":"resposta3",'sim':'sim3','nao':'nao3'},

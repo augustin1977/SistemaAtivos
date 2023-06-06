@@ -26,12 +26,12 @@ class Modo_falha_equipamento(models.Model):
         ordering = ['equipamento','modo_falha']
 
 """ cadastra o material utilizado na nota_equipamento"""    
-class Nota_material(models.Model):
-    material=models.ForeignKey(Material_consumo, on_delete=models.DO_NOTHING)
-    quantidade=models.DecimalField(max_digits=12, decimal_places=2)
+# class Nota_material(models.Model):
+#     material=models.ForeignKey(Material_consumo, on_delete=models.DO_NOTHING)
+#     quantidade=models.DecimalField(max_digits=12, decimal_places=2)
     
-    def __str__(self):
-        return f"{self.material}.{self.quantidade}"
+#     def __str__(self):
+#         return f"{self.material}.{self.quantidade}"
    
      
 """ cadastra a nota do equipamento contendo a descrição do nota,equipamento, modo de falha,data do cadastro, se houve falha, calibração e lubrificação"""    
@@ -40,7 +40,7 @@ class Nota_equipamento(models.Model):
     descricao=models.TextField()
     equipamento=models.ForeignKey( Equipamento, on_delete=models.DO_NOTHING)
     modo_Falha_equipamento=models.ForeignKey(Modo_falha_equipamento, on_delete=models.DO_NOTHING)
-    material=models.ManyToManyField(Nota_material, blank=True)
+    # material=models.ManyToManyField(Nota_material, blank=True)
     data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False)
     data_ocorrencia=models.DateField(auto_now=False, auto_now_add=False)
     falha=models.BooleanField()
