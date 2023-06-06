@@ -18,12 +18,12 @@
                 dataType: 'json',
                 success: function(response) {
                     var equipamentos = response;
-                    console.log(equipamentos)
+                    // console.log(equipamentos)
 
                     $('#equipamentos_list').empty();
                     equipamentos.forEach(function(equipamento) {
 
-                        console.log(equipamento)
+                        // console.log(equipamento)
                         var row = $('<tr>');
                         var nome = $('<td>').text(equipamento.nome_equipamento);
                         var modelo = $('<td>').text(equipamento.modelo);

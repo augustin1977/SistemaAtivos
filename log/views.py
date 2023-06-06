@@ -13,7 +13,7 @@ import csv
 import codecs
 from django.utils import timezone
 from cadastro_equipamentos.settings import TIME_ZONE
-from datetime import datetime
+from datetime import datetime,timedelta
 import pytz
 
 
@@ -52,23 +52,42 @@ def baixarRelatorioLog(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     try :
-        teste=int(request.GET.get("tempo"))
+        tempo=int(request.GET.get("tempo"))
     except:
-        teste=60
-    date_limit = timezone.now() - timezone.timedelta(days=teste)
-    log=Log.objects.filter(data_cadastro__gte=date_limit).order_by('-data_cadastro')
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="relatorio.csv"'
-    # Criar um objeto CSV Writer
-    response.write(u'\ufeff'.encode('utf8'))
-    writer = csv.writer(response, delimiter=';')
-    # Escrever o cabeçalho do arquivo CSV
-    writer.writerow(['Data', 'Transação', 'Movimento','Equipamento','Ocorrência','Usuario','Alteração'])
-    # Executar a consulta no banco de dados e adicione os resultados ao arquivo CSV
-    for obj in log:
-        writer.writerow([obj.data_cadastro, obj.transacao, obj.movimento,obj.equipamento,obj.nota_equipamento,
-            obj.usuario,obj.alteracao])
-    return response
+        tempo=60
+    if tempo>0:
+        date_limit = timezone.now() - timezone.timedelta(days=tempo)
+        log=Log.objects.filter(data_cadastro__gte=date_limit).order_by('-data_cadastro')
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="relatorio.csv"'
+        # Criar um objeto CSV Writer
+        response.write(u'\ufeff'.encode('utf8'))
+        writer = csv.writer(response, delimiter=';')
+        # Escrever o cabeçalho do arquivo CSV
+        writer.writerow(['Data', 'Transação', 'Movimento','Equipamento','Ocorrência','Usuario','Alteração'])
+        # Executar a consulta no banco de dados e adicione os resultados ao arquivo CSV
+        for obj in log:
+            writer.writerow([obj.data_cadastro, obj.transacao, obj.movimento,obj.equipamento,obj.nota_equipamento,
+                obj.usuario,obj.alteracao])
+        return response
+    else:
+        data_inicio = datetime.strptime(request.GET.get("dataInicio"), "%Y-%m-%d")
+        data_fim = datetime.strptime(request.GET.get("dataFim"), "%Y-%m-%d") + timedelta(days=1)
+        filtro1=Q(data_cadastro__gte=data_inicio)
+        filtro2=Q(data_cadastro__lte=data_fim)
+        log=Log.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="relatorio.csv"'
+        # Criar um objeto CSV Writer
+        response.write(u'\ufeff'.encode('utf8'))
+        writer = csv.writer(response, delimiter=';')
+        # Escrever o cabeçalho do arquivo CSV
+        writer.writerow(['Data', 'Transação', 'Movimento','Equipamento','Ocorrência','Usuario','Alteração'])
+        # Executar a consulta no banco de dados e adicione os resultados ao arquivo CSV
+        for obj in log:
+            writer.writerow([obj.data_cadastro.strftime("%d-%m-%Y %H:%M:%S"), obj.transacao, obj.movimento,obj.equipamento,obj.nota_equipamento,
+                obj.usuario,obj.alteracao])
+        return response
 
 def relatorioNotasData(request):
     if not request.session.get('usuario'):
@@ -90,7 +109,7 @@ def relatorioNotasData(request):
         #print(notas)
 
         return render(request,'relatorioNotasData.html',{'form':notas,'data_inicio':str(datainicio.date()), 'data_fim':str(datafim.date()),'selected':0})
-    return HttpResponse("Parcialmente implementado")
+
 
 def relatorioLogEquipamento(request):
     if not request.session.get('usuario'):
@@ -166,3 +185,27 @@ def baixarRelatorioNotaEquipamento(request):
         writer.writerow([obj.data_ocorrencia, obj.data_cadastro, obj.titulo,obj.descricao,obj.equipamento,
             obj.usuario])
     return response
+
+
+def relatorioLogData(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    if request.method=="GET":
+        utc=pytz.timezone(TIME_ZONE)
+        hoje=utc.localize(datetime.combine((datetime.today()), datetime.min.time()))
+        inicio="1900-01-01"
+        return render(request,'relatorioLogData.html',{'data_inicio':str(inicio), 'data_fim':str(hoje.date()),'selected':0})
+    else:
+        utc=pytz.timezone(TIME_ZONE)
+     
+        datainicio=utc.localize(datetime.combine(datetime.strptime(request.POST.get("data_inicio"),'%Y-%m-%d').date(),datetime.min.time()))
+        datafim=utc.localize(datetime.combine(datetime.strptime(request.POST.get("data_fim"),'%Y-%m-%d').date(),datetime.min.time()))
+        data_fim =datafim+ timedelta(days=1)
+
+        filtro1=Q(data_cadastro__gte=datainicio)
+        filtro2=Q(data_cadastro__lte=data_fim)
+        log=Log.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
+        #print(notas)
+
+        return render(request,'relatorioLogData.html',{'lista_log':log,'data_inicio':str(datainicio.date()), 'data_fim':str(datafim.date()),'selected':0})
+    

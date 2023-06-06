@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block 'titulo' %} Relatório de LOG {% endblock %}
+{% block 'menu' %}
+{% include 'menurelatorio.html' %}
+{% endblock %}
+{% block 'conteudo' %}
+<style>
+    .table-container {
+      overflow-x: auto;
+      max-height: 70vh;
+    }
+    
+    .bottom-button {
+      position: relative;
+      margin-top: 3px;
+    }
+    
+    .bottom-button a {
+      display: inline-block;
+      position: absolute;
+      max-height: 6vh;
+      left: 0;
+    }
+</style>
+<div class='container'>
+    <br><br><br>
+    <div class='row'>
+        <div class='col-md-3'></div>
+        <form method="POST" action="{% url 'relatorioLogData' %}"> {% csrf_token %}
+            <div class="form-group">
+            </div>
+            <div class="form-group">
+                <label for="data_inicio">Data_Início:</label>
+                <input type="date" name="data_inicio" required value="{{ data_inicio }}">
+
+                <label for="data_fim">   Data_Fim:</label>
+                <input type="date" name="data_fim" required value="{{ data_fim }}">
+                <button type="submit" class="btn btn-primary">OK</button>
+                <button type="button" class="btn btn-secondary">Cancelar</button>
+
+            </div>
+        </form>
+        <div class="table-container">
+            <div class="table-responsive" style="max-height: 65vh;overflow-y: auto;">
+                <table class="table table-hover table-sm">
+                    <thead class="thead-light sticky-top">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Data</th>
+                            <th scope="col">Transação</th>
+                            <th scope="col">Movimento</th>
+                            <th scope="col">Equipamento</th>
+                            <th scope="col">Ocorrência</th>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Alteração</th>
+                        </tr>
+                    </thead>
+                    <tbody style="overflow-y: scroll;">
+                        {% for log in lista_log %}
+                        <tr>
+                            <td>{{ log.id }}</td>
+                            <th scope="row">{{ log.data_cadastro }}</th>
+                            <td>{{ log.transacao }}</td>
+                            <td>{{ log.movimento }}</td>
+                            <td>{{ log.equipamento }}</td>
+                            <td>{{ log.nota_equipamento }}</td>
+                            <td>{{ log.usuario }}</td>
+                            <td>{{ log.alteracao }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="bottom-button">
+            <a href="{% url 'baixarRelatorioLog' %}?dataInicio={{ data_inicio }}&dataFim={{ data_fim }}&tempo=-1" class="btn btn-success btn-mg text-nowrap"> Baixar Relatório 
+                <i class="bi bi-filetype-csv"></i>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
