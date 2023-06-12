@@ -13,7 +13,7 @@ workers = multiprocessing.cpu_count() * 2 + 1  # Número de workers para process
 
 # Configurações para servir arquivos estáticos
 def on_starting(server):
-    server._app_holder.settings.STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    #server._app_holder.settings.STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
     from django.core.management import call_command
     call_command('collectstatic', interactive=False)
