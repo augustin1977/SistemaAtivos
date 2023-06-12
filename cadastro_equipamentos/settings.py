@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 import info_email 
-from whitenoise import WhiteNoise
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -68,10 +67,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-
-    
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",    
 ]
 
 ROOT_URLCONF = "cadastro_equipamentos.urls"
@@ -151,7 +147,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static','icons'),
                     os.path.join(BASE_DIR, 'cadastro_equipamentos','static','icons')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-WHITENOISE_AUTOREFRESH = True
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
