@@ -218,7 +218,5 @@ def relatorioLogData(request):
                 lognovo.append({'id':i+1,'transacao':"Erro",'movimento':"Erro",
                 'data_cadastro':item.data_cadastro,'usuario':item.usuario,'equipamento':"Erro",
                 'ocorrencia_equipamento':"Erro",'alteracao':item.alteracao})
-
-
         return render(request,'relatorioLogData.html',{'lista_log':lognovo,'data_inicio':str(datainicio.date()), 'data_fim':str(datafim.date()),'selected':0})
     
