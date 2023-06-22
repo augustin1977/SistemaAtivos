@@ -11,7 +11,7 @@
       $('#nome-equipamento').on('keyup', function() {
           var nome_equipamento = $(this).val();
           
-          if (nome_equipamento.length > 2) {
+          if (nome_equipamento.length >= 3) {
               $.ajax({
                   url: '{% url "get_equipamentos" %}',
                   data: {
@@ -20,12 +20,14 @@
                   dataType: 'json',
                   success: function(response) {
                       var equipamentos = response;
-                      // console.log(equipamentos)
+                      
+                      // Verificar se o valor atual do campo ainda tem 3 ou mais caracteres
+                      if ($('#nome-equipamento').val().length < 3) {
+                          return;  // Retorna sem fazer nenhuma alteração na tela
+                      }
   
                       $('#equipamentos_list').empty();
                       equipamentos.forEach(function(equipamento) {
-  
-                          // console.log(equipamento)
                           var row = $('<tr>');
                           var nome = $('<td>').text(equipamento.nome_equipamento);
                           var modelo = $('<td>').text(equipamento.modelo);
@@ -40,13 +42,12 @@
                   }
               });
           } else {
-              // Caso a sequência buscada tenha menos de 3 caracteres, faça o que for adequado
-              // Pode ser deixar a lista de equipamentos vazia ou mostrar uma mensagem de aviso, por exemplo.
               $('#equipamentos_list').empty();
           }
       });
   });
 </script>
+
 
 <div class="text-center">
   <br><br>
