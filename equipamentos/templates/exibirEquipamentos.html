@@ -7,39 +7,47 @@
 {% block 'conteudo'%} 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('#nome-equipamento').on('keyup', function() {
-            var nome_equipamento = $(this).val();
-            $.ajax({
-                url: '{% url "get_equipamentos" %}',
-                data: {
-                    'nome_equipamento': nome_equipamento
-                },
-                dataType: 'json',
-                success: function(response) {
-                    var equipamentos = response;
-                    // console.log(equipamentos)
-
-                    $('#equipamentos_list').empty();
-                    equipamentos.forEach(function(equipamento) {
-
-                        // console.log(equipamento)
-                        var row = $('<tr>');
-                        var nome = $('<td>').text(equipamento.nome_equipamento);
-                        var modelo = $('<td>').text(equipamento.modelo);
-                        var tipo = $('<td>').text(equipamento.tipo_equipamento);
-                        var local = $('<td>').text(equipamento.local);
-                        var detalhes = $('<td>').html('<a href="{% url "exibirDetalheEquipamento" %}?id=' + equipamento.id + '"><i class="bi bi-file-text"></i></a>');
-                        var editar = $('<td>').html('<a href="{% url "editarEquipamento" %}?equipamento=' + equipamento.id + '"><i class="bi bi-pencil"></i></a>');
-                        var excluir = $('<td>').html('<a href="{% url "excluirEquipamento" %}?id=' + equipamento.id+ '&excluir=1"><i class="bi bi-trash"></i></a>');
+  $(document).ready(function() {
+      $('#nome-equipamento').on('keyup', function() {
+          var nome_equipamento = $(this).val();
+          
+          if (nome_equipamento.length > 3) {
+              $.ajax({
+                  url: '{% url "get_equipamentos" %}',
+                  data: {
+                      'nome_equipamento': nome_equipamento
+                  },
+                  dataType: 'json',
+                  success: function(response) {
+                      var equipamentos = response;
+                      // console.log(equipamentos)
+  
+                      $('#equipamentos_list').empty();
+                      equipamentos.forEach(function(equipamento) {
+  
+                          // console.log(equipamento)
+                          var row = $('<tr>');
+                          var nome = $('<td>').text(equipamento.nome_equipamento);
+                          var modelo = $('<td>').text(equipamento.modelo);
+                          var tipo = $('<td>').text(equipamento.tipo_equipamento);
+                          var local = $('<td>').text(equipamento.local);
+                          var detalhes = $('<td>').html('<a href="{% url "exibirDetalheEquipamento" %}?id=' + equipamento.id + '"><i class="bi bi-file-text"></i></a>');
+                          var editar = $('<td>').html('<a href="{% url "editarEquipamento" %}?equipamento=' + equipamento.id + '"><i class="bi bi-pencil"></i></a>');
+                          var excluir = $('<td>').html('<a href="{% url "excluirEquipamento" %}?id=' + equipamento.id+ '&excluir=1"><i class="bi bi-trash"></i></a>');
                           row.append(nome, modelo, tipo, local, detalhes, editar, excluir);
-                        $('#equipamentos_list').append(row);
-                    });
-                }
-            });
-        });
-    });
+                          $('#equipamentos_list').append(row);
+                      });
+                  }
+              });
+          } else {
+              // Caso a sequência buscada tenha menos de 3 caracteres, faça o que for adequado
+              // Pode ser deixar a lista de equipamentos vazia ou mostrar uma mensagem de aviso, por exemplo.
+              $('#equipamentos_list').empty();
+          }
+      });
+  });
 </script>
+
 <div class="text-center">
   <br><br>
   <h1>  Lista de Equipamentos </h1>

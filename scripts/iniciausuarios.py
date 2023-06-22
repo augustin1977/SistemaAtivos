@@ -53,6 +53,7 @@ def run():
                                     <p>Os dados para login são:</p>
                                     <p>Seu nome de usuário: {remetentes[nome]}</p>
                                     <p>Sua senha provisória: {senha}</p>
+                                    <p>O link do sistema é: <a href="http://gestaoativosma.ad.ipt.br/">gestaoativosma.ad.ipt.br </p>
                                     <p>Obrigado!</p>
                                 </body>
                                 </html>"""
