@@ -9,6 +9,7 @@
 <script>
 $(document).ready(function() {
     var debounceTimeout;
+    var ultimoFiltro; // Variável para armazenar o último filtro utilizado
 
     $('#nome-equipamento').on('keyup', function() {
         var nome_equipamento = $(this).val();
@@ -17,7 +18,7 @@ $(document).ready(function() {
 
         debounceTimeout = setTimeout(function() {
             fazerChamadaAjax(nome_equipamento);
-        }, 300); // Defina um tempo de atraso adequado em milissegundos (por exemplo, 300ms)
+        }, 350); // Defina um tempo de atraso adequado em milissegundos (por exemplo, 350ms)
     });
 
     function fazerChamadaAjax(nome_equipamento) {
@@ -44,10 +45,24 @@ $(document).ready(function() {
                     row.append(nome, modelo, tipo, local, detalhes, editar, excluir);
                     $('#equipamentos_list').append(row);
                 });
+
+                // Atualizar o último filtro utilizado
+                ultimoFiltro = nome_equipamento;
             }
         });
     }
+
+    // Manipulador de eventos para o botão "Baixar Relatório"
+    $('a.btn').on('click', function() {
+        var urlRelatorio = '{% url "baixarRelatorioEquipamentos" %}';
+        if (ultimoFiltro) {
+            // Adicionar o último filtro como parâmetro na URL do relatório
+            urlRelatorio += '?filtro=' + encodeURIComponent(ultimoFiltro);
+        }
+        window.location.href = urlRelatorio;
+    });
 });
+
 </script>
 <div class="text-center">
   <br><br>
@@ -109,6 +124,6 @@ $(document).ready(function() {
     
 </div>
 </div>
-<a href="{% url 'baixarRelatorioEquipamentos' %}"class="btn btn-success btn-mg"> Baixar Relatório </a>
+<a href="#"class="btn btn-success btn-mg"> Baixar Relatório </a>
 
 {% endblock %}
