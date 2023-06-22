@@ -18,7 +18,7 @@ class localFormCadastro(ModelForm):
             'sala':TextInput (attrs={'class': "form-control"}),
             'armario':TextInput (attrs={'class': "form-control"}),
             'prateleira':TextInput (attrs={'class': "form-control"}),
-            'apelido_local':TextInput (attrs={'class': "form-control"}),
+            'apelido_local':TextInput (attrs={'class': "form-control",'label': "Detalhes"}),
 
         }
 
@@ -35,7 +35,7 @@ class localFormEditar(ModelForm):
             'sala':TextInput (attrs={'class': "form-control"}),
             'armario':TextInput (attrs={'class': "form-control"}),
             'prateleira':TextInput (attrs={'class': "form-control"}),
-            'apelido_local':TextInput (attrs={'class': "form-control"}),
+            'apelido_local':TextInput (attrs={'class': "form-control",'label': "Detalhes"}),
 
         }
 
