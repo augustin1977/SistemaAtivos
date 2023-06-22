@@ -497,9 +497,20 @@ def baixarRelatorioEquipamentos(request):
         'data_compra','data_ultima_calibracao','usuario_cadastro','data_cadastro',
         'patrimonio','codigo','custo_aquisição','moeda','projeto_compra','responsavel','potencia_eletrica',
         'tensao_eletrica','nacionalidade','data_ultima_atualizacao','especificacao','dados_adicionais','ativo'])
+    try:
+        nome_equipamento=request.GET.get('filtro')
+        q1=Q(nome_equipamento__icontains=nome_equipamento)
+        q2=Q(codigo__icontains=nome_equipamento)
+        q3=Q(ativo=True)
+        filtro=(q1|q2)&q3
+        equipamentos = Equipamento.objects.filter(filtro)
+    except:
+        equipamentos = Equipamento.objects.all()
+
+    
 
     # Execute a consulta no banco de dados e adicione os resultados ao arquivo CSV
-    for obj in Equipamento.objects.all().order_by('-nome_equipamento'):
+    for obj in equipamentos:
         writer.writerow([obj.nome_equipamento, obj.modelo, obj.fabricante,obj.local,obj.tipo_equipamento,
             obj.data_compra,obj.data_ultima_calibracao,obj.usuario,obj.data_cadastro,
             obj.patrimonio,obj.codigo,obj.custo_aquisição,obj.custo_aquisição_currency,obj.projeto_compra,
