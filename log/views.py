@@ -122,7 +122,7 @@ def relatorioLogEquipamento(request):
         log=Log.objects.filter(equipamento=equipamentoid).order_by('-data_cadastro')
         equipamento=Equipamento.objects.filter(ativo=True)
         lognovo=[]
-        for i,item in enumerate(equipamento):
+        for i,item in enumerate(log):
             try:
                 lognovo.append({'id':i+1,'transacao':lista_transacoes[item.transacao],'movimento':lista_movimentos[item.movimento],
                 'data_cadastro':item.data_cadastro,'usuario':item.usuario,'equipamento':item.equipamento,
@@ -131,7 +131,7 @@ def relatorioLogEquipamento(request):
                 lognovo.append({'id':i+1,'transacao':"Erro",'movimento':"Erro",
                 'data_cadastro':item.data_cadastro,'usuario':item.usuario,'equipamento':"Erro",
                 'ocorrencia_equipamento':"Erro",'alteracao':item.alteracao})
-        return render(request,'relatorioLogEquipamento.html',{'form':lognovo, 'lista_log':log,'selected':int(equipamentoid)})
+        return render(request,'relatorioLogEquipamento.html',{'form':equipamento, 'lista_log':lognovo,'selected':int(equipamentoid)})
     return HttpResponse("Parcialmente implementado")
 
 def baixarRelatorioLogEquipamento(request):
