@@ -43,14 +43,14 @@ def get_equipamentos(request):
     nome_equipamento = request.GET.get('nome_equipamento', '')
     equipamentos = []
 
-    if len(nome_equipamento) > 1:
-        q1=Q(nome_equipamento__icontains=nome_equipamento)
-        q2=Q(codigo__icontains=nome_equipamento)
-        q3=Q(ativo=True)
-        filtro=(q1|q2)&q3
-        equipamentos = Equipamento.objects.filter(filtro)
-    else:
-        equipamentos = Equipamento.objects.filter(ativo=True)
+    #if len(nome_equipamento) > 1:
+    q1=Q(nome_equipamento__icontains=nome_equipamento)
+    q2=Q(codigo__icontains=nome_equipamento)
+    q3=Q(ativo=True)
+    filtro=(q1|q2)&q3
+    equipamentos = Equipamento.objects.filter(filtro)
+    #else:
+    #    equipamentos = Equipamento.objects.filter(ativo=True)
     #equipamentos_json = list(equipamentos.values('id','nome_equipamento', 'modelo','tipo_equipamento__nome_tipo','local'))
     equipamentos_json = json.dumps([equipamento.to_dic() for equipamento in equipamentos],ensure_ascii=False)
     #equipamentos_json = json.dumps(equipamentos_json,ensure_ascii=False)
