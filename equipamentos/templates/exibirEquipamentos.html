@@ -11,7 +11,7 @@
       $('#nome-equipamento').on('keyup', function() {
           var nome_equipamento = $(this).val();
           
-          if (nome_equipamento.length > 3) {
+          if (nome_equipamento.length > 2) {
               $.ajax({
                   url: '{% url "get_equipamentos" %}',
                   data: {
