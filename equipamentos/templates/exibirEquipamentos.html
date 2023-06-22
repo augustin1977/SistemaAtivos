@@ -11,20 +11,13 @@
       $('#nome-equipamento').on('keyup', function() {
           var nome_equipamento = $(this).val();
           
-          if (nome_equipamento.length >= 3) {
+          if (nome_equipamento.length <= 2) {
+              // Exibir lista completa de equipamentos
               $.ajax({
                   url: '{% url "get_equipamentos" %}',
-                  data: {
-                      'nome_equipamento': nome_equipamento
-                  },
                   dataType: 'json',
                   success: function(response) {
                       var equipamentos = response;
-                      
-                      // Verificar se o valor atual do campo ainda tem 3 ou mais caracteres
-                      if ($('#nome-equipamento').val().length < 3) {
-                          return;  // Retorna sem fazer nenhuma alteração na tela
-                      }
   
                       $('#equipamentos_list').empty();
                       equipamentos.forEach(function(equipamento) {
@@ -42,11 +35,36 @@
                   }
               });
           } else {
-              $('#equipamentos_list').empty();
+              // Realizar a pesquisa com o nome do equipamento
+              $.ajax({
+                  url: '{% url "get_equipamentos" %}',
+                  data: {
+                      'nome_equipamento': nome_equipamento
+                  },
+                  dataType: 'json',
+                  success: function(response) {
+                      var equipamentos = response;
+  
+                      $('#equipamentos_list').empty();
+                      equipamentos.forEach(function(equipamento) {
+                          var row = $('<tr>');
+                          var nome = $('<td>').text(equipamento.nome_equipamento);
+                          var modelo = $('<td>').text(equipamento.modelo);
+                          var tipo = $('<td>').text(equipamento.tipo_equipamento);
+                          var local = $('<td>').text(equipamento.local);
+                          var detalhes = $('<td>').html('<a href="{% url "exibirDetalheEquipamento" %}?id=' + equipamento.id + '"><i class="bi bi-file-text"></i></a>');
+                          var editar = $('<td>').html('<a href="{% url "editarEquipamento" %}?equipamento=' + equipamento.id + '"><i class="bi bi-pencil"></i></a>');
+                          var excluir = $('<td>').html('<a href="{% url "excluirEquipamento" %}?id=' + equipamento.id+ '&excluir=1"><i class="bi bi-trash"></i></a>');
+                          row.append(nome, modelo, tipo, local, detalhes, editar, excluir);
+                          $('#equipamentos_list').append(row);
+                      });
+                  }
+              });
           }
       });
   });
 </script>
+
 
 
 <div class="text-center">
