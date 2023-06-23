@@ -183,7 +183,7 @@ def editarDisciplina(request):
     tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
     if(usuario.tipo not in tipo):
           return redirect(f'/equipamentos/?status=50')
-    return HttpResponse("<h1>Não implementado</h1>")
+    return HttpResponse("<h1>Acesso não autorizado</h1>")
 
 def exibirDisciplinas(request):
     if not request.session.get('usuario'):
@@ -212,7 +212,7 @@ def editarModoFalha(request):
     tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
     if(usuario.tipo not in tipo):
           return redirect(f'/equipamentos/?status=50')
-    return HttpResponse("<h1>Não implementado</h1>")
+    return HttpResponse("<h1>Acesso não autorizado</h1>")
 
 def exibirModoFalha(request):
     if not request.session.get('usuario'):
@@ -245,7 +245,7 @@ def editarModoFalhaEquipamento(request):
     if(usuario.tipo not in tipo):
           return redirect(f'/equipamentos/?status=50')
     
-    
+    return HttpResponse("<h1>Acesso não autorizado</h1>") # linha inserida para evitar execução do codigo abaixo, deve ser refeita essa rotina a luz de novos entendimento
     perguntas=[{'numero':1,'texto':"É ligado na energia?","resposta":"resposta1",'sim':'sim1','nao':'nao1'},
             {'numero':2,'texto':"Tem partes eletronicas?","resposta":"resposta2",'sim':'sim2','nao':'nao2'},
             {'numero':3,'texto':"Tem alguns sistema hidraulico?","resposta":"resposta3",'sim':'sim3','nao':'nao3'},
@@ -336,4 +336,5 @@ def editarNotas(request):
             return render(request, "editarNota.html", {'form':form})    
 
 def excluirNotas(request):
+    return HttpResponse("<h1>Acesso não autorizado</h1>")
     return HttpResponse("<h1>Não implementado</h1>")
