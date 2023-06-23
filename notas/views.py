@@ -16,7 +16,6 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-
 def notas(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -194,7 +193,6 @@ def exibirDisciplinas(request):
     disciplinas=Disciplina.objects.all()
     return render(request, "exibirDisciplinas.html", {'disciplinas':disciplinas,'status':0})
 
-
 def excluirModoFalha(request):
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     tipo1=Q(tipo="superuser")
@@ -223,7 +221,6 @@ def exibirModoFalha(request):
     modosFalha=Modo_Falha.objects.all()
     
     return render(request, "exibirModosFalha.html", {'modosFalha':modosFalha,'status':0})
-
 
 def excluirModoFalhaEquipamento(request):
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
