@@ -95,7 +95,7 @@ def relatorioNotasData(request):
     if request.method=="GET":
         utc=pytz.timezone(TIME_ZONE)
         hoje=utc.localize(datetime.combine((datetime.today()), datetime.min.time()))
-        inicio="1900-01-01"
+        inicio=str(hoje.date()- timedelta(days=1))
         return render(request,'relatorioNotasData.html',{'data_inicio':str(inicio), 'data_fim':str(hoje.date()),'selected':0})
     else:
         utc=pytz.timezone(TIME_ZONE)
@@ -103,8 +103,8 @@ def relatorioNotasData(request):
         datainicio=utc.localize(datetime.combine(datetime.strptime(request.POST.get("data_inicio"),'%Y-%m-%d').date(),datetime.min.time()))
         datafim=utc.localize(datetime.combine(datetime.strptime(request.POST.get("data_fim"),'%Y-%m-%d').date(),datetime.min.time()))
         data_fim =datafim+ timedelta(days=1)
-        filtro1=Q(data_cadastro__gte=datainicio)
-        filtro2=Q(data_cadastro__lte=data_fim)
+        filtro1=Q(data_ocorrencia__gte=datainicio)
+        filtro2=Q(data_ocorrencia__lte=data_fim)
         notas=Nota_equipamento.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
         # print(notas)
 
@@ -203,10 +203,10 @@ def relatorioLogData(request):
     if request.method=="GET":
         utc=pytz.timezone(TIME_ZONE)
         hoje=utc.localize(datetime.combine((datetime.today()), datetime.min.time()))
-        inicio="1900-01-01"
+        inicio=inicio=str(hoje.date()- timedelta(days=1))
         log=[]
    
-        return render(request,'relatorioLogData.html',{'lista_log':log,'data_inicio':str(inicio), 'data_fim':str(hoje.date()),'selected':0})
+        return render(request,'relatorioLogData.html',{'lista_log':log,'data_inicio':inicio, 'data_fim':str(hoje.date()),'selected':0})
     else:
         utc=pytz.timezone(TIME_ZONE)
      

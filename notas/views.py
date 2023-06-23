@@ -14,6 +14,8 @@ from log.models import Log
 from .forms import *
 from django.http import JsonResponse
 from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 def notas(request):
     if not request.session.get('usuario'):
@@ -142,10 +144,11 @@ def cadastrarNota(request):
                 usuario=usuario
             )
             nota.save()
-            for material in data['material']:
-                Nota_material
+            # Linhas comentadas até a conclusão do cadastramento de material de consumo
+            """for material in data['material']:
+                #Nota_material
                 nota.material.add(material)
-                
+            """    
             Log.cadastramento(usuario=Usuario.objects.get(id=request.session.get('usuario')),transacao='ne',objeto=nota,nota_equipamento=nota)
             form=CadastraNota_equipamentoForm
             
@@ -287,14 +290,38 @@ def exibirModoFalhaEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     modosFalha=Modo_falha_equipamento.objects.all()
-    return render(request, "exibirModosFalhaEquipamento.html", {'modosFalha':modosFalha,'status':0})
+    paginator = Paginator(modosFalha, 25) # paginando resultados
+    #log=Log(transacao='eq',movimento='lt',usuario=usu,alteracao=f'{usu.nome} visualisou Lista equipamentos') # depois tem que logar isso
+    page = request.GET.get('page')# verifica se ja tem um pagina escolhida
+    try:
+        resultados_paginados = paginator.get_page(page) # cria paginas
+    except PageNotAnInteger:
+        # Se o número da página não for um inteiro, mostre a primeira página
+        resultados_paginados = paginator.get_page(1)
+    except EmptyPage:
+        # Se o número da página estiver fora do intervalo, mostre a última página
+        resultados_paginados = paginator.get_page(paginator.num_pages)
+    
+    return render(request, "exibirModosFalhaEquipamento.html", {'modosFalha':resultados_paginados,'status':0})
 
 def exibirNotas(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
-    notas=Nota_equipamento.objects.all() # depois tenho que filtrar isso
+    notas = Nota_equipamento.objects.order_by('-data_ocorrencia', '-data_cadastro')# se quiser criar filtro é aqui que deve fazer isso
+    paginator = Paginator(notas, 25) # paginando resultados
     #log=Log(transacao='eq',movimento='lt',usuario=usu,alteracao=f'{usu.nome} visualisou Lista equipamentos') # depois tem que logar isso
-    return render(request, "exibirnotas.html", {'notas':notas})
+    page = request.GET.get('page')# verifica se ja tem um pagina escolhida
+    try:
+        resultados_paginados = paginator.get_page(page) # cria paginas
+    except PageNotAnInteger:
+        # Se o número da página não for um inteiro, mostre a primeira página
+        resultados_paginados = paginator.get_page(1)
+    except EmptyPage:
+        # Se o número da página estiver fora do intervalo, mostre a última página
+        resultados_paginados = paginator.get_page(paginator.num_pages)
+    
+    
+    return render(request, "exibirnotas.html", {'notas':resultados_paginados})
 
 def editarNotas(request):
     if not request.session.get('usuario'):

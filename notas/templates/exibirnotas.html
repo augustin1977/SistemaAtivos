@@ -40,8 +40,24 @@
         </tbody>
       </table>
       </div>
+          
     </div>
     <br>
+    <div class="pagination">
+      <span class="step-links">
+          {% if notas.has_previous %}
+              <a href="?page=1">&laquo; Primeira</a>
+              <a href="?page={{ notas.previous_page_number }}">Anterior</a>
+          {% endif %}
+  
+          <span class="current-page">{{ notas.number }}</span>
+  
+          {% if notas.has_next %}
+              <a href="?page={{ notas.next_page_number }}">Próxima</a>
+              <a href="?page={{ notas.paginator.num_pages }}">Última &raquo;</a>
+          {% endif %}
+      </span>
+  </div>
     <div class='col-md-3'></div> 
     
 </div>
