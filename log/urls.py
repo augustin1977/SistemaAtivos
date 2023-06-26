@@ -10,4 +10,5 @@ urlpatterns = [path("menuRelatorios/",views.menuRelatorios, name="menuRelatorios
     path("baixarRelatorioNotaEquipamento/",views.baixarRelatorioNotaEquipamento, name="baixarRelatorioNotaEquipamento"),  
     path("relatorioNotasData/",views.relatorioNotasData, name="relatorioNotasData"),
     path("relatorioLogData/",views.relatorioLogData, name="relatorioLogData"),
+    path("baixarRelatorionotasEquipamentodata/",views.baixarRelatorionotasEquipamentodata, name="baixarRelatorionotasEquipamentodata"),
 ]

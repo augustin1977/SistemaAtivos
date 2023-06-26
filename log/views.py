@@ -110,7 +110,6 @@ def relatorioNotasData(request):
 
         return render(request,'relatorioNotasData.html',{'form':notas,'data_inicio':str(datainicio.date()), 'data_fim':str(datafim.date()),'selected':0})
 
-
 def relatorioLogEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -182,6 +181,7 @@ def baixarRelatorioNotaEquipamento(request):
         busca=int(request.GET.get("equipamentoid"))
     except:
         busca=0
+        
     notas=Nota_equipamento.objects.filter(equipamento=busca).order_by('-data_cadastro')
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="relatorio.csv"'
@@ -195,7 +195,6 @@ def baixarRelatorioNotaEquipamento(request):
         writer.writerow([obj.data_ocorrencia, obj.data_cadastro, obj.titulo,obj.descricao,obj.equipamento,
             obj.usuario])
     return response
-
 
 def relatorioLogData(request):
     if not request.session.get('usuario'):
@@ -230,3 +229,27 @@ def relatorioLogData(request):
                 'ocorrencia_equipamento':"Erro",'alteracao':item.alteracao})
         return render(request,'relatorioLogData.html',{'lista_log':lognovo,'data_inicio':str(datainicio.date()), 'data_fim':str(datafim.date()),'selected':0})
     
+def baixarRelatorionotasEquipamentodata(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    try :
+        datai=(request.GET.get("data_inicio"))
+        dataf=(request.GET.get("data_fim"))
+    except:
+        datai=0
+        dataf=0
+    filtro1=Q(data_ocorrencia__gte=datai)
+    filtro2=Q(data_ocorrencia__lte=dataf)
+    notas=Nota_equipamento.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="relatorio.csv"'
+    # Criar um objeto CSV Writer
+    response.write(u'\ufeff'.encode('utf8'))
+    writer = csv.writer(response, delimiter=';')
+    # Escrever o cabeçalho do arquivo CSV
+    writer.writerow(['Data_ocorrencia','Data_cadastro', 'Titulo', 'Descrição','Equipamento','Usuario'])
+    # Executar a consulta no banco de dados e adicione os resultados ao arquivo CSV   
+    for obj in notas:
+        writer.writerow([obj.data_ocorrencia, obj.data_cadastro, obj.titulo,obj.descricao,obj.equipamento,
+            obj.usuario])
+    return response
