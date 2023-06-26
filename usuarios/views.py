@@ -214,7 +214,7 @@ def listarUsuarios(request):
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     tipo=Tipo.objects.get(tipo="admin")
     if(usuario.tipo==tipo):
-        usuarios=Usuario.objects.filter(ativo=True)
+        usuarios=Usuario.objects.filter(ativo=True).order_by('nome')
         return render(request, "listaUsuarios.html", {'usuarios':usuarios})
     else:
         return redirect(f'/equipamentos/?status=50')
