@@ -29,7 +29,7 @@ def cadastrar(request):
     # tipo2=Q(tipo='especialuser')
     tipo3=Q(tipo='admin')
     tipo=Tipo.objects.filter(tipo3)
-    usuario= Usuario.objects.get(usuario=request.session.get('usuario'))
+    usuario= Usuario.objects.get(id=request.session.get('usuario'))
     if(usuario.tipo not in tipo): # verifica se o usuário é tipo especial
         return redirect(f'/equipamentos/?status=50') # se não for redireciona para pagina de acesso recusado
     return render(request, "cadastro.html", {'status':status})
