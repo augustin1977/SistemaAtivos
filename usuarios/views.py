@@ -20,7 +20,18 @@ def login(request):
 
 def cadastrar(request):
     # cria a view do cadastro de usuaário
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
     status=str(request.GET.get('status'))
+
+    # ### Bloco de bloqueio de usuario para acesso ###   
+    # tipo1=Q(tipo="superuser")
+    # tipo2=Q(tipo='especialuser')
+    tipo3=Q(tipo='admin')
+    tipo=Tipo.objects.filter(tipo3)
+    usuario= Usuario.objects.get(usuario=request.session.get('usuario'))
+    if(usuario.tipo not in tipo): # verifica se o usuário é tipo especial
+        return redirect(f'/equipamentos/?status=50') # se não for redireciona para pagina de acesso recusado
     return render(request, "cadastro.html", {'status':status})
 
 def editar(request):
