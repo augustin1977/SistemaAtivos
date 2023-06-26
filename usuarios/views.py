@@ -10,7 +10,7 @@ import re
 import string
 import random
 from django.http import Http404
-
+from django.db.models import Q
 def vazio(request):
     return redirect('/auth/login/') 
 def login(request):
