@@ -117,6 +117,19 @@ def cadastrarEquipamento(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     #print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Cadastro Equipamentos")
+    
+    
+    # ### Bloco de bloqueio de usuario para acesso ###   
+    # tipo1=Q(tipo="superuser")
+    # tipo2=Q(tipo='especialuser')
+    # tipo3=Q(tipo='admin')
+    # tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
+    # usuario= Usuario.objects.get(usuario=request.session.get('usuario'))
+    # if(usuario.tipo not in tipo): # verifica se o usuário é tipo especial
+    #     return redirect(f'/equipamentos/?status=50') # se não for redireciona para pagina de acesso recusado
+
+
+
     if request.method=="GET":
         form=equipamentoCadastrarForm(initial={'usuario':request.session.get('usuario')})      
 

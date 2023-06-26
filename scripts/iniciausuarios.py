@@ -20,8 +20,8 @@ def run():
         linha=arquivo.readline()
         i=0
         while(linha):
-            linha=arquivo.readline().strip() # transforma a linha num vetor
-            vetor=linha.split('\t')
+            linha=arquivo.readline().strip() # Retira espaços indesejados
+            vetor=linha.split('\t') # cria o vetor com os valores
             if vetor[0]:
                 remetentes[vetor[0]]=vetor[1]
             i+=1 # conta numero de linhas lidas
