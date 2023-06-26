@@ -71,9 +71,9 @@ def exibirDetalheEquipamento(request):
     return render(request, "exibirDetalheEquipamento.html", {'equipamento':equipamento, 'materiais':materiais, 'media':arquivos})
 
 def editarEquipamento(request):
-    usuario=Usuario.objects.get(id=request.session.get('usuario'))
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
     if request.method=="GET":
         equipamento=request.GET.get("equipamento")
         dados=Equipamento.objects.get(id=equipamento,ativo=True)

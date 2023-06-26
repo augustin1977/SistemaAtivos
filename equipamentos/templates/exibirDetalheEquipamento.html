@@ -37,14 +37,21 @@
             <td>{{equipamento.data_cadastro}}</td></tr>
             <th scope="row">Data Compra</th>
             <td>{{equipamento.data_compra}}</td></tr>
+            <th scope="row">Data Ultima calibração</th>
+            <td>{equipamento.data_ultima_calibracao} </td> </tr>
+            <th scope="row">Data Atualização</th>
+            <td>{equipamento.data_ultima_atualizacao} </td> </tr>
             <th scope="row">Numero Patrimonio</th>
-            <td>{{equipamento.patrimonio}} exluir-{{ confirmarexluir }}</td> </tr>
-            <th scope="row">Material Consumo</th>
+            <td>{{equipamento.patrimonio}} </td> </tr>
+            <th scope="row">Responsavel</th>
+            <td>{{equipamento.responsavel}} </td> </tr>
+            <!-- Quando implementar a funcionalidade de materiais -->
+            <!-- <th scope="row">Material Consumo</th>
             <td>
             {% for material in materiais %}   
                 {{material}} <br>
             {% endfor %}
-            </td> </tr>
+            </td> </tr> -->
             <th scope="row">Arquivos</th>
             <td>
               <table class="table table-hover">
