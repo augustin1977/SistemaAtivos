@@ -7,6 +7,13 @@ from cadastro_equipamentos.settings import TIME_ZONE
 import datetime
 import pytz
 
+class CustomMoney(MoneyField):
+    def clean(self, value):
+        value[0] = value[0].replace(',', '.')
+        value= super().clean(value)
+
+        return value
+
 class localFormCadastro(ModelForm):
     class Meta:
         model = Local_instalacao
@@ -56,16 +63,16 @@ class equipamentoEditarForm(Form):
     data_compra=DateTimeField(widget=DateInput( attrs={'class': 'form-control'}))
     data_ultima_calibracao=DateTimeField(required=False,widget=DateInput( attrs={'class': 'form-control'}))
     patrimonio=CharField(widget= TextInput(attrs={'class': "form-control"}))
-    material_consumo=ModelMultipleChoiceField(required=False,blank=True,queryset= Material_consumo.objects.all(),widget=SelectMultiple(attrs={'class': "form-control"}))
+    # material_consumo=ModelMultipleChoiceField(required=False,blank=True,queryset= Material_consumo.objects.all(),widget=SelectMultiple(attrs={'class': "form-control"}))
     usuario=CharField(label="",widget=HiddenInput())
-    custo_aquisição=MoneyField(default_currency='BRL',required=False,widget= MoneyWidget(attrs={'class': "form-control"}))
+    custo_aquisição=CustomMoney(default_currency='BRL',required=False,widget= MoneyWidget(attrs={'class': "form-control"}))
     responsavel=CharField(widget= TextInput(attrs={'class': "form-control"}))
     potencia_eletrica=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
     nacionalidade=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
     tensao_eletrica=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
     projeto_compra=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
     especificacao=CharField(required=False,widget= Textarea(attrs={'class': "form-control"}))
-    outros_dados=CharField(widget= Textarea(attrs={'class': "form-control"}))
+    outros_dados=CharField(required=False,widget= Textarea(attrs={'class': "form-control"}))
 
    
     def clean(self):
@@ -90,9 +97,9 @@ class equipamentoCadastrarForm(Form):
     data_compra=DateTimeField(widget=DateInput( attrs={'type': 'date', 'class': 'form-control'}))
     data_ultima_calibracao=DateTimeField(widget=DateInput( attrs={'type': 'date', 'class': 'form-control'}))
     patrimonio=CharField(widget= TextInput(attrs={'class': "form-control"}))
-    material_consumo=ModelMultipleChoiceField(required=False,blank=True,queryset= Material_consumo.objects.all(),widget=SelectMultiple(attrs={'class': "form-control"}))
+    # material_consumo=ModelMultipleChoiceField(required=False,blank=True,queryset= Material_consumo.objects.all(),widget=SelectMultiple(attrs={'class': "form-control"}))
     usuario=CharField(label="",widget=HiddenInput())
-    custo_aquisição=MoneyField(default_currency='BRL',required=True,widget= MoneyWidget(attrs={'class': "form-control"}))
+    custo_aquisição=CustomMoney(default_currency='BRL',required=True,widget= MoneyWidget(attrs={'class': "form-control"}))
     responsavel=CharField(widget= TextInput(attrs={'class': "form-control"}))
     potencia_eletrica=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
     nacionalidade=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
@@ -106,6 +113,7 @@ class equipamentoCadastrarForm(Form):
         super().clean()
         utc=pytz.timezone(TIME_ZONE)# pytz.UTC
         cd=self.cleaned_data
+        # print(cd)
         cd['data_cadastro']=utc.localize( datetime.datetime.now())
         data_compra=cd["data_compra"]
         data_cadastro=cd["data_cadastro"]

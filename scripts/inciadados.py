@@ -48,7 +48,7 @@ def run():
     civil=['Problema Base fixação','Chummbar equipamento','Pitura','outros']
     TI=['Erro sistema Operacional',"computador não liga/inicia",'Tela Azul','Sistema travado','Erro comunicação','calibração','outros']
     outros=["Outros", 'Falta energia','Equipamento sem componentes']
-    geral=['Falha geral', 'problema não identificado','outros']
+    geral=['Calibração','Falha geral', 'problema não identificado','outros']
     eletronica=['Placa queimada/defeito','botão/ botoeira com defeito','Falha sensor','PLC travado/queimado','Preventiva','Calibração','outros' ]
     
     disciplinas={'Elétrica':eletrica,'Mecânica':mecanica,'Hidraulica':hidraulica,"Civil":civil,'Eletrônica':eletronica,'Informática':TI,'Geral':geral,'Outros':outros}

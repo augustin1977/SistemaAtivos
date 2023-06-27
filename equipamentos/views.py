@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.contrib.staticfiles.views import serve
 from django.http import HttpResponse, JsonResponse
 from .models import Usuario,Tipo,Equipamento,Material_consumo,Media,Fabricante
+from notas.models import *
 from django.shortcuts import redirect 
 from cadastro_equipamentos import settings
 from django.http import HttpResponse, Http404
@@ -97,18 +98,19 @@ def editarEquipamento(request):
                 alteracao|=alterado
             if alteracao:
                 e.save()
-            
-            lista_materiais=Material_consumo.objects.filter(equipamento__id=details.cleaned_data['id'])
-            for material in details.cleaned_data['material_consumo']:
-                if material not in lista_materiais:
-                    log=Log(transacao='mc',usuario=usuario,equipamento=e,alteracao=f'O usuario {usuario} cadastrou o material {material} no equipamento {e}')
-                    log.save()
-                    e.material_consumo.add(material)
-            for material in lista_materiais:
-                if material not in details.cleaned_data['material_consumo']:
-                    e.material_consumo.remove(material)
-                    log=Log(transacao='mc',movimento='dl',usuario=usuario,equipmento=e,alteracao=f'o usuario {usuario} excluiu o material {material} do equipamento {e}')
-                    log.save()
+            # bloco comentado pois os materiais não foram implementados
+
+            # lista_materiais=Material_consumo.objects.filter(equipamento__id=details.cleaned_data['id'])
+            # for material in details.cleaned_data['material_consumo']:
+            #     if material not in lista_materiais:
+            #         log=Log(transacao='mc',usuario=usuario,equipamento=e,alteracao=f'O usuario {usuario} cadastrou o material {material} no equipamento {e}')
+            #         log.save()
+            #         e.material_consumo.add(material)
+            # for material in lista_materiais:
+            #     if material not in details.cleaned_data['material_consumo']:
+            #         e.material_consumo.remove(material)
+            #         log=Log(transacao='mc',movimento='dl',usuario=usuario,equipmento=e,alteracao=f'o usuario {usuario} excluiu o material {material} do equipamento {e}')
+            #         log.save()
             
     equipamentos=Equipamento.objects.filter(ativo=True)
     return render(request, "exibirEquipamentos.html", {'equipamentos':equipamentos})
@@ -144,7 +146,8 @@ def cadastrarEquipamento(request):
             data_ultima_calibracao=details.cleaned_data['data_ultima_calibracao']
             data_cadastro=details.cleaned_data['data_cadastro']
             patrimonio=details.cleaned_data['patrimonio']
-            material_consumo=details.cleaned_data['material_consumo']
+            #material_consumo=details.cleaned_data['material_consumo']
+            material_consumo=[]
             usuario=details.cleaned_data['usuario']
             codigo=details.cleaned_data['codigo']
             custo_aquisição=details.cleaned_data['custo_aquisição']
@@ -163,8 +166,26 @@ def cadastrarEquipamento(request):
                             nacionalidade=nacionalidade,data_ultima_atualizacao=data_ultima_atualizacao,tensao_eletrica=tensao_eletrica,
                             projeto_compra=projeto_compra,especificacao=especificacao,outros_dados=outros_dados,custo_aquisição=custo_aquisição,ativo=True)
             e.save()
+            mecanica= Disciplina.objects.get(disciplina='Mecânica')
+            geral= Disciplina.objects.get(disciplina='Geral')
+            outros= Disciplina.objects.get(disciplina='Outros')
+
+            filtro1=Q(disciplina=mecanica)
+            filtro2=Q(disciplina=geral)
+            filtro3=Q(disciplina=outros)
+            modos=Modo_Falha.objects.filter(filtro1|filtro2|filtro3)
+            for modo in modos:
+                m=Modo_falha_equipamento(equipamento=e,modo_falha=modo)
+                m.save()
+            if e.potencia_eletrica or e.tensao_eletrica:
+                modos=Modo_Falha.objects.filter(disciplina=Disciplina.objects.get(disciplina='Elétrica'))
+                for modo in modos:
+                    m=Modo_falha_equipamento(equipamento=e,modo_falha=modo)
+                    m.save()
+                    
             usuario=Usuario.objects.get(id=request.session.get('usuario'))
             Log.cadastramento(objeto=e,transacao='eq',usuario=usuario,equipamento=e)
+            # Cadastrando modos de falha Equipamento
             
 
             for material in material_consumo:
