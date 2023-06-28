@@ -29,6 +29,7 @@ def run():
     except Exception as erro:
         print(erro) # imp´rime o erro em caso de erro
     pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$" # Padrão para verificar se o email é um valor válido
+    print(remetentes)
     tipo=Tipo.objects.filter(tipo="user")
     sis=Usuario.objects.get(nome='System') # pega o usuario System
     #print(Tipo[0])
@@ -38,7 +39,7 @@ def run():
             if re.search(pattern, remetentes[nome]): # verifica se o e-mail é valido
                 senha=gera_senha(12) # gera uma senha aleatoria de 12 digitos 
                 senha_cripto=sha256(senha.encode()).hexdigest() # criptografa a senha usado sha256
-                if len(Usuario.objects.filter(email=remetentes[nome]))==0: # verifica se o email ja está no banco de dados
+                if len(Usuario.objects.filter(email=remetentes[nome],ativo=True))==0: # verifica se o email ja está no banco de dados
                     usuario=Usuario(nome=nome,chapa=0,email=remetentes[nome],senha=senha_cripto,tipo=tipo[0],primeiro_acesso=True,ativo=True)
                     usuario.save() # caso o usuario não exista, cadastra o usuario e salva no banco
                     
