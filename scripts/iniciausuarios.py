@@ -32,8 +32,6 @@ def run():
     print(remetentes)
     tipo=Tipo.objects.filter(tipo="user")
     sis=Usuario.objects.get(nome='System') # pega o usuario System
-    #print(Tipo[0])
-    remetentes={"Eric Augustin":"ericaugustin@gmail.com","Eric Augustin2":"ericaugustin@hotmail.com"}
     for nome in remetentes: # itera cada nome no dicionário remetentes
         if nome and remetentes[nome]: # verifica se no dicionario está completa como nome e email
             if re.search(pattern, remetentes[nome]): # verifica se o e-mail é valido
@@ -65,7 +63,7 @@ def run():
                         send_mail(subject='Cadastro no Sistema de Gestão de Ativos',message=conteudo_plain,
                             from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario.email,info_email['email']],
                             html_message=conteudo_html)  
-                        #time.sleep(random.randint(1,2)+random.randint(0,5))
+                        time.sleep(random.randint(1,10)+random.randint(0,10)+random.randint(0,5)+random.randint(0,5))
                     except Exception as erro:
                         print("#######Erro no envio do email############")
                         print(erro) # em caso de erro imprime o erro
