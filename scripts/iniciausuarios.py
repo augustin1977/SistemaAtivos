@@ -32,7 +32,7 @@ def run():
     tipo=Tipo.objects.filter(tipo="user")
     sis=Usuario.objects.get(nome='System') # pega o usuario System
     #print(Tipo[0])
-    #remetentes={"Eric Augustin":"ericaugustin@gmail.com"}
+    remetentes={"Eric Augustin":"ericaugustin@gmail.com","Eric Augustin":"ericaugustin@hotmail.com"}
     for nome in remetentes: # itera cada nome no dicionário remetentes
         if nome and remetentes[nome]: # verifica se no dicionario está completa como nome e email
             if re.search(pattern, remetentes[nome]): # verifica se o e-mail é valido
