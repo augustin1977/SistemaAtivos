@@ -63,9 +63,9 @@ class CadastraNota_equipamentoForm(ModelForm):
         model = Nota_equipamento
         fields = ['titulo', 'descricao', 'equipamento', 'modo_Falha_equipamento',  'data_ocorrencia', 'falha', 'calibracao', 'lubrificao']
         widgets = {
-            'titulo': TextInput(attrs={'class': 'form-control'}),
-            'descricao': Textarea(attrs={'class': 'form-control'}),
-            'data_ocorrencia': DateInput(attrs={'class': 'form-control'}),
+            'titulo': TextInput(attrs={'class': 'form-control','placeholder':'Nome da ocorrencia para futura referencia e pesquisa'}),
+            'descricao': Textarea(attrs={'class': 'form-control','placeholder':'Descrição detalhada da ocorrencia'}),
+            'data_ocorrencia': DateInput(attrs={'class': 'form-control','placeholder':'Data da ocorrencia no formato dd/mm/aaaa'}),
             'falha': CheckboxInput(attrs={'class': 'form-control'}),
             'calibracao': CheckboxInput(attrs={'class': 'form-control'}),
             'lubrificao': CheckboxInput(attrs={'class': 'form-control'}),
