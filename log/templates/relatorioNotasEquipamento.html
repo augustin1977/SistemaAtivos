@@ -29,9 +29,9 @@
                     {% for equipamento in form %}
                     
                     {% if equipamento.id == selected %}
-                    <option value="{{equipamento.id}}" selected>{{equipamento.nome_equipamento}} </option>
+                    <option value="{{equipamento.id}}" selected>{{equipamento.nome_equipamento}} - {{equipamento.codigo}}</option>
                     {% else %}
-                    <option value="{{equipamento.id}}">{{equipamento.nome_equipamento}}</option>
+                    <option value="{{equipamento.id}}">{{equipamento.nome_equipamento}} - {{equipamento.codigo}}</option>
                     {% endif %}
                     {% endfor %}
 
