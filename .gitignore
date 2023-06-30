@@ -8,3 +8,4 @@ teste.py
 gunicorn_conf
 *.log
 Lista_LPM.txt
+images/
