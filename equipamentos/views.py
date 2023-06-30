@@ -194,7 +194,7 @@ def cadastrarEquipamento(request):
                 log.save()
             
             form=equipamentoCadastrarForm(initial={'usuario':request.session.get('usuario')}) 
-            return render(request, "cadastrarEquipamento.html", {'form':form,'status':1})
+            return render(request, "cadastrarEquipamento.html", {'form':form,'status':1,'equipamento':nome_equipamento+" - "+codigo})
         else:
             return render(request, "cadastrarEquipamento.html", {'form':details}) 
         

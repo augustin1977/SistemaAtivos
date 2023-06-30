@@ -36,13 +36,14 @@ $(document).ready(function() {
                 equipamentos.forEach(function(equipamento) {
                     var row = $('<tr>');
                     var nome = $('<td>').text(equipamento.nome_equipamento);
+                    var codigo = $('<td>').text(equipamento.codigo);
                     var modelo = $('<td>').text(equipamento.modelo);
                     var tipo = $('<td>').text(equipamento.tipo_equipamento);
                     var local = $('<td>').text(equipamento.local);
                     var detalhes = $('<td>').html('<a href="{% url "exibirDetalheEquipamento" %}?id=' + equipamento.id + '"><i class="bi bi-file-text"></i></a>');
                     var editar = $('<td>').html('<a href="{% url "editarEquipamento" %}?equipamento=' + equipamento.id + '"><i class="bi bi-pencil"></i></a>');
                     var excluir = $('<td>').html('<a href="{% url "excluirEquipamento" %}?id=' + equipamento.id+ '&excluir=1"><i class="bi bi-trash"></i></a>');
-                    row.append(nome, modelo, tipo, local, detalhes, editar, excluir);
+                    row.append(nome,codigo, modelo, tipo, local, detalhes, editar, excluir);
                     $('#equipamentos_list').append(row);
                 });
 
@@ -84,20 +85,22 @@ $(document).ready(function() {
       <table class="table table-hover" style="table-layout: fixed;">
         <colgroup>
           <col style="width: 30%">
-          <col style="width: 15%">
-          <col style="width: 15%">
-          <col style="width: 25%">
           <col style="width: 8%">
-          <col style="width: 8%">
-          <col style="width: 8%">
+          <col style="width: 12%">
+          <col style="width: 12%">
+          <col style="width: 20%">
+          <col style="width: 7%">
+          <col style="width: 5%">
+          <col style="width: 6%">
         </colgroup>
       <thead class="thead-light sticky-top" > 
           <tr>
             <th scope="col">Equipamentos</th>
+            <th scope="col">Código</th>
             <th scope="col">Modelo</th>
             <th scope="col">Tipo</th>
             <th scope="col">Local Instalação</th>
-            <th scope="col">Ver detalhes</th>
+            <th scope="col">Detalhes</th>
             <th scope="col">Editar</th>
             <th scope="col">Excluir</th>
           </tr>
@@ -105,7 +108,8 @@ $(document).ready(function() {
         <tbody id="equipamentos_list" style="overflow: auto;" >
             {% for equipamento in equipamentos %}
             <tr>
-            <th scope="row">{{equipamento.nome_equipamento}}-{{equipamento.codigo}}</th>
+            <th scope="row">{{equipamento.nome_equipamento}}</th>
+            <td>{{ equipamento.codigo }}</td> 
             <td>{{equipamento.modelo}}</td>
             <td>{{equipamento.tipo_equipamento}}</td>
             <td>{{equipamento.local}}</td>

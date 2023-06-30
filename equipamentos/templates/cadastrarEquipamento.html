@@ -16,7 +16,7 @@
             <hr>
             
             {% if status == 1 %}
-                <div class="alert alert-success" role="alert">Fomulario cadatrados com sucesso</div>    
+                <div class="alert alert-success" role="alert">Equipamento {{ equipamento }} cadatrado com sucesso</div>    
             {% endif %}
             <form method ="POST" action="{% url 'cadastrarEquipamento' %}"> {% csrf_token %}
                 {{ form }}
