@@ -15,6 +15,7 @@ import os,csv
 from log.models import Log
 from .forms import *
 import equipamentos.funcoesAuxiliares as funcoesAuxiliares
+from equipamentos.calcula_dados_sistema import *
 from django.db.models import Q
 import json
 
@@ -720,3 +721,7 @@ def excluirLocal(request):
             local.delete()
             return redirect('/equipamentos/listarLocais')
         return redirect(f'/equipamentos/?status=50')
+
+def consulta_dados_sistema(request):
+    linhas,letras=acessaPastaRecursiva(BASE_DIR)
+    return HttpResponse(f"<h1>Estatisticas do Site</h1>Foram digitados {converteBR(letras)} caracteres em {converteBR(linhas)} linhas de codigo.<br>")

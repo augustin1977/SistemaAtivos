@@ -18,6 +18,7 @@ from django.urls import path
 from django.conf.urls import include
 from django.conf.urls.static import static
 from django.conf import settings
+from equipamentos import views
 
 
 urlpatterns = [
@@ -27,8 +28,11 @@ urlpatterns = [
     path('auth/', include('usuarios.urls')),
     path('', include('usuarios.urls')),
     path('log/', include('log.urls')),
+    path('consulta_dados_sistema/', views.consulta_dados_sistema, name='consulta_dados_sistema'),
 ]
 urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL,
                               document_root=settings.MEDIA_ROOT)
+        
+

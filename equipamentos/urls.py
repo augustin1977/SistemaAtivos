@@ -28,6 +28,7 @@ urlpatterns = [path("",views.home, name="home"),
                path('excluirTipo/',views.excluirTipo,name="excluirTipo"),
                path('excluirLocal/',views.excluirLocal,name="excluirLocal"),
                path('get_equipamentos/', views.get_equipamentos, name='get_equipamentos'),
+               path('consulta_dados_sistema/', views.consulta_dados_sistema, name='consulta_dados_sistema'),
 ]
 
 
