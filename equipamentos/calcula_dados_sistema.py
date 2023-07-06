@@ -54,7 +54,7 @@ def acessarPastaecontar(pasta):
 	for p in pasta.arquivos:
 		cLinha=0
 		cletras=0
-		if p[-2:]=='py' or  p[-4:]=='html' or p[-3:]=='htm' or p[-2:]=='md':
+		if p[-2:]=='py' or p[-3:]=='txt' or  p[-4:]=='html' or p[-3:]=='htm' or p[-2:]=='md':
 			cLinha,cletras=contar_linhas_com_conteudo(os.path.join(pasta.caminho,p))
 			contadorLinha+=cLinha
 			contadorletras+=cletras
@@ -64,13 +64,16 @@ def acessarPastaecontar(pasta):
 def contar_linhas_com_conteudo(caminho_arquivo):
     contadorLinha = 0
     contadorletras=0
-    with open(caminho_arquivo, 'r') as arquivo:
-        for linha in arquivo:
-            linha = linha.strip()  
-            if linha and not linha.isspace():
-                contadorLinha += 1
-                contadorletras+=len(linha)
-                #print(linha)
+    try:
+        with open(caminho_arquivo, 'r') as arquivo:
+            for linha in arquivo:
+                linha = linha.strip()  
+                if linha and not linha.isspace():
+                    contadorLinha += 1
+                    contadorletras+=len(linha)
+                    #print(linha)
+    except:
+	    return 0,0
     return contadorLinha,contadorletras
 
 
