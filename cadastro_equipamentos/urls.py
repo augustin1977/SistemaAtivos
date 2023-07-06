@@ -29,6 +29,7 @@ urlpatterns = [
     path('', include('usuarios.urls')),
     path('log/', include('log.urls')),
     path('consulta_dados_sistema/', views.consulta_dados_sistema, name='consulta_dados_sistema'),
+    path('estastisticas/', views.consulta_dados_sistema, name='estatisticas'),
 ]
 urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
