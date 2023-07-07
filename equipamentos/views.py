@@ -629,7 +629,7 @@ def cadastrarArquivo(request):
                         equipamento=form.cleaned_data['equipamento'])
             usuario=Usuario.objects.get(id=request.session.get('usuario'))
             media.save()
-            Log.cadastramento(usuario=usuario,transacao='me',objeto=media)
+            Log.cadastramento(objeto=media,usuario=usuario,transacao='me',equipamento=form.cleaned_data['equipamento'])
             return redirect('cadastrarArquivo')
         else:
             pass
