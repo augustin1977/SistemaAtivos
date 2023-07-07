@@ -1,6 +1,6 @@
 import os
 class Pasta:
-	"""Cria estrutura de dados para funcionamento das funções de calculo do nuero de linhas e caracteres"""
+	"""Cria estrutura de dados para funcionamento das funções de calculo do numero de linhas e caracteres"""
 	def __init__(self,caminho):
 		self.caminho=os.path.join(caminho)
 		self.arquivos=[]
@@ -16,12 +16,14 @@ class Pasta:
 				self.subpastas.append(Pasta(os.path.join(self.caminho,arquivo)))
 	def __str__(self):
 		return str(self.arquivos)
-def converteBR(numero):
+def converteBR(numero,casas=3):
 	"""Converte numero padão americano em numero padrão BR"""
 	tipo=type(numero)
 	if not(tipo==int or tipo==float):
 		return "erro - Valor não numerico -> "+str(numero)
 	else :
+		if tipo==float:
+			numero=round(numero,casas)
 		string=f"{numero:_}"
 		string=string.replace(".",",")
 		string= string.replace('_','.')
@@ -48,6 +50,7 @@ def acessaPastaRecursiva(pasta):
 	return contadorLinha,contadorletras
 
 def acessarPastaecontar(pasta):
+	"""Acessa a pasta recebina na variavel pasta  e retorna o numero de linhas e de caracteres de todos os arquvios dessa pasta """
 	contadorLinha = 0
 	contadorletras = 0
 	pasta=Pasta(pasta)
@@ -62,6 +65,7 @@ def acessarPastaecontar(pasta):
 	return contadorLinha,contadorletras
 
 def contar_linhas_com_conteudo(caminho_arquivo):
+    """Recebe um nome de arquivo com seu caminho completo e retorna quantas linhas não vazias e caracteres ele possui"""
     contadorLinha = 0
     contadorletras=0
     try:
@@ -73,7 +77,7 @@ def contar_linhas_com_conteudo(caminho_arquivo):
                     contadorletras+=len(linha)
                     #print(linha)
     except:
-	    return 0,0
+        return 0,0
     return contadorLinha,contadorletras
 
 

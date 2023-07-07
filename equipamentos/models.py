@@ -10,6 +10,7 @@ from djmoney.models.fields import MoneyField
 
 
 class Fabricante(models.Model):
+    """Criação do banco de dade de Fabricante ou forneceodor do equipamento"""
     nome_fabricante=models.CharField(max_length=80)
     endereco_fabricante=models.CharField(max_length=180,null=True, blank=True)
     nome_contato_fabricante=models.CharField(max_length=80,null=True, blank=True)
@@ -23,6 +24,7 @@ class Fabricante(models.Model):
         ordering = ['nome_fabricante']
 
 class Local_instalacao(models.Model):
+    """Criação do banco de dade de Local de instalação"""
     laboratorio=models.CharField(max_length=30)
     predio=models.CharField(max_length=50)
     piso=models.CharField(max_length=80)
@@ -49,6 +51,7 @@ class Local_instalacao(models.Model):
         "armario":self.armario,'prateleira':self.prateleira}
    
 class Tipo_equipamento(models.Model):
+    """Criação do banco de dade de tipo de equipamento"""
     nome_tipo=models.CharField(max_length=50)
     sigla=models.CharField(max_length=3,unique=True)
     descricao_tipo=models.TextField(null=True, blank=True)    
@@ -60,6 +63,7 @@ class Tipo_equipamento(models.Model):
         return {'id':self.id, 'nome_tipo':self.nome_tipo,"descricao_tipo":self.descricao_tipo}
 
 class Material_consumo(models.Model):
+    """Criação do banco de dade de material de consumo - ainda não completamtne implementado, somete criado o BD"""
     nome_material=models.CharField(max_length=70)
     fornecedor=models.ForeignKey(Fabricante,on_delete=models.SET_NULL, null=True, blank=True)
     especificacao_material=models.TextField(null=True, blank=True)
@@ -76,6 +80,7 @@ class Material_consumo(models.Model):
 
 
 class Equipamento(models.Model):
+    """Criação do banco de dade do equipamento"""
     nome_equipamento=models.CharField(max_length=80)
     modelo=models.CharField(max_length=80,null=True, blank=True)
     fabricante=models.ForeignKey(Fabricante, on_delete=models.DO_NOTHING,null=True, blank=True)
@@ -118,6 +123,7 @@ class Equipamento(models.Model):
 
 
 class Media(models.Model):
+    """Criação do banco de dade de arquivos do equipamento"""
     nome=models.CharField(max_length=50,null=False, blank=False)
     documentos= models.FileField(upload_to ='files/',max_length=255,null=False, blank=False)
     equipamento=models.ForeignKey(Equipamento,on_delete=models.DO_NOTHING, null=False, blank=False)

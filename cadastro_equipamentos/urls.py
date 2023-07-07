@@ -30,6 +30,7 @@ urlpatterns = [
     path('log/', include('log.urls')),
     path('consulta_dados_sistema/', views.consulta_dados_sistema, name='consulta_dados_sistema'),
     path('estatisticas/', views.consulta_dados_sistema, name='estatisticas'),
+    path('estatistica/', views.consulta_dados_sistema, name='estatistica'),
 ]
 urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:

@@ -1,6 +1,7 @@
 import random
 
 def retiraespacos(palavra):
+    """Recebe um string e retorna esse string sem espaços ou caracteres não imprimiveis"""
     resultado=""
     for letra in palavra:
         if not letra==" ":
@@ -8,6 +9,8 @@ def retiraespacos(palavra):
     return resultado
             
 def fazlista(palavra,lista):
+    """Recebe um string e uma lista de string e retorna uma string de 3 caracteres,
+      que possuo o maior numeros de caracteres da string original e que não esteja contida na lista """
     letras="ABCDEFGHIJKLMOPQRSTUVXYWZ"
     siglas=lista
     item=retiraespacos(palavra)
