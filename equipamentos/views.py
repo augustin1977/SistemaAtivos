@@ -641,14 +641,22 @@ def cadastrarArquivo(request):
 
 def excluiArquivo(request):
     if not request.session.get('usuario'):
-        return redirect('/auth/login/?status=2')
+            return redirect('/auth/login/?status=2')
     if request.method == 'GET':
-       media=Media.objects.get(id=request.GET.get('id'))
-       id_equipamento=media.equipamento.id
-       fullpath = os.path.normpath(os.path.join(MEDIA_ROOT, str(media.documentos)))
-       os.remove(fullpath)
-       media.delete()
-       return  redirect(f'/equipamentos/exibirDetalheEquipamento/?id={id_equipamento}')
+        usuario=Usuario.objects.get(id=request.session.get('usuario'))
+        media=Media.objects.get(id=request.GET.get('id'))
+        id_equipamento=media.equipamento.id
+        fullpath = os.path.normpath(os.path.join(MEDIA_ROOT, str(media.documentos)))
+        caminho_backup=os.path.join(MEDIA_ROOT,'backup',str(media.equipamento))
+        #os.remove(fullpath)
+        equipamento=Equipamento.objects.get(id=id_equipamento)
+        try:
+           os.replace(fullpath,caminho_backup)
+           Log.exclusao(objeto=media,transacao='me',usuario=usuario,equipamento=equipamento)
+           media.delete()
+        except Exception  as erro:
+            return HttpResponse("Erro Ao excluir o arquivo<br>"+str(erro))
+        return  redirect(f'/equipamentos/exibirDetalheEquipamento/?id={id_equipamento}')
     
     return HttpResponse("formulario de excluir arquivos")
 
