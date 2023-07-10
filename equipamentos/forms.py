@@ -6,6 +6,7 @@ from djmoney.forms.fields import MoneyField,MoneyWidget
 from cadastro_equipamentos.settings import TIME_ZONE
 import datetime
 import pytz
+import os
 
 class CustomMoney(MoneyField):
     def clean(self, value):
@@ -180,7 +181,12 @@ class materialCadastraForm(ModelForm):
 
 class mediaForm(ModelForm):
     #id=CharField(label="",widget=HiddenInput(),required=False)
-    
+    def clean_documentos(self):
+        documentos = self.cleaned_data['documentos']
+        if len(documentos._get_name()) > 128:
+            raise ValidationError('O nome do arquivo é muito longo. Por favor, renomeie o arquivo reduza o tamanho para até 128 caracteres.')
+        return documentos
+
     class Meta:
         model = Media
         fields = '__all__'
@@ -192,7 +198,5 @@ class mediaForm(ModelForm):
         }
         labels = {
             'nome': 'Nome do arquivo','equipamento':'Equipamento','documentos':'Documento'
-        }
-
+        }  
     
-
