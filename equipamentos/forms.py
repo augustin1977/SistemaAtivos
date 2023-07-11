@@ -183,7 +183,9 @@ class mediaForm(ModelForm):
     #id=CharField(label="",widget=HiddenInput(),required=False)
     def clean_documentos(self):
         documentos = self.cleaned_data['documentos']
-        if len(documentos._get_name()) > 128:
+        if documentos.size > (40*1000*2**10) : # Se o Arquivo for maior que 40Mbytes
+            raise ValidationError('O nome do arquivo é muito grande. Por favor, divida o arquivo ou compacte seu contudo, o tamanho maximo aceito é 40MB.')
+        if len(documentos._get_name()) > 128: # se o nome do arquivo foi maior que 128 caracteres
             raise ValidationError('O nome do arquivo é muito longo. Por favor, renomeie o arquivo reduza o tamanho para até 128 caracteres.')
         return documentos
 
@@ -193,10 +195,10 @@ class mediaForm(ModelForm):
         widgets = {
             'nome':TextInput (attrs={'class': "form-control",'placeholder':'Nome de referencia do Arquivo. Ex: Manual, Nota fiscal, etc...'}),
             'equipamento':Select (attrs={'class': "form-control"}),
-            'documentos':ClearableFileInput(attrs={'multiple': True,'class': "form-control"}),
+            'documentos':ClearableFileInput(attrs={'multiple': False,'class': "form-control"}),
             
         }
         labels = {
-            'nome': 'Nome do arquivo','equipamento':'Equipamento','documentos':'Documento'
+            'nome': 'Nome do arquivo','equipamento':'Equipamento','documentos':'Documento - Tamanho máximo do arquivo - 40MB'
         }  
     
