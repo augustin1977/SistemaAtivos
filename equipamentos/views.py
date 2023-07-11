@@ -648,9 +648,9 @@ def excluiArquivo(request):
         id_equipamento=media.equipamento.id
         fullpath = os.path.normpath(os.path.join(MEDIA_ROOT, str(media.documentos)))
         caminho_backup=os.path.normpath(os.path.join(MEDIA_ROOT,'backup',os.path.basename(fullpath)))
-        print(media.equipamento)
-        print(fullpath)
-        print(caminho_backup)
+        # print(media.equipamento)
+        # print(fullpath)
+        # print(caminho_backup)
         equipamento=Equipamento.objects.get(id=id_equipamento)
         try:
             os.replace(fullpath,caminho_backup)
