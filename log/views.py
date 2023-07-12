@@ -17,6 +17,15 @@ from datetime import datetime,timedelta
 import pytz
 
 
+
+
+
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+
 lista_transacoes={'eq':'Equipamento','te':'Tipo Equipamento','fn':'Fornecedor','li':'Local Instalação','mc':'Material Consumo',
                         'me':'media','dc':'Disciplina de Manutenção','mf':'Modo de Falha','mq':'Modo de falha Equipamento',
                         'nm':'Ocorrência Material','ne':'Ocorrência Equipamento','us':'usuario','tu':'Tipo de Usuario','rt':"Relatório"}
@@ -88,6 +97,7 @@ def baixarRelatorioLog(request):
             writer.writerow([obj.data_cadastro.strftime("%d-%m-%Y %H:%M:%S"), obj.transacao, obj.movimento,obj.equipamento,obj.nota_equipamento,
                 obj.usuario,obj.alteracao])
         return response
+
 
 def relatorioNotasData(request):
     if not request.session.get('usuario'):
@@ -230,6 +240,7 @@ def relatorioLogData(request):
         return render(request,'relatorioLogData.html',{'lista_log':lognovo,'data_inicio':str(datainicio.date()), 'data_fim':str(datafim.date()),'selected':0})
     
 def baixarRelatorionotasEquipamentodata(request):
+
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     try :
@@ -252,4 +263,127 @@ def baixarRelatorionotasEquipamentodata(request):
     for obj in notas:
         writer.writerow([obj.data_ocorrencia, obj.data_cadastro, obj.titulo,obj.descricao,obj.equipamento,
             obj.usuario])
+    return response
+
+
+def baixarRelatorioLogPDF(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    try:
+        tempo = int(request.GET.get("tempo"))
+    except:
+        tempo = 60
+
+    if tempo > 0:
+        date_limit = timezone.now() - timezone.timedelta(days=tempo)
+        log = Log.objects.filter(data_cadastro__gte=date_limit).order_by('-data_cadastro')
+    else:
+        utc=pytz.timezone(TIME_ZONE)
+        data_inicio=utc.localize(datetime.combine(datetime.strptime(request.GET.get("dataInicio"),'%Y-%m-%d').date(),datetime.min.time()))
+        data_fim=utc.localize(datetime.combine(datetime.strptime(request.GET.get("dataFim"),'%Y-%m-%d').date(),datetime.min.time()))
+        #data_inicio =datetime.strptime(request.GET.get("dataInicio"), "%Y-%m-%d")
+        #data_fim = datetime.strptime(request.GET.get("dataFim"), "%Y-%m-%d") + timedelta(days=1)
+        
+        filtro1 = Q(data_cadastro__gte=data_inicio)
+        filtro2 = Q(data_cadastro__lte=data_fim)
+        log = Log.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
+
+    # Criar um objeto PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="relatorio.pdf"'
+    doc = SimpleDocTemplate(response, pagesize=A4)
+
+    elements = []
+
+   # Cabeçalho personalizado
+    styles = getSampleStyleSheet()
+    header_style = styles['Heading1']
+    header_text = 'Sistema de Gestão de Ativos'
+    header_paragraph_style = ParagraphStyle('HeaderParagraphStyle', parent=header_style, alignment=1, fontSize=14)
+    elements.append(Paragraph(header_text, header_paragraph_style))
+
+
+    subheader_style = styles['Heading2']
+    subheader_text = 'Relatório de LOG por data'
+    subheader_paragraph_style = ParagraphStyle('SubheaderParagraphStyle', parent=subheader_style, alignment=1, fontSize=12)
+    elements.append(Paragraph(subheader_text, subheader_paragraph_style))
+
+    # Informações de data
+    date_style = ParagraphStyle('DateStyle', parent=styles['Normal'], spaceAfter=12)
+    date_today = timezone.now().strftime("%d-%m-%Y")
+    date_start = data_inicio.strftime("%d-%m-%Y")
+    date_end = (data_fim - timedelta(days=1)).strftime("%d-%m-%Y")
+    date_info = f'Data do Relatório: {date_today}<br/>Data de início do filtro: {date_start}<br/>Data de fim do filtro: {date_end}'
+    elements.append(Paragraph(date_info, date_style))
+
+    # Tabela com os dados
+    table_data = [['Data', 'Transação', 'Movimento', 'Equipamento', 'Ocorrência', 'Usuário', 'Alteração']]
+    for obj in log:
+        if obj.equipamento==None:
+            equipamento=""
+        else:
+            equipamento=str(obj.equipamento)
+        if obj.nota_equipamento==None:
+            nota=""
+        else:
+            nota=str(obj.nota_equipamento)
+        usuario=str(obj.usuario)
+        row = [
+            Paragraph(obj.data_cadastro.strftime("%d-%m-%Y %H:%M:%S"), styles['Normal']),
+            Paragraph(lista_transacoes[obj.transacao], styles['Normal']),
+            Paragraph(lista_movimentos[obj.movimento], styles['Normal']),
+            Paragraph(equipamento, styles['Normal']),
+            Paragraph(nota, styles['Normal']),
+            Paragraph(usuario, styles['Normal']),
+            Paragraph(obj.alteracao, styles['Normal']),
+        ]
+        
+        table_data.append(row)
+    table_style = TableStyle([
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 4),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 4),
+        ('TOPPADDING', (0, 0), (-1, -1), 4),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 8),
+        ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
+        ('BOTTOMPADDING', (0, 1), (-1, -1), 6),
+        ('BOX', (0, 0), (-1, -1), 1, colors.black),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+   
+    ])
+    
+
+    # Definir a largura das colunas
+    col_widths = [0.9* inch, 1 * inch, 0.8 * inch, 1* inch, 1 * inch, 1 * inch, 2 * inch]
+
+    table = Table(table_data, colWidths=col_widths,repeatRows=1)
+    table.setStyle(table_style)
+    elements.append(table)
+
+    # Construir o documento PDF
+    def rodape(canvas, doc):
+        numero_pagina = canvas.getPageNumber()
+        texto = f"Página {numero_pagina}"
+        canvas.saveState()
+        canvas.setFont("Helvetica", 10)
+        canvas.drawString(inch, 0.75 * inch, texto)
+        canvas.restoreState()
+
+    # Associar a função de rodapé ao documento
+    doc.build(
+        elements,onFirstPage=rodape,
+        onLaterPages=rodape
+    )
+
     return response
