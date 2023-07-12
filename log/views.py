@@ -280,7 +280,7 @@ def baixarRelatorioLogPDF(request):
     else:
         utc=pytz.timezone(TIME_ZONE)
         data_inicio=utc.localize(datetime.combine(datetime.strptime(request.GET.get("dataInicio"),'%Y-%m-%d').date(),datetime.min.time()))
-        data_fim=utc.localize(datetime.combine(datetime.strptime(request.GET.get("dataFim"),'%Y-%m-%d').date(),datetime.min.time()))
+        data_fim=utc.localize(datetime.combine(datetime.strptime(request.GET.get("dataFim"),'%Y-%m-%d').date(),datetime.min.time())+ timedelta(days=1))
         #data_inicio =datetime.strptime(request.GET.get("dataInicio"), "%Y-%m-%d")
         #data_fim = datetime.strptime(request.GET.get("dataFim"), "%Y-%m-%d") + timedelta(days=1)
         
