@@ -5,7 +5,6 @@
 {% endblock %}
 {% block 'conteudo' %}
 
-
 <div class='container'>
     <br><br><br>
     <div class='row'>
@@ -25,7 +24,7 @@
             </div>
         </form>
         <div class="table-container mx-auto">
-            <div class="table-responsive" style="max-height: 65vh;">
+            <div class="table-responsive" style="max-height: 70vh;">
                 <table class="table table-hover table-resposive-sm">
                     <thead class="thead-light sticky-top ">
                         <tr>
@@ -58,12 +57,17 @@
             </div>
         </div>
     </div>
+    <div class='col-md'>
     <div class="bottom-button">
             
-        <a href="{% url 'baixarRelatorioLog' %}?dataInicio={{ data_inicio }}&dataFim={{ data_fim }}&tempo=-1" class="btn btn-success btn-mg text-nowrap" style="bottom: auto;"> Baixar Relatório 
+        <a href="{% url 'baixarRelatorioLog' %}?dataInicio={{ data_inicio }}&dataFim={{ data_fim }}&tempo=-1" class="btn btn-success btn-mg text-nowrap" style="bottom: auto;"> Baixar Relatório Excel 
             <i class="bi bi-filetype-csv"></i>
         </a>
+        <a href="{% url 'baixarRelatorioLogPDF' %}?dataInicio={{ data_inicio }}&dataFim={{ data_fim }}&tempo=-1" class="btn btn-success btn-mg text-nowrap" style="bottom: auto;"> Baixar Relatório PDF
+            <i class="bi bi-filetype-pdf"></i>
+        </a>
     </div>
+    
 </div>
-
+</div>
 {% endblock %}
