@@ -307,7 +307,7 @@ def cadastrarFornecedor(request):
                                 site_Fabricante=post_site_Fabricante,
                                 dados_adicionais=post_dados_adicionais)
         fabricante.save()
-        Log.cadastramento(usuario=usuario,transacao='li',objeto=fabricante)
+        Log.cadastramento(usuario=usuario,transacao='fn',objeto=fabricante)
         return render(request, "cadastrarFornecedor.html", {'status':0})
 
 def editarFornecedor(request):
