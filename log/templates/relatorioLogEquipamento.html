@@ -42,8 +42,9 @@
                 <button type="submit" class="btn btn-primary">OK</button>
                 <button type="button" class="btn btn-secondary">Cancelar</button>
                 {% if selected > 0 %}
-                <a href="{% url 'baixarRelatorioLogEquipamento' %}?equipamentoid={{selected}}"class="btn btn-success btn-mg"> Baixar Relatório <i class="bi bi-filetype-csv"></i></a>
-        {% endif %}
+                <a href="{% url 'baixarRelatorioLogEquipamento' %}?equipamentoid={{selected}}"class="btn btn-success btn-mg"> Relatório CSV<i class="bi bi-filetype-csv"></i></a>
+                <a href="{% url 'baixarRelatorioLogEquipamentoPDF' %}?equipamentoid={{selected}}"class="btn btn-success btn-mg"> Relatório PDF<i class="bi bi-filetype-csv"></i></a>
+                {% endif %}
             </div>
         </form>
         

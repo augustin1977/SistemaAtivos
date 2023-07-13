@@ -16,15 +16,64 @@ from cadastro_equipamentos.settings import TIME_ZONE
 from datetime import datetime,timedelta
 import pytz
 
-
-
-
-
+#criação de PDF
+from reportlab.lib.enums import TA_JUSTIFY
+from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import inch
+from reportlab.lib.units import inch,mm
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+
+#### Criando Classe para colcoar o numero de paginas#####
+class PageNumCanvas(canvas.Canvas):
+    """
+    http://code.activestate.com/recipes/546511-page-x-of-y-with-reportlab/
+    http://code.activestate.com/recipes/576832/
+    """
+    #----------------------------------------------------------------------
+    def __init__(self, *args, **kwargs):
+        """Constructor"""
+        canvas.Canvas.__init__(self, *args, **kwargs)
+        self.pages = []
+        
+    #----------------------------------------------------------------------
+    def showPage(self):
+        """
+        On a page break, add information to the list
+        """
+        self.pages.append(dict(self.__dict__))
+        self._startPage()
+        
+    #----------------------------------------------------------------------
+    def save(self):
+        """
+        Add the page number to each page (page x of y)
+        """
+        page_count = len(self.pages)
+        
+        for page in self.pages:
+            self.__dict__.update(page)
+            self.draw_page_number(page_count)
+            self.setAuthor("Sistema de Gestão de Ativos")
+            self.setTitle("Relatório")
+            self.setSubject("Relatório do Sistema")
+            
+            canvas.Canvas.showPage(self)
+            
+        canvas.Canvas.save(self)
+        
+    #----------------------------------------------------------------------
+    def draw_page_number(self, page_count):
+        """
+        Add the page number
+        """
+        page = "Sistema de Gestão de Ativos do LPM - Pagina %s de %s" % (self._pageNumber, page_count)
+        self.setFont("Helvetica", 9)
+        self.drawRightString(195*mm, 10*mm, page)
+
+
+
 
 lista_transacoes={'eq':'Equipamento','te':'Tipo Equipamento','fn':'Fornecedor','li':'Local Instalação','mc':'Material Consumo',
                         'me':'media','dc':'Disciplina de Manutenção','mf':'Modo de Falha','mq':'Modo de falha Equipamento',
@@ -265,7 +314,6 @@ def baixarRelatorionotasEquipamentodata(request):
             obj.usuario])
     return response
 
-
 def baixarRelatorioLogPDF(request):
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
@@ -292,6 +340,7 @@ def baixarRelatorioLogPDF(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="relatorio.pdf"'
     doc = SimpleDocTemplate(response, pagesize=A4)
+    
     elements = []
 
    # Cabeçalho personalizado
@@ -312,7 +361,7 @@ def baixarRelatorioLogPDF(request):
     date_start = data_inicio.strftime("%d/%m/%Y")
     date_end = (data_fim - timedelta(days=1)).strftime("%d/%m/%Y")
     usuario_relatorio= str(Usuario.objects.get(id=request.session.get('usuario')))
-    date_info = f'Relatório emitido por {usuario_relatorio} em {date_today}<br/>Data de início do filtro: {date_start} Data de fim do filtro: {date_end}'
+    date_info = f'Relatório emitido por {usuario_relatorio} em <b>{date_today} </b><br/>Data de início do filtro: <b>{date_start}</b> Data de fim do filtro: <b>{date_end}</b>'
     elements.append(Paragraph(date_info, date_style))
 
     # Tabela com os dados
@@ -365,18 +414,100 @@ def baixarRelatorioLogPDF(request):
     table.setStyle(table_style)
     elements.append(table)
 
-    # Construir o documento PDF
-    def rodape(canvas, doc):
-        numero_pagina = canvas.getPageNumber()
-        texto = f"Página {numero_pagina}"
-        canvas.saveState()
-        canvas.setFont("Helvetica", 10)
-        canvas.drawString(inch, 0.75 * inch, texto)
-        canvas.restoreState()
+    doc.build(
+        elements,
+        canvasmaker=PageNumCanvas
+    )
+    return response
 
+def baixarRelatorioLogEquipamentoPDF(request):
+    if not request.session.get('usuario'):
+        return redirect('/auth/login/?status=2')
+    try :
+        teste=int(request.GET.get("equipamentoid"))
+    except:
+        teste=0
+    log=Log.objects.filter(equipamento=teste).order_by('-data_cadastro')
+    equipamento=Equipamento.objects.get(id=teste)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="relatorio.pdf"'
+    doc = SimpleDocTemplate(response, pagesize=A4)
+    elements = []
+
+ # Cabeçalho personalizado
+    styles = getSampleStyleSheet()
+    header_style = styles['Heading1']
+    header_text = 'Sistema de Gestão de Ativos - LPM'
+    header_paragraph_style = ParagraphStyle('HeaderParagraphStyle', parent=header_style, alignment=1, fontSize=14)
+    elements.append(Paragraph(header_text, header_paragraph_style))
+
+    subheader_style = styles['Heading2']
+    subheader_text = 'Relatório de LOG por Equipamento'
+    subheader_paragraph_style = ParagraphStyle('SubheaderParagraphStyle', parent=subheader_style, alignment=1, fontSize=12)
+    elements.append(Paragraph(subheader_text, subheader_paragraph_style))
+
+ # Informações de data
+    date_style = ParagraphStyle('DateStyle', parent=styles['Normal'], spaceAfter=12)
+    date_today = datetime.now().strftime("%d/%m/%Y %H:%M")
+    
+    usuario_relatorio= str(Usuario.objects.get(id=request.session.get('usuario')))
+    date_info = f'Relatório emitido por {usuario_relatorio} em {date_today}<br/>Log do Equipamento: <b>{equipamento}</b>'
+    elements.append(Paragraph(date_info, date_style))
+
+    # Tabela com os dados
+    table_data = [['Data', 'Transação', 'Movimento', 'Equipamento', 'Ocorrência', 'Usuário', 'Alteração']]
+    for obj in log:
+        if obj.equipamento==None:
+            equipamento=""
+        else:
+            equipamento=str(obj.equipamento)
+        if obj.nota_equipamento==None:
+            nota=""
+        else:
+            nota=str(obj.nota_equipamento)
+        usuario=str(obj.usuario)
+        row = [
+            Paragraph(obj.data_cadastro.strftime("%d-%m-%Y %H:%M:%S"), styles['Normal']),
+            Paragraph(lista_transacoes[obj.transacao], styles['Normal']),
+            Paragraph(lista_movimentos[obj.movimento], styles['Normal']),
+            Paragraph(equipamento, styles['Normal']),
+            Paragraph(nota, styles['Normal']),
+            Paragraph(usuario, styles['Normal']),
+            Paragraph(obj.alteracao, styles['Normal']),
+        ]      
+        table_data.append(row)
+    table_style = TableStyle([
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 4),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 4),
+        ('TOPPADDING', (0, 0), (-1, -1), 4),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 8),
+        ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
+        ('BOTTOMPADDING', (0, 1), (-1, -1), 6),
+        ('BOX', (0, 0), (-1, -1), 1, colors.black),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ])
+      # Definir a largura das colunas
+    col_widths = [0.9* inch, 1 * inch, 0.8 * inch, 1* inch, 1 * inch, 1 * inch, 2 * inch]
+    table = Table(table_data, colWidths=col_widths,repeatRows=1)
+    table.setStyle(table_style)
+    elements.append(table)
+
+    
     # Associar a função de rodapé ao documento
     doc.build(
-        elements,onFirstPage=rodape,
-        onLaterPages=rodape
+        elements,
+        canvasmaker=PageNumCanvas
     )
     return response
