@@ -288,20 +288,18 @@ def baixarRelatorioLogPDF(request):
         filtro2 = Q(data_cadastro__lte=data_fim)
         log = Log.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
 
-    # Criar um objeto PDF
+    # Criar o objeto PDF
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="relatorio.pdf"'
     doc = SimpleDocTemplate(response, pagesize=A4)
-
     elements = []
 
    # Cabeçalho personalizado
     styles = getSampleStyleSheet()
     header_style = styles['Heading1']
-    header_text = 'Sistema de Gestão de Ativos'
+    header_text = 'Sistema de Gestão de Ativos - LPM'
     header_paragraph_style = ParagraphStyle('HeaderParagraphStyle', parent=header_style, alignment=1, fontSize=14)
     elements.append(Paragraph(header_text, header_paragraph_style))
-
 
     subheader_style = styles['Heading2']
     subheader_text = 'Relatório de LOG por data'
@@ -310,10 +308,11 @@ def baixarRelatorioLogPDF(request):
 
     # Informações de data
     date_style = ParagraphStyle('DateStyle', parent=styles['Normal'], spaceAfter=12)
-    date_today = timezone.now().strftime("%d-%m-%Y")
-    date_start = data_inicio.strftime("%d-%m-%Y")
-    date_end = (data_fim - timedelta(days=1)).strftime("%d-%m-%Y")
-    date_info = f'Data do Relatório: {date_today}<br/>Data de início do filtro: {date_start}<br/>Data de fim do filtro: {date_end}'
+    date_today = datetime.now().strftime("%d/%m/%Y %H:%M")
+    date_start = data_inicio.strftime("%d/%m/%Y")
+    date_end = (data_fim - timedelta(days=1)).strftime("%d/%m/%Y")
+    usuario_relatorio= str(Usuario.objects.get(id=request.session.get('usuario')))
+    date_info = f'Relatório emitido por {usuario_relatorio} em {date_today}<br/>Data de início do filtro: {date_start} Data de fim do filtro: {date_end}'
     elements.append(Paragraph(date_info, date_style))
 
     # Tabela com os dados
@@ -336,8 +335,7 @@ def baixarRelatorioLogPDF(request):
             Paragraph(nota, styles['Normal']),
             Paragraph(usuario, styles['Normal']),
             Paragraph(obj.alteracao, styles['Normal']),
-        ]
-        
+        ]      
         table_data.append(row)
     table_style = TableStyle([
         ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
@@ -360,13 +358,9 @@ def baixarRelatorioLogPDF(request):
         ('BOTTOMPADDING', (0, 1), (-1, -1), 6),
         ('BOX', (0, 0), (-1, -1), 1, colors.black),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-   
     ])
-    
-
-    # Definir a largura das colunas
+      # Definir a largura das colunas
     col_widths = [0.9* inch, 1 * inch, 0.8 * inch, 1* inch, 1 * inch, 1 * inch, 2 * inch]
-
     table = Table(table_data, colWidths=col_widths,repeatRows=1)
     table.setStyle(table_style)
     elements.append(table)
@@ -385,5 +379,4 @@ def baixarRelatorioLogPDF(request):
         elements,onFirstPage=rodape,
         onLaterPages=rodape
     )
-
     return response
