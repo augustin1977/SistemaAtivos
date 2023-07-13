@@ -1,3 +1,4 @@
+# Bibliotecas Django
 from django.shortcuts import render
 from django.contrib.staticfiles.views import serve
 from django.http import HttpResponse
@@ -8,15 +9,15 @@ from log.models import Log
 from django.shortcuts import redirect 
 from cadastro_equipamentos import settings
 from django.http import HttpResponse, Http404
+from django.utils import timezone
+from cadastro_equipamentos.settings import TIME_ZONE
+#Bibliotecas Gerais
 from os import path
 import csv
 import codecs
-from django.utils import timezone
-from cadastro_equipamentos.settings import TIME_ZONE
 from datetime import datetime,timedelta
 import pytz
-
-#criação de PDF
+#Bibliotecas de criação de PDF
 from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, A4
@@ -27,11 +28,11 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 
 #### Criando Classe para colcoar o numero de paginas#####
 class PageNumCanvas(canvas.Canvas):
-    """
+    """Classe de criação de canvas para colocar pagina nas folhas dos arquivos PDF, exemplo tirado de:
     http://code.activestate.com/recipes/546511-page-x-of-y-with-reportlab/
     http://code.activestate.com/recipes/576832/
     """
-    #----------------------------------------------------------------------
+
     def __init__(self, *args, **kwargs):
         """Constructor"""
         canvas.Canvas.__init__(self, *args, **kwargs)
@@ -79,6 +80,7 @@ lista_movimentos={'cd':'Cadastro','lt':'Listagem','ed':'Edição','dl':'Delete',
 
 
 def relatorioLog(request):
+    """Cria relatório de log generico"""
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
@@ -104,6 +106,7 @@ def relatorioLog(request):
     return render(request, "relatorioLog.html", {'lista_log':lognovo}) 
 
 def baixarRelatorioLog(request):
+    """ Cria arquivo e Baixa relatório de LOG no formato CSV"""
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     try :
@@ -144,8 +147,9 @@ def baixarRelatorioLog(request):
                 obj.usuario,obj.alteracao])
         return response
 
-
 def relatorioNotasData(request):
+    """Cria relatório de notas entre duas datas recebidas via requisição POST
+    As variaveis são data_inicio e data_fim """
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=2')
     if request.method=="GET":
