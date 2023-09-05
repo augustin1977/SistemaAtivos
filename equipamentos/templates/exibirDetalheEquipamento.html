@@ -4,6 +4,9 @@
 {% block 'menu' %} 
 {% include 'menuequipamento.html' %} 
 {% endblock %}
+
+          
+
 {% block 'conteudo'%} 
 <div class="text-center">
   <br><br>
@@ -73,12 +76,14 @@
             </td> 
           </tr>
           {% if confirmarexluir == '1' %}
-          <th scope="row"> Excluir</th>
+          <th scope="row"> Excluir Equipamento</th>
           <td>
-            <a href="{% url 'excluirEquipamento' %}?id={{ equipamento.id }}&excluir=2"class="btn btn-danger btn-mg"> Excluir registro <i class="bi bi-trash"></i> </a>
+            <a href="{% url 'excluiArquivo' %}?id={{ arquivo.id }}" class="delete-link"><i class="bi bi-trash"></i></a>
           </td>
+          
         </tr>
           {% endif %}
+          
         </tbody>
       </table>
 

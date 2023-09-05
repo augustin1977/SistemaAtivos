@@ -71,7 +71,7 @@ def exibirDetalheEquipamento(request):
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     #log=Log(transacao='eq',movimento='lt',usuario=usuario,equipamento=equipamento,alteracao=f'{usuario} listou detalhe equipamento: {equipamento}')
     #log.save()
-    return render(request, "exibirDetalheEquipamento.html", {'equipamento':equipamento, 'materiais':materiais, 'media':arquivos})
+    return render(request, "exibirDetalheEquipamento.html", {'equipamento':equipamento, 'materiais':materiais, 'media':arquivos, 'confirmarexluir':'0'})
 
 def editarEquipamento(request):
     if not request.session.get('usuario'):
@@ -132,7 +132,7 @@ def cadastrarEquipamento(request):
         tipo3=Q(tipo='admin')
         tipo=Tipo.objects.filter(tipo1 | tipo2 | tipo3)
         usuario= Usuario.objects.get(usuario=request.session.get('usuario'))
-        if(usuario.tipo not in tipo): # verifica se o usuário é tipo especial
+        if(usuario.tipo not in tipo): # verifica se o usuário é tipo selecionado
             return redirect(f'/equipamentos/?status=50') # se não for redireciona para pagina de acesso recusado
     
 
@@ -648,9 +648,6 @@ def excluiArquivo(request):
         id_equipamento=media.equipamento.id
         fullpath = os.path.normpath(os.path.join(MEDIA_ROOT, str(media.documentos)))
         caminho_backup=os.path.normpath(os.path.join(MEDIA_ROOT,'backup',os.path.basename(fullpath)))
-        # print(media.equipamento)
-        # print(fullpath)
-        # print(caminho_backup)
         equipamento=Equipamento.objects.get(id=id_equipamento)
         try:
             os.replace(fullpath,caminho_backup)
