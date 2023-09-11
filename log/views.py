@@ -59,7 +59,7 @@ class PageNumCanvas(canvas.Canvas):
         
         
         page_count = len(self.pages)
-        hash=hashlib.sha512()
+        hash=hashlib.sha256()
         
         string_data_paginas_dados=datetime.now().strftime('%d/%m/%Y %H:%M:%S')
         string_data_paginas_dados+=str(page_count)
@@ -82,9 +82,12 @@ class PageNumCanvas(canvas.Canvas):
         """
         Add the page number
         """
-        page = "Hash de segurança: <%s> -  Sistema de Gestão de Ativos do LPM - Pagina %s de %s" % (hash.hexdigest(),self._pageNumber, page_count)
-        self.setFont("Helvetica", 9)
-        self.drawRightString(195*mm, 10*mm, page)
+        hash_string="Hash de segurança: <%s>" % (hash.hexdigest())
+        page =   "Sistema de Gestão de Ativos do LPM - Pagina %s de %s" % (self._pageNumber, page_count)
+        self.setFont("Helvetica", 10)
+        
+        self.drawRightString(205*mm, 15*mm, page)
+        self.drawRightString(205*mm,10*mm,hash_string)
 
 lista_transacoes={'eq':'Equipamento','te':'Tipo Equipamento','fn':'Fornecedor','li':'Local Instalação','mc':'Material Consumo',
                         'me':'media','dc':'Disciplina de Manutenção','mf':'Modo de Falha','mq':'Modo de falha Equipamento',
@@ -495,19 +498,19 @@ def baixarRelatorioLogEquipamentoPDF(request):
         ('LEFTPADDING', (0, 0), (-1, -1), 4),
         ('RIGHTPADDING', (0, 0), (-1, -1), 4),
         ('TOPPADDING', (0, 0), (-1, -1), 4),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
         ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, 0), 10),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
         ('BACKGROUND', (0, 1), (-1, -1), colors.white),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 8),
         ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
-        ('BOTTOMPADDING', (0, 1), (-1, -1), 6),
+        ('BOTTOMPADDING', (0, 1), (-1, -1), 3),
         ('BOX', (0, 0), (-1, -1), 1, colors.black),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
     ])
