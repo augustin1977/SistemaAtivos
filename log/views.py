@@ -91,7 +91,6 @@ lista_transacoes={'eq':'Equipamento','te':'Tipo Equipamento','fn':'Fornecedor','
                         'nm':'Ocorrência Material','ne':'Ocorrência Equipamento','us':'usuario','tu':'Tipo de Usuario','rt':"Relatório"}
 lista_movimentos={'cd':'Cadastro','lt':'Listagem','ed':'Edição','dl':'Delete','lo':'logon','lf':'logoff'}
 
-
 def relatorioLog(request):
     """Cria relatório de log generico"""
     if not request.session.get('usuario'):
