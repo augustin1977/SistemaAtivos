@@ -76,7 +76,7 @@ class PageNumCanvas(canvas.Canvas):
         """
         Add the page number
         """
-        page = "Hash de segurança %s -  Sistema de Gestão de Ativos do LPM - Pagina %s de %s" % (hash.hexdigest(),self._pageNumber, page_count)
+        page = "Hash de segurança: <%s> -  Sistema de Gestão de Ativos do LPM - Pagina %s de %s" % (hash.hexdigest(),self._pageNumber, page_count)
         self.setFont("Helvetica", 9)
         self.drawRightString(195*mm, 10*mm, page)
 
