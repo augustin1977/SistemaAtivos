@@ -12,7 +12,6 @@ from django.http import HttpResponse, Http404
 from django.utils import timezone
 from cadastro_equipamentos.settings import TIME_ZONE
 
-
 #Bibliotecas Gerais
 from os import path
 import csv
@@ -20,10 +19,11 @@ import codecs
 from datetime import datetime,timedelta
 import pytz
 import hashlib
+
 #Bibliotecas de criação de PDF
 from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter, A4
+from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch,mm
@@ -54,12 +54,18 @@ class PageNumCanvas(canvas.Canvas):
         """
         Add the page number to each page (page x of y)
         """
+        
+        dados=str(dict(self.__dict__))
+        
+        
         page_count = len(self.pages)
-        hash=hashlib.md5()
-        tempo=datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-        tempo+=str(page_count)
-        tempo+=str(self)
-        hash.update(tempo.encode('utf-8'))
+        hash=hashlib.sha512()
+        
+        string_data_paginas_dados=datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+        string_data_paginas_dados+=str(page_count)
+        string_data_paginas_dados+=dados
+        
+        hash.update(string_data_paginas_dados.encode('utf-8'))
         for page in self.pages:
             self.__dict__.update(page)
             self.draw_page_number(page_count,hash)
