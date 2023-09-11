@@ -11,12 +11,15 @@ from cadastro_equipamentos import settings
 from django.http import HttpResponse, Http404
 from django.utils import timezone
 from cadastro_equipamentos.settings import TIME_ZONE
+
+
 #Bibliotecas Gerais
 from os import path
 import csv
 import codecs
 from datetime import datetime,timedelta
 import pytz
+import hashlib
 #Bibliotecas de criação de PDF
 from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.pdfgen import canvas
@@ -52,10 +55,14 @@ class PageNumCanvas(canvas.Canvas):
         Add the page number to each page (page x of y)
         """
         page_count = len(self.pages)
-        
+        hash=hashlib.md5()
+        tempo=datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+        tempo+=str(page_count)
+        tempo+=str(self)
+        hash.update(tempo.encode('utf-8'))
         for page in self.pages:
             self.__dict__.update(page)
-            self.draw_page_number(page_count)
+            self.draw_page_number(page_count,hash)
             self.setAuthor("Sistema de Gestão de Ativos")
             self.setTitle("Relatório")
             self.setSubject("Relatório do Sistema")
@@ -65,11 +72,11 @@ class PageNumCanvas(canvas.Canvas):
         canvas.Canvas.save(self)
         
     #----------------------------------------------------------------------
-    def draw_page_number(self, page_count):
+    def draw_page_number(self, page_count,hash):
         """
         Add the page number
         """
-        page = "Sistema de Gestão de Ativos do LPM - Pagina %s de %s" % (self._pageNumber, page_count)
+        page = "Hash de segurança %s -  Sistema de Gestão de Ativos do LPM - Pagina %s de %s" % (hash.hexdigest(),self._pageNumber, page_count)
         self.setFont("Helvetica", 9)
         self.drawRightString(195*mm, 10*mm, page)
 
