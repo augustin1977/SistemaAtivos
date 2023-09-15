@@ -24,7 +24,7 @@ def geraPlot(arquivo, comMedia):
     matplotlib.use('Agg')  # Modo não interativo
     # ------------- Convertendo dados--------------------
     
-    if type(arquivo)==None:
+    if not arquivo:
         return False
     dados=arquivo.read().decode('UTF-8')
     
