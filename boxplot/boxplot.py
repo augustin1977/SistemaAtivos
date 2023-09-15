@@ -111,7 +111,7 @@ def geraPlot(arquivo, comMedia):
    
     # # criando area de plotagem e definindo variaves globais como nome do grafico
     
-    fig1, ax1 = plt.subplots(figsize=(12+len(nomes),len(nomes)))
+    fig1, ax1 = plt.subplots(figsize=((10+len(nomes))//2,5+len(nomes)//4))
     #print(len(nomes), len(dados_verificados[0]))
     if (len(nomes)==len(dados_verificados)):
         #print("Numero de nomes:",len(nomes))
