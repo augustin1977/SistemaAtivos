@@ -16,7 +16,27 @@ def transpoe_matriz(matriz):
                 pass
         novamatriz.append(novalinha)
     return novamatriz
-            
+    
+def colocareferencianofim(matriz,familias,media,nomes):
+    for n,familia in enumerate(familias):
+        if (familia.upper()=="REFERENCIA" or 
+                familia.upper()=="REFERÊNCIA" or 
+                familia.upper()=="REF" or 
+                familia.upper()=="REFERENCE" or
+                familia.upper()=="REF." ):
+            temp1=familias.pop(n)
+            temp2=matriz.pop(n)
+            temp3=media.pop(n)
+            temp4=nomes.pop(n)
+            temp5=n
+            familias.append(temp1)
+            matriz.append(temp2)
+            media.append(temp3)
+            nomes.append(temp4)
+    return matriz,familias,media,nomes,temp5
+	
+
+                
 
 
 def geraPlot(arquivo, comMedia):
@@ -34,6 +54,7 @@ def geraPlot(arquivo, comMedia):
     tamanho_texto_pequeno="small"
     tamanho_texto_normal="large"
     tamanho_texto_grande="x-large"
+    tamanho_texto_super_grande="xx-large"
     # define Verde da média
     verde="#008000"
     #define vermelho da mediana
@@ -88,41 +109,40 @@ def geraPlot(arquivo, comMedia):
         if (i!=""):
             cols+=1
     if (cols>20):
-        tamanho_texto=tamanho_texto_super_pequeno
+        tamanho_texto=tamanho_texto_pequeno
     elif (cols>10):
         tamanho_texto=tamanho_texto_pequeno
     else:
         tamanho_texto=tamanho_texto_normal
 
     #cria biblioteca de cores
-    corGrafico={}
-    j=0;
-    for i in familias:
-        if i not in corGrafico:
-            if (str(i).upper()=="REFERENCIA"or str(i).upper()=="REFERÊNCIA" or str(i).upper()=="REF" or str(i).upper()=="REFERENCE"):
-                numero_linha_media_referencia=j
-                corGrafico[i]='red'
-            else:
-                corGrafico[i]=cor[j];
-            j=j+1
+    
 
-
-
-   
     # # criando area de plotagem e definindo variaves globais como nome do grafico
     
     fig1, ax1 = plt.subplots(figsize=((10+len(nomes))//2,5+len(nomes)//4))
     #print(len(nomes), len(dados_verificados[0]))
     if (len(nomes)==len(dados_verificados)):
-        #print("Numero de nomes:",len(nomes))
-        #print("numero de dados:",len(dados_verificados))
 
+        # coloca a referencia no final
+        dados_verificados,familias,media,nomes,numero_linha_media_referencia=colocareferencianofim(dados_verificados,familias,media,nomes)
+        # ajusta legenda e cores dos graficos
+        corGrafico={}
+        j=0;
+        for i,familia in enumerate(familias):
+            if familia not in corGrafico:
+                if i==numero_linha_media_referencia:
+                    corGrafico[familia]='red'
+                else:
+                    corGrafico[familia]=cor[j];
+                j=j+1
+        
+        print(corGrafico)
+        print(familias)
         # cria propriedades da linha de media e da mediana
         propriedades_medianas={'color':vermelho,'linewidth':1.5}
         propriedades_medias={"linestyle":"-","color":verde}
-        # cria boxplot mostrando medias e linha de medias(showmean e meanline True) com dados na vertical (vert=False) sem outliers(showfliers=False) 
-        #graf=ax1.boxplot(dataset,labels=nomes,vert=False,showmeans=True,meanline=True,medianprops=propriedades_medianas,meanprops=propriedades_medias,flierprops={"marker":"+"},patch_artist=True,showfliers=False)
-
+      
         # cria boxplot mostrando medias e linha de medias(showmean e meanline True) com dados na vertical (vert=False) com outliers
         graf=ax1.boxplot(dados_verificados,labels=nomes,vert=False,showmeans=True,meanline=True,medianprops=propriedades_medianas,meanprops=propriedades_medias,flierprops={"marker":"+"},patch_artist=True)
        
@@ -147,9 +167,14 @@ def geraPlot(arquivo, comMedia):
                 ax1.text(media[i],i+offset,"{}".format(media[i]),size=tamanho_texto,color=verde,horizontalalignment ='center')
             
         # define titulo do grafico e dos eixos
-        ax1.set_title(titulo, fontsize=tamanho_texto_grande,fontweight="bold")
-        ax1.set_xlabel(eixoX,fontsize=tamanho_texto_normal,fontweight="bold")
-        ax1.set_ylabel(eixoY,fontsize=tamanho_texto_normal,fontweight="bold")
+        if cols>20:
+            ax1.set_title(titulo, fontsize=tamanho_texto_super_grande,fontweight="bold")
+            ax1.set_xlabel(eixoX,fontsize=tamanho_texto_grande,fontweight="bold")
+            ax1.set_ylabel(eixoY,fontsize=tamanho_texto_grande,fontweight="bold")
+        else:
+            ax1.set_title(titulo, fontsize=tamanho_texto_grande,fontweight="bold")
+            ax1.set_xlabel(eixoX,fontsize=tamanho_texto_normal,fontweight="bold")
+            ax1.set_ylabel(eixoY,fontsize=tamanho_texto_normal,fontweight="bold")
 
         #ajustes de posições para melhor enquadramento
         #fig1.subplots_adjust(left=0.17,right=0.98,top=0.96,bottom=0.07)
@@ -159,9 +184,7 @@ def geraPlot(arquivo, comMedia):
         if comMedia:
             ax1.axvline(media[numero_linha_media_referencia], ymin=0, ymax=len(media),linewidth=1, color=verde,linestyle=':')
 
-        # exibe linha de grade
-        #ax1.yaxis.grid(True)
-        #ax1.xaxis.grid(True)
+
 
         # pinta cada boxplot com a cor de sua familia
         legenda=[] 
@@ -169,7 +192,6 @@ def geraPlot(arquivo, comMedia):
         for patch, color in zip(graf['boxes'], familias):  
             patch.set_facecolor(corGrafico[color])
             legenda.append(mpatches.Patch(color=corGrafico[color], label=color))
-
 
         #constroi a legenda
         ax1.legend(handles=legenda).set_draggable(True)
