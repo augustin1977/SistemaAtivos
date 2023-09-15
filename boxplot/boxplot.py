@@ -66,6 +66,7 @@ def geraPlot(arquivo, comMedia):
     dados=arquivo.read().decode('UTF-8')
     
        # ------------- ajustando preferencias--------------------
+    # print(dados)
     # define tamanho dos textos
     tamanho_texto_super_pequeno="xx-small"
     tamanho_texto_pequeno="small"
@@ -88,7 +89,7 @@ def geraPlot(arquivo, comMedia):
     for linha in linhas:
         l=linha.split("\r")
         tabela.append(l[0].split(";")) 
-    #print (tabela)
+    # print (tabela)
     titulo=tabela[0][0]
     # busca as familias dos ensaios na planilha
     familias = tabela[1]
@@ -97,30 +98,31 @@ def geraPlot(arquivo, comMedia):
     eixoY=tabela[0][2]
     nomes=tabela[2]
     dados_lidos=tabela[3:]
-    #print(titulo)
-    #print(eixoX)
-    #print(eixoY)
-    #print(nomes)
-    #print(dados_lidos)
+    # print(titulo)
+    # print(eixoX)
+    # print(eixoY)
+    # print(nomes)
+    # print(dados_lidos)
     # verificando se está tudo preenchido corretamente
     dados_verificados=[]
     contagem_colunas=[0]*len(nomes)
     for l,linha in enumerate(dados_lidos):
-        if len(linha)==len(nomes):
-            nova_linha=[]
-            for c,dado in enumerate(linha):
-                try: 
-                    nova_linha.append(float(dado))
-                    contagem_colunas[c]+=1
-                except:
-                    dados_lidos[l][c]=False
-            dados_verificados.append(nova_linha)
+        nova_linha=[]
+        for c,dado in enumerate(linha):
+            try: 
+                dado=dado.replace(",",".")
+                nova_linha.append(float(dado))
+                contagem_colunas[c]+=1
+            except:
+                dados_lidos[l][c]=False
+        dados_verificados.append(nova_linha)
+    # print(dados_verificados)
     dados_verificados=transpoe_matriz(dados_verificados)
     media=[0]*len(dados_verificados)
     for n in range(len(media)):
         media[n]=sum(dados_verificados[n])/len(dados_verificados[n])
-    #print(dados_verificados)  
-    #print(media)    
+    # print(dados_verificados)  
+    # print(media)    
     cols=0
     for i in nomes:
         if (i!=""):
@@ -138,7 +140,7 @@ def geraPlot(arquivo, comMedia):
     # # criando area de plotagem e definindo variaves globais como nome do grafico
     
     fig1, ax1 = plt.subplots(figsize=((10+len(nomes))//2,5+len(nomes)//4))
-    #print(len(nomes), len(dados_verificados[0]))
+    # print(len(nomes), len(dados_verificados))
     if (len(nomes)==len(dados_verificados)):
 
         # coloca a referencia no final
@@ -221,6 +223,6 @@ def geraPlot(arquivo, comMedia):
         #print("retornando buffer")
         return buffer
     else:
-        #print("Deu erro")
+        print("Deu erro")
         return False
 
