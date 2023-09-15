@@ -16,7 +16,7 @@ def transpoe_matriz(matriz):
                 pass
         novamatriz.append(novalinha)
     return novamatriz
-    
+  
 def colocareferencianofim(matriz,familias,media,nomes):
     for n,familia in enumerate(familias):
         if (familia.upper()=="REFERENCIA" or 
@@ -34,10 +34,6 @@ def colocareferencianofim(matriz,familias,media,nomes):
             media.append(temp3)
             nomes.append(temp4)
     return matriz,familias,media,nomes,temp5
-	
-
-                
-
 
 def geraPlot(arquivo, comMedia):
     

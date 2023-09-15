@@ -9,6 +9,10 @@ def boxplotinicial(request):
 def gerar_grafico(request):
 
     file=request.FILES.get('arquivoAnexo')
+    name=str(file)
+    if name[-3:]!="csv":
+        print(name[-3:])
+        return render(request,'boxplot.html',{'erro': '2'})
     imagem=geraPlot(file,request.POST.get('checkbox')=='on')
     
     if imagem:
