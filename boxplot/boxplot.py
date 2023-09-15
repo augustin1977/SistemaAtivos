@@ -18,6 +18,27 @@ def transpoe_matriz(matriz):
     return novamatriz
   
 def colocareferencianofim(matriz,familias,media,nomes):
+    # trocaposição de todos os elementos
+    tam=len(familias)
+    for i in range(tam//2):
+        #inverte a matriz
+        temp=matriz[i]
+        matriz[i]=matriz[tam-i-1]
+        matriz[tam-i-1]=temp
+        #inverte a familia
+        temp=familias[i]
+        familias[i]=familias[tam-i-1]
+        familias[tam-i-1]=temp
+        #inverte a media
+        temp=media[i]
+        media[i]=media[tam-i-1]
+        media[tam-i-1]=temp
+        #inverte os nomes
+        temp=nomes[i]
+        nomes[i]=nomes[tam-i-1]
+        nomes[tam-i-1]=temp
+        
+    # caso a referencia não seja a ultima troca novente
     for n,familia in enumerate(familias):
         if (familia.upper()=="REFERENCIA" or 
                 familia.upper()=="REFERÊNCIA" or 
