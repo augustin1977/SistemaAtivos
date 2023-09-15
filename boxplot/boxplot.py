@@ -137,8 +137,7 @@ def geraPlot(arquivo, comMedia):
                     corGrafico[familia]=cor[j];
                 j=j+1
         
-        print(corGrafico)
-        print(familias)
+
         # cria propriedades da linha de media e da mediana
         propriedades_medianas={'color':vermelho,'linewidth':1.5}
         propriedades_medias={"linestyle":"-","color":verde}
@@ -187,11 +186,14 @@ def geraPlot(arquivo, comMedia):
 
 
         # pinta cada boxplot com a cor de sua familia
-        legenda=[] 
+        legenda=[]
+        incluido=[] 
         # cria legenda já com suas cores
         for patch, color in zip(graf['boxes'], familias):  
             patch.set_facecolor(corGrafico[color])
-            legenda.append(mpatches.Patch(color=corGrafico[color], label=color))
+            if color not in incluido:
+                incluido.append(color)
+                legenda.append(mpatches.Patch(color=corGrafico[color], label=color))
 
         #constroi a legenda
         ax1.legend(handles=legenda).set_draggable(True)
