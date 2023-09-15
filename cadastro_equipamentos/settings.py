@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "notas",
     "usuarios",
     "log",
+    "boxplot",
     'django_extensions',
 
 

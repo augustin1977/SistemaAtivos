@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criando BoxPlot</title>
+    <!-- Inclua os arquivos CSS do Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-10">
+        <h1>Criar Boxplot a partir de Excel padrão</h1>
+        <form class= "row g-3" method="post" enctype="multipart/form-data" action="{% url 'gerar_grafico' %}" class="custom-form"> 
+            {% csrf_token %}
+            <!-- Caixa de seleção para escolher uma opção -->
+            <div class="col-12">
+                <a href="{% url 'download_model_csv' %}" class="btn btn-secondary" role="button">Baixar Modelo de Arquivo</a>
+            </div>
+            <div class="col-12">
+                <label for="arquivo">Anexar arquivo:</label>
+                <input type="file" class="form-control-file" id="arquivoAnexo" name="arquivoAnexo">
+                {% if erro == '1'%}
+                <div class="alert alert-danger" role="alert">
+                    Favor anexar arquivo
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-12"> 
+                <input type="checkbox" class="form-check-input" id="checkbox" name="checkbox">
+                <label class="form-check-label" for="checkbox">
+                    Exibir Linha de Média da Referência
+                </label>
+            </div>
+
+            <!-- Botão para executar a função desejada -->
+            <div class="col-12"> 
+                <button type="submit" class="btn btn-primary" id="BoxPlot">Gerar Boxplot</button>
+                <div class="form-group"></div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-1">
+    </div>
+</div>
+    <!-- Inclua os arquivos JavaScript do Bootstrap e jQuery (necessários para alguns recursos do Bootstrap) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
