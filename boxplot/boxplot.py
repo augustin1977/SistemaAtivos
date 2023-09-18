@@ -39,6 +39,13 @@ def colocareferencianofim(matriz,familias,media,nomes):
         nomes[tam-i-1]=temp
         
     # caso a referencia não seja a ultima troca novente
+    n=0
+    temp1=familias.pop(n)
+    temp2=matriz.pop(n)
+    temp3=media.pop(n)
+    temp4=nomes.pop(n)
+    temp5=n
+    
     for n,familia in enumerate(familias):
         if (familia.upper()=="REFERENCIA" or 
                 familia.upper()=="REFERÊNCIA" or 
