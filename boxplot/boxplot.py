@@ -16,6 +16,19 @@ def transpoe_matriz(matriz):
                 pass
         novamatriz.append(novalinha)
     return novamatriz
+
+def try_decode(text, encodings=['utf-8', 'windows-1252', 'iso-8859-1', 'iso850']):
+    
+    
+    for encoding in encodings:
+        try:
+            decoded_text = text.decode(encoding)
+            return decoded_text
+        except UnicodeDecodeError:
+            pass
+    # Se nenhuma codificação funcionou, retorne None ou levante uma exceção, dependendo do seu caso.
+    return None  # Ou raise Exception("Nenhuma codificação válida encontrada")
+
   
 def colocareferencianofim(matriz,familias,media,nomes):
     # trocaposição de todos os elementos
@@ -39,12 +52,7 @@ def colocareferencianofim(matriz,familias,media,nomes):
         nomes[tam-i-1]=temp
         
     # caso a referencia não seja a ultima troca novente
-    n=0
-    temp1=familias.pop(n)
-    temp2=matriz.pop(n)
-    temp3=media.pop(n)
-    temp4=nomes.pop(n)
-    temp5=n
+    temp5=0
     
     for n,familia in enumerate(familias):
         if (familia.upper()=="REFERENCIA" or 
@@ -70,7 +78,10 @@ def geraPlot(arquivo, comMedia):
     
     if not arquivo:
         return False
-    dados = arquivo.read().decode('ISO-8859-1')
+    dados = arquivo.read()
+    dados= try_decode(dados)
+    if dados==None:
+        return False
     
        # ------------- ajustando preferencias--------------------
     # print(dados)
@@ -113,6 +124,7 @@ def geraPlot(arquivo, comMedia):
     # verificando se está tudo preenchido corretamente
     dados_verificados=[]
     contagem_colunas=[0]*len(nomes)
+    
     for l,linha in enumerate(dados_lidos):
         nova_linha=[]
         for c,dado in enumerate(linha):
@@ -131,6 +143,7 @@ def geraPlot(arquivo, comMedia):
     # print(dados_verificados)  
     # print(media)    
     cols=0
+    # print(nomes)
     for i in nomes:
         if (i!=""):
             cols+=1
@@ -153,6 +166,7 @@ def geraPlot(arquivo, comMedia):
         # coloca a referencia no final
         dados_verificados,familias,media,nomes,numero_linha_media_referencia=colocareferencianofim(dados_verificados,familias,media,nomes)
         # ajusta legenda e cores dos graficos
+        # print(dados_verificados)
         corGrafico={}
         j=0;
         for i,familia in enumerate(familias):
@@ -230,6 +244,5 @@ def geraPlot(arquivo, comMedia):
         #print("retornando buffer")
         return buffer
     else:
-        print("Deu erro")
         return False
 
