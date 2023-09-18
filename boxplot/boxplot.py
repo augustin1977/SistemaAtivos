@@ -17,7 +17,7 @@ def transpoe_matriz(matriz):
         novamatriz.append(novalinha)
     return novamatriz
 
-def try_decode(text, encodings=['utf-8', 'windows-1252', 'iso-8859-1', 'iso850']):
+def try_decode(text, encodings=['utf-8', 'iso-8859-1','windows-1252', 'CP850','iso-8859-15 ', 'MacRoman']):
     
     
     for encoding in encodings:
