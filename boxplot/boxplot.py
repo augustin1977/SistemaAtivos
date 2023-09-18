@@ -63,7 +63,7 @@ def geraPlot(arquivo, comMedia):
     
     if not arquivo:
         return False
-    dados=arquivo.read().decode('UTF-8')
+    dados = arquivo.read().decode('ISO-8859-1')
     
        # ------------- ajustando preferencias--------------------
     # print(dados)
