@@ -1,18 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criando BoxPlot</title>
-    <!-- Inclua os arquivos CSS do Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
+{% extends 'base.html'%}
+{% block 'titulo'%} Gestão Ativos MA  {% endblock %}
+{% block 'menu' %} 
+{% include 'menuferramentas.html' %} 
+{% endblock %}
+{% block 'conteudo'%} 
+
+
+<div class="text-center">
+    <br><br>
+    <h1>Criar Boxplot a partir de Excel padrão</h1>
+    </div>
     <div class="container">
     <div class="col-md-1">
     </div>
     <div class="col-md-10">
-        <h1>Criar Boxplot a partir de Excel padrão</h1>
+
+        
         <form class= "row g-3" method="post" enctype="multipart/form-data" action="{% url 'gerar_grafico' %}" class="custom-form"> 
             {% csrf_token %}
             <!-- Caixa de seleção para escolher uma opção -->
@@ -55,10 +58,6 @@
     <div class="col-md-1">
     </div>
 </div>
-    <!-- Inclua os arquivos JavaScript do Bootstrap e jQuery (necessários para alguns recursos do Bootstrap) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
 
-</html>
+{% endblock %}
+
