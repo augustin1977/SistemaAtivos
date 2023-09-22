@@ -13,7 +13,7 @@ def gerar_grafico(request):
     if name[-3:]!="csv":
         # print(name[-3:])
         return render(request,'boxplot.html',{'erro': '2'})
-    imagem=geraPlot(file,request.POST.get('checkbox')=='on')
+    imagem=geraPlot(file,request.POST.get('commedia')=='on',request.POST.get("labelcores")=='on')
     
     if imagem:
         response = HttpResponse(imagem, content_type='image/png')

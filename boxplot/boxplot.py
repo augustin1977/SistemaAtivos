@@ -51,27 +51,27 @@ def colocareferencianofim(matriz,familias,media,nomes):
         nomes[i]=nomes[tam-i-1]
         nomes[tam-i-1]=temp
         
-    # caso a referencia não seja a ultima troca novente
-    temp5=0
+    # caso a referencia não seja a ultima troca 
+    temp5=tam-1
     
-    for n,familia in enumerate(familias):
-        if (familia.upper()=="REFERENCIA" or 
-                familia.upper()=="REFERÊNCIA" or 
-                familia.upper()=="REF" or 
-                familia.upper()=="REFERENCE" or
-                familia.upper()=="REF." ):
-            temp1=familias.pop(n)
-            temp2=matriz.pop(n)
-            temp3=media.pop(n)
-            temp4=nomes.pop(n)
-            temp5=n
-            familias.append(temp1)
-            matriz.append(temp2)
-            media.append(temp3)
-            nomes.append(temp4)
+    # for n,familia in enumerate(familias):
+    #     if (familia.upper()=="REFERENCIA" or 
+    #             familia.upper()=="REFERÊNCIA" or 
+    #             familia.upper()=="REF" or 
+    #             familia.upper()=="REFERENCE" or
+    #             familia.upper()=="REF." ):
+    #         temp1=familias.pop(n)
+    #         temp2=matriz.pop(n)
+    #         temp3=media.pop(n)
+    #         temp4=nomes.pop(n)
+    #         temp5=n
+    #         familias.append(temp1)
+    #         matriz.append(temp2)
+    #         media.append(temp3)
+    #         nomes.append(temp4)
     return matriz,familias,media,nomes,temp5
 
-def geraPlot(arquivo, comMedia):
+def geraPlot(arquivo, comMedia,labelcores):
     
     matplotlib.use('Agg')  # Modo não interativo
     # ------------- Convertendo dados--------------------
@@ -116,12 +116,7 @@ def geraPlot(arquivo, comMedia):
     eixoY=tabela[0][2]
     nomes=tabela[2]
     dados_lidos=tabela[3:]
-    # print(titulo)
-    # print(eixoX)
-    # print(eixoY)
-    # print(nomes)
-    # print(dados_lidos)
-    # verificando se está tudo preenchido corretamente
+
     dados_verificados=[]
     contagem_colunas=[0]*len(nomes)
     
@@ -171,7 +166,8 @@ def geraPlot(arquivo, comMedia):
         j=0;
         for i,familia in enumerate(familias):
             if familia not in corGrafico:
-                if i==numero_linha_media_referencia:
+                #if i==numero_linha_media_referencia:
+                if familia.lower()=="referencia" or familia.lower()=="referência" or familia.lower()=="ref" or familia.lower()=="reference" or familia.lower()=="ref.":
                     corGrafico[familia]='red'
                 else:
                     corGrafico[familia]=cor[j];
@@ -184,8 +180,13 @@ def geraPlot(arquivo, comMedia):
       
         # cria boxplot mostrando medias e linha de medias(showmean e meanline True) com dados na vertical (vert=False) com outliers
         graf=ax1.boxplot(dados_verificados,labels=nomes,vert=False,showmeans=True,meanline=True,medianprops=propriedades_medianas,meanprops=propriedades_medias,flierprops={"marker":"+"},patch_artist=True)
-       
-        
+        # Coloca label vermelho na familia referencia
+        if labelcores:
+            for label,familia in zip(ax1.get_yticklabels(),familias):
+                if familia.lower()=="referencia" or familia.lower()=="referência" or familia.lower()=="ref" or familia.lower()=="reference" or familia.lower()=="ref.":
+                    label.set_color("red")
+                else:
+                    label.set_color('black')
         # Coloca um texto com o valor da média de cada coluna no grafico
         if len(media)<3:
             offset=1.1
@@ -234,7 +235,7 @@ def geraPlot(arquivo, comMedia):
             if color not in incluido:
                 incluido.append(color)
                 legenda.append(mpatches.Patch(color=corGrafico[color], label=color))
-
+        legenda.reverse()
         #constroi a legenda
         ax1.legend(handles=legenda).set_draggable(True)
         # mostra o grafico
