@@ -3,7 +3,6 @@ import matplotlib.patches as mpatches
 from io import BytesIO
 import matplotlib
 
-
 #----------------funções auxiliares ------------------
 def transpoe_matriz(matriz):
     novamatriz=[]
@@ -81,7 +80,7 @@ def geraPlot(arquivo, comMedia,labelcores):
     dados = arquivo.read()
     dados= try_decode(dados)
     if dados==None:
-        return False
+        return 3 # erro de decodificação do documento
     
        # ------------- ajustando preferencias--------------------
     # print(dados)

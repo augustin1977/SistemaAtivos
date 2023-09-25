@@ -27,12 +27,17 @@
                 <input type="file" class="form-control-file" id="arquivoAnexo" name="arquivoAnexo">
                 {% if erro == '1'%}
                 <div class="alert alert-danger" role="alert">
-                    Favor anexar arquivo
+                    Favor anexar arquivo válido, verifque se anexou um arquivo válido e sem erros.
                 </div>
                 {% endif %}
                 {% if erro == '2'%}
                 <div class="alert alert-danger" role="alert">
-                    O Sistema processa apenas arquvos ".CSV"
+                    O Sistema processa apenas arquvos ".CSV".
+                </div>
+                {% endif %}
+                {% if erro == '3'%}
+                <div class="alert alert-danger" role="alert">
+                    O arquivo não foi decodificado corretamento, verifique o documento e tente novamente.
                 </div>
                 {% endif %}
             </div>

@@ -18,8 +18,10 @@ def gerar_grafico(request):
     if imagem:
         response = HttpResponse(imagem, content_type='image/png')
         response['Content-Disposition'] = f'attachment; filename=boxplot.png'
-
+        
         return response
+    elif imagem==3: # Erro de decodificação
+        return render(request,'boxplot.html',{'erro': '3'})
     else:
         return render(request,'boxplot.html',{'erro': '1'})
  
