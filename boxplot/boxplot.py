@@ -221,9 +221,9 @@ def geraPlot(arquivo, comMedia,labelcores):
         # Faz a linha media do ensaio de referencia  se comMedia=True(ultimo)
         #print(comMedia)
         if comMedia:
-            ax1.axvline(media[numero_linha_media_referencia], ymin=0, ymax=len(media),linewidth=1, color=verde,linestyle=':')
-
-
+            for i,familia in enumerate(familias):
+                if familia.lower()=="referencia" or familia.lower()=="referência" or familia.lower()=="ref" or familia.lower()=="reference" or familia.lower()=="ref.":
+                    ax1.axvline(media[i], ymin=0, ymax=len(media),linewidth=1, color=verde,linestyle=':')
 
         # pinta cada boxplot com a cor de sua familia
         legenda=[]
