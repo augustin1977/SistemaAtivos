@@ -82,9 +82,11 @@ class equipamentoEditarForm(Form):
         super().clean()
         utc=pytz.UTC
         cd=self.cleaned_data
-        cd['data_cadastro']=Equipamento.objects.get(id=cd['id']).data_cadastro
+        print(cd)
+
         data_compra=cd["data_compra"]
-        data_cadastro=cd["data_cadastro"]
+        data_cadastro=Equipamento.objects.get(id=cd['id']).data_cadastro
+        # print(data_cadastro)
         if data_compra>data_cadastro:
             raise ValidationError('Data Compra invalida: a data de compra deve ser anterior a data de hoje')
         #tipo_equipamento=cd["tipo_equipamento"]

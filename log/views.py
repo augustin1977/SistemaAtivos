@@ -105,7 +105,7 @@ def relatorioLog(request):
     try :
         tempo=int(request.GET.get("tempo"))
     except:
-        tempo=60*6
+        tempo=30*6 # seis meses de hisórico corrido
     date_limit = timezone.now() - timezone.timedelta(days=tempo)
     log=Log.objects.filter(data_cadastro__gte=date_limit).order_by('-data_cadastro')
     lognovo=[]

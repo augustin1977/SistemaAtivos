@@ -89,7 +89,7 @@ class Equipamento(models.Model):
     data_compra=models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
     data_ultima_calibracao=models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
     usuario=models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True)
-    data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False)
+    data_cadastro=models.DateTimeField(auto_now=False, auto_now_add=True)
     patrimonio=models.CharField(max_length=30,null=True, blank=True)
     material_consumo=models.ManyToManyField(Material_consumo,  blank=True)
     codigo=models.CharField(max_length=9,null=True, blank=True,unique=True)

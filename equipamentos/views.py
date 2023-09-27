@@ -92,8 +92,8 @@ def editarEquipamento(request):
         if details.is_valid():     
             e=Equipamento.objects.get(id=details.cleaned_data['id'],ativo=True)
             listaCampos=['nome_equipamento','modelo','fabricante','local','tipo_equipamento','data_compra',
-                         'data_ultima_calibracao','data_cadastro','patrimonio','codigo',
-                         'custo_aquisição','responsavel','potencia_eletrica','nacionalidade','data_ultima_atualizacao',
+                         'data_ultima_calibracao','patrimonio','codigo','custo_aquisição','responsavel',
+                         'potencia_eletrica','nacionalidade','data_ultima_atualizacao',
                          'tensao_eletrica','projeto_compra','especificacao','outros_dados']
             alteracao=False
             for campo in listaCampos:
@@ -103,6 +103,7 @@ def editarEquipamento(request):
                     setattr(e,campo,details.cleaned_data[campo])
                 alteracao|=alterado
             if alteracao:
+                # print(e.data_cadastro)
                 e.save()
             # bloco comentado pois os materiais não foram implementados
 
