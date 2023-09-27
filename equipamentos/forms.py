@@ -80,10 +80,9 @@ class equipamentoEditarForm(Form):
    
     def clean(self):
         super().clean()
-        utc=pytz.UTC
+        utc=pytz.timezone(TIME_ZONE) # pytz.UTC
         cd=self.cleaned_data
-        print(cd)
-
+        # print(cd)
         data_compra=cd["data_compra"]
         data_cadastro=Equipamento.objects.get(id=cd['id']).data_cadastro
         # print(data_cadastro)
