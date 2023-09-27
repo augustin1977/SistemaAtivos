@@ -46,11 +46,15 @@ def get_equipamentos(request):
     nome_equipamento = request.GET.get('nome_equipamento', '')
     equipamentos = []
 
-    if len(nome_equipamento) > 1:
+    if len(nome_equipamento) > 2:
         q1=Q(nome_equipamento__icontains=nome_equipamento)
         q2=Q(codigo__icontains=nome_equipamento)
-        q3=Q(ativo=True)
-        filtro=(q1|q2)&q3
+        q3=Q(fabricante__nome_fabricante__icontains=nome_equipamento)
+        q4=Q(patrimonio=nome_equipamento)
+        q5=Q(modelo__icontains=nome_equipamento)
+        q9=Q(ativo=True)
+        
+        filtro=(q1|q2|q3|q4|q5)&q9
         equipamentos = Equipamento.objects.filter(filtro)
     else:
         equipamentos = Equipamento.objects.filter(ativo=True)
