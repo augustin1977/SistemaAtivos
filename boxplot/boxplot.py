@@ -210,6 +210,10 @@ def geraPlot(arquivo, comMedia,labelcores):
             ax1.set_title(titulo, fontsize=tamanho_texto_super_grande,fontweight="bold")
             ax1.set_xlabel(eixoX,fontsize=tamanho_texto_grande,fontweight="bold")
             ax1.set_ylabel(eixoY,fontsize=tamanho_texto_grande,fontweight="bold")
+        elif len(titulo)>25:
+            ax1.set_title(titulo, fontsize=tamanho_texto_normal,fontweight="bold")
+            ax1.set_xlabel(eixoX,fontsize=tamanho_texto_normal,fontweight="bold")
+            ax1.set_ylabel(eixoY,fontsize=tamanho_texto_normal,fontweight="bold")
         else:
             ax1.set_title(titulo, fontsize=tamanho_texto_grande,fontweight="bold")
             ax1.set_xlabel(eixoX,fontsize=tamanho_texto_normal,fontweight="bold")
