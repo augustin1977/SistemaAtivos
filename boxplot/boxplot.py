@@ -206,10 +206,14 @@ def geraPlot(arquivo, comMedia,labelcores):
                 ax1.text(media[i],i+offset,"{}".format(media[i]),size=tamanho_texto,color=verde,horizontalalignment ='center')
             
         # define titulo do grafico e dos eixos
-        if cols>20:
+        if cols>20 and len (titulo)<40:
             ax1.set_title(titulo, fontsize=tamanho_texto_super_grande,fontweight="bold")
             ax1.set_xlabel(eixoX,fontsize=tamanho_texto_grande,fontweight="bold")
             ax1.set_ylabel(eixoY,fontsize=tamanho_texto_grande,fontweight="bold")
+        elif len(titulo)>100:
+            ax1.set_title(titulo, fontsize=tamanho_texto_pequeno,fontweight="bold")
+            ax1.set_xlabel(eixoX,fontsize=tamanho_texto_pequeno,fontweight="bold")
+            ax1.set_ylabel(eixoY,fontsize=tamanho_texto_pequeno,fontweight="bold")
         elif len(titulo)>25:
             ax1.set_title(titulo, fontsize=tamanho_texto_normal,fontweight="bold")
             ax1.set_xlabel(eixoX,fontsize=tamanho_texto_normal,fontweight="bold")
