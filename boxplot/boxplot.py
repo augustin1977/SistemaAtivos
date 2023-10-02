@@ -139,7 +139,7 @@ def geraPlot(arquivo, comMedia,labelcores):
     cols=0
     # print(nomes)
     maxnomes=len(max(nomes,key= lambda x:len(x)))
-    print(maxnomes)
+    # print(maxnomes)
     for i in nomes:
         if (i!=""):
             cols+=1
