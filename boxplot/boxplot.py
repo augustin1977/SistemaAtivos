@@ -138,6 +138,8 @@ def geraPlot(arquivo, comMedia,labelcores):
     # print(media)    
     cols=0
     # print(nomes)
+    maxnomes=len(max(nomes,key= lambda x:len(x)))
+    print(maxnomes)
     for i in nomes:
         if (i!=""):
             cols+=1
@@ -153,7 +155,7 @@ def geraPlot(arquivo, comMedia,labelcores):
 
     # # criando area de plotagem e definindo variaves globais como nome do grafico
     
-    fig1, ax1 = plt.subplots(figsize=((10+len(nomes))//2,5+len(nomes)//4))
+    fig1, ax1 = plt.subplots(figsize=(max((maxnomes)//6,12),max(5+len(nomes)//4,8)))
     # print(len(nomes), len(dados_verificados))
     if (len(nomes)==len(dados_verificados)):
 
@@ -180,6 +182,7 @@ def geraPlot(arquivo, comMedia,labelcores):
         # cria boxplot mostrando medias e linha de medias(showmean e meanline True) com dados na vertical (vert=False) com outliers
         graf=ax1.boxplot(dados_verificados,labels=nomes,vert=False,showmeans=True,meanline=True,medianprops=propriedades_medianas,meanprops=propriedades_medias,flierprops={"marker":"+"},patch_artist=True)
         # Coloca label vermelho na familia referencia
+
         if labelcores:
             for label,familia in zip(ax1.get_yticklabels(),familias):
                 if familia.lower()=="referencia" or familia.lower()=="referência" or familia.lower()=="ref" or familia.lower()=="reference" or familia.lower()=="ref.":
@@ -210,7 +213,23 @@ def geraPlot(arquivo, comMedia,labelcores):
             ax1.set_title(titulo, fontsize=tamanho_texto_super_grande,fontweight="bold")
             ax1.set_xlabel(eixoX,fontsize=tamanho_texto_grande,fontweight="bold")
             ax1.set_ylabel(eixoY,fontsize=tamanho_texto_grande,fontweight="bold")
+            if maxnomes>100:
+                tamanho_fonte_eixo=tamanho_texto_super_pequeno
+            elif maxnomes>60:
+                tamanho_fonte_eixo=tamanho_texto_pequeno
+            elif maxnomes>40:
+                tamanho_fonte_eixo=tamanho_texto_normal
+            else:
+                tamanho_fonte_eixo=tamanho_texto_normal
+                
+                for yticklabel in ax1.get_yticklabels():
+                    yticklabel.set_fontsize(tamanho_fonte_eixo)
+                
         elif len(titulo)>100:
+            ax1.set_title(titulo, fontsize=tamanho_texto_super_pequeno,fontweight="bold")
+            ax1.set_xlabel(eixoX,fontsize=tamanho_texto_super_pequeno,fontweight="bold")
+            ax1.set_ylabel(eixoY,fontsize=tamanho_texto_super_pequeno,fontweight="bold")
+        elif len(titulo)>40:
             ax1.set_title(titulo, fontsize=tamanho_texto_pequeno,fontweight="bold")
             ax1.set_xlabel(eixoX,fontsize=tamanho_texto_pequeno,fontweight="bold")
             ax1.set_ylabel(eixoY,fontsize=tamanho_texto_pequeno,fontweight="bold")
