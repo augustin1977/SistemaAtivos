@@ -15,7 +15,15 @@ def transpoe_matriz(matriz):
                 pass
         novamatriz.append(novalinha)
     return novamatriz
-
+def exclui_sem_none(colunas):
+    continua=True
+    while(continua):
+        if colunas[-1]=="":
+            colunas.pop(-1)
+        else:
+            continua=False
+    return colunas
+    
 def try_decode(text, encodings=['utf-8', 'iso-8859-1','windows-1252', 'CP850','iso-8859-15 ', 'MacRoman']):
     
     
@@ -31,7 +39,7 @@ def try_decode(text, encodings=['utf-8', 'iso-8859-1','windows-1252', 'CP850','i
   
 def colocareferencianofim(matriz,familias,media,nomes):
     # trocaposição de todos os elementos
-    tam=len(familias)
+    tam=len(nomes)
     for i in range(tam//2):
         #inverte a matriz
         temp=matriz[i]
@@ -139,10 +147,9 @@ def geraPlot(arquivo, comMedia,labelcores):
     cols=0
     # print(nomes)
     maxnomes=len(max(nomes,key= lambda x:len(x)))
-    # print(maxnomes)
-    for i in nomes:
-        if (i!=""):
-            cols+=1
+    cols=len(nomes)
+    
+    # definindo tamnho do testo do grafico
     if (cols>20):
         tamanho_texto=tamanho_texto_pequeno
     elif (cols>10):
@@ -157,6 +164,8 @@ def geraPlot(arquivo, comMedia,labelcores):
     
     fig1, ax1 = plt.subplots(figsize=(max((maxnomes)//6,12),max(5+len(nomes)//4,8)))
     # print(len(nomes), len(dados_verificados))
+
+    nomes=exclui_sem_none(nomes)# Exclui colunas com nome vazio
     if (len(nomes)==len(dados_verificados)):
 
         # coloca a referencia no final
@@ -272,4 +281,3 @@ def geraPlot(arquivo, comMedia,labelcores):
         return buffer
     else:
         return False
-
