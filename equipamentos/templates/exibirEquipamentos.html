@@ -1,133 +1,170 @@
-
-{% extends 'base.html'%}
-{% block 'titulo'%} Gestão Ativos MA {% endblock %}
-{% block 'menu' %} 
-{% include 'menuequipamento.html' %} 
-{% endblock %}
-{% block 'conteudo'%} 
+{% extends 'base.html'%} {% block 'titulo'%} Gestão Ativos MA {% endblock %} {%
+block 'menu' %} {% include 'menuequipamento.html' %} {% endblock %} {% block
+'conteudo'%}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
+  $(document).ready(function () {
     var debounceTimeout;
     var ultimoFiltro; // Variável para armazenar o último filtro utilizado
 
-    $('#nome-equipamento').on('keyup', function() {
-        var nome_equipamento = $(this).val();
+    $("#nome-equipamento").on("keyup", function () {
+      var nome_equipamento = $(this).val();
 
-        clearTimeout(debounceTimeout);
+      clearTimeout(debounceTimeout);
 
-        debounceTimeout = setTimeout(function() {
-            fazerChamadaAjax(nome_equipamento);
-        }, 400); // Defina um tempo de atraso adequado em milissegundos (por exemplo, 400ms)
+      debounceTimeout = setTimeout(function () {
+        fazerChamadaAjax(nome_equipamento);
+      }, 400); // Defina um tempo de atraso adequado em milissegundos (por exemplo, 400ms)
     });
 
     function fazerChamadaAjax(nome_equipamento) {
-        $.ajax({
-            url: '{% url "get_equipamentos" %}',
-            data: {
-                'nome_equipamento': nome_equipamento
-            },
-            dataType: 'json',
-            cache: false, // Desativar o cache
-            success: function(response) {
-                var equipamentos = response;
+      $.ajax({
+        url: '{% url "get_equipamentos" %}',
+        data: {
+          nome_equipamento: nome_equipamento,
+        },
+        dataType: "json",
+        cache: false, // Desativar o cache
+        success: function (response) {
+          var equipamentos = response;
 
-                $('#equipamentos_list').empty();
-                equipamentos.forEach(function(equipamento) {
-                    var row = $('<tr>');
-                    var nome = $('<td>').text(equipamento.nome_equipamento);
-                    var codigo = $('<td>').text(equipamento.codigo);
-                    var modelo = $('<td>').text(equipamento.modelo);
-                    var tipo = $('<td>').text(equipamento.tipo_equipamento);
-                    var local = $('<td>').text(equipamento.local);
-                    var detalhes = $('<td>').html('<a href="{% url "exibirDetalheEquipamento" %}?id=' + equipamento.id + '"><i class="bi bi-file-text"></i></a>');
-                    var editar = $('<td>').html('<a href="{% url "editarEquipamento" %}?equipamento=' + equipamento.id + '"><i class="bi bi-pencil"></i></a>');
-                    var excluir = $('<td>').html('<a href="{% url "excluirEquipamento" %}?id=' + equipamento.id+ '&excluir=1"><i class="bi bi-trash"></i></a>');
-                    row.append(nome,codigo, modelo, tipo, local, detalhes, editar, excluir);
-                    $('#equipamentos_list').append(row);
-                });
+          $("#equipamentos_list").empty();
+          equipamentos.forEach(function (equipamento) {
+            var row = $("<tr>");
+            var nome = $("<td>").text(equipamento.nome_equipamento);
+            var codigo = $("<td>").text(equipamento.codigo);
+            var modelo = $("<td>").text(equipamento.modelo);
+            var tipo = $("<td>").text(equipamento.tipo_equipamento);
+            var local = $("<td>").text(equipamento.local);
+            var detalhes = $("<td>").html(
+              '<a href="{% url "exibirDetalheEquipamento" %}?id=' +
+                equipamento.id +
+                '"><i class="bi bi-file-text"></i></a>'
+            );
+            var editar = $("<td>").html(
+              '<a href="{% url "editarEquipamento" %}?equipamento=' +
+                equipamento.id +
+                '"><i class="bi bi-pencil"></i></a>'
+            );
+            var excluir = $("<td>").html(
+              '<a href="{% url "excluirEquipamento" %}?id=' +
+                equipamento.id +
+                '&excluir=1"><i class="bi bi-trash"></i></a>'
+            );
+            row.append(
+              nome,
+              codigo,
+              modelo,
+              tipo,
+              local,
+              detalhes,
+              editar,
+              excluir
+            );
+            $("#equipamentos_list").append(row);
+          });
 
-                // Atualizar o último filtro utilizado
-                ultimoFiltro = nome_equipamento;
-            }
-        });
+          // Atualizar o último filtro utilizado
+          ultimoFiltro = nome_equipamento;
+        },
+      });
     }
 
     // Manipulador de eventos para o botão "Baixar Relatório"
-    $('a.btn').on('click', function() {
-        var urlRelatorio = '{% url "baixarRelatorioEquipamentos" %}';
-        if (ultimoFiltro) {
-            // Adicionar o último filtro como parâmetro na URL do relatório
-            urlRelatorio += '?filtro=' + encodeURIComponent(ultimoFiltro);
-        }
-        window.location.href = urlRelatorio;
+    $("a.btn").on("click", function () {
+      var urlRelatorio = '{% url "baixarRelatorioEquipamentos" %}';
+      if (ultimoFiltro) {
+        // Adicionar o último filtro como parâmetro na URL do relatório
+        urlRelatorio += "?filtro=" + encodeURIComponent(ultimoFiltro);
+      }
+      window.location.href = urlRelatorio;
     });
-});
-
+  });
 </script>
 <div class="text-center">
-  <br><br>
-  <h1>  Lista de Equipamentos </h1>
-  </div>
+  <br /><br />
+  <h1>Lista de Equipamentos</h1>
+</div>
 <div class="form-group">
   <div class="col-md-4 mx-auto">
-    <label for="nome-equipamento">Pesquisar Equipamento por Nome ou palavra chave </label>
-    <input type="text" class="form-control text-left" id="nome-equipamento" placeholder="Pesquisar equipamento por nome ou palavra chave" value="">
+    <label for="nome-equipamento"
+      >Pesquisar Equipamento por Nome ou palavra chave
+    </label>
+    <input
+      type="text"
+      class="form-control text-left"
+      id="nome-equipamento"
+      placeholder="Pesquisar equipamento por nome ou palavra chave"
+      value=""
+    />
   </div>
 </div>
 
-<div class ='container'>
-  <div class='row'>
-      <div class='col-md-0'>
-      </div>
-      <div class="col-md">
-    <div class="table-responsive" style="max-height: 65vh; ">
-      <table class="table table-hover" style="table-layout: fixed;">
-        <colgroup>
-          <col style="width: 30%">
-          <col style="width: 8%">
-          <col style="width: 12%">
-          <col style="width: 12%">
-          <col style="width: 20%">
-          <col style="width: 7%">
-          <col style="width: 5%">
-          <col style="width: 6%">
-        </colgroup>
-      <thead class="thead-light sticky-top" > 
-          <tr>
-            <th scope="col">Equipamentos</th>
-            <th scope="col">Código</th>
-            <th scope="col">Modelo</th>
-            <th scope="col">Tipo</th>
-            <th scope="col">Local Instalação</th>
-            <th scope="col">Detalhes</th>
-            <th scope="col">Editar</th>
-            <th scope="col">Excluir</th>
-          </tr>
-        </thead>
-        <tbody id="equipamentos_list" style="overflow: auto;" >
+<div class="container">
+  <div class="row">
+    <div class="col-md-0"></div>
+    <div class="col-md">
+      <div class="table-responsive" style="max-height: 65vh">
+        <table class="table table-hover" style="table-layout: fixed">
+          <colgroup>
+            <col style="width: 30%" />
+            <col style="width: 8%" />
+            <col style="width: 12%" />
+            <col style="width: 12%" />
+            <col style="width: 20%" />
+            <col style="width: 7%" />
+            <col style="width: 5%" />
+            <col style="width: 6%" />
+          </colgroup>
+          <thead class="thead-light sticky-top">
+            <tr>
+              <th scope="col">Equipamentos</th>
+              <th scope="col">Código</th>
+              <th scope="col">Modelo</th>
+              <th scope="col">Tipo</th>
+              <th scope="col">Local Instalação</th>
+              <th scope="col">Detalhes</th>
+              <th scope="col">Editar</th>
+              <th scope="col">Excluir</th>
+            </tr>
+          </thead>
+          <tbody id="equipamentos_list" style="overflow: auto">
             {% for equipamento in equipamentos %}
             <tr>
-            <th scope="row">{{equipamento.nome_equipamento}}</th>
-            <td>{{ equipamento.codigo }}</td> 
-            <td>{{equipamento.modelo}}</td>
-            <td>{{equipamento.tipo_equipamento}}</td>
-            <td>{{equipamento.local}}</td>
-            <td><a href="{% url 'exibirDetalheEquipamento' %}?id={{ equipamento.id }}"><i class="bi bi-file-text"></i></a></td>
-            <td><a href="{% url 'editarEquipamento' %}?equipamento={{ equipamento.id }}"><i class="bi bi-pencil-square"></i></a></td>
-            <td><a href="{% url 'excluirEquipamento' %}?id={{ equipamento.id }}&excluir=1"><i class="bi bi-trash"></i></a></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+              <th scope="row">{{equipamento.nome_equipamento}}</th>
+              <td>{{ equipamento.codigo }}</td>
+              <td>{{equipamento.modelo}}</td>
+              <td>{{equipamento.tipo_equipamento}}</td>
+              <td>{{equipamento.local}}</td>
+              <td>
+                <a
+                  href="{% url 'exibirDetalheEquipamento' %}?id={{ equipamento.id }}"
+                  ><i class="bi bi-file-text"></i
+                ></a>
+              </td>
+              <td>
+                <a
+                  href="{% url 'editarEquipamento' %}?equipamento={{ equipamento.id }}"
+                  ><i class="bi bi-pencil-square"></i
+                ></a>
+              </td>
+              <td>
+                <a
+                  href="{% url 'excluirEquipamento' %}?id={{ equipamento.id }}&excluir=1"
+                  ><i class="bi bi-trash"></i
+                ></a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
-    <br>
-    
-    <div class='col-md-0'></div> 
-    
+    <br />
+
+    <div class="col-md-0"></div>
+  </div>
 </div>
-</div>
-<a href="#"class="btn btn-success btn-mg"> Baixar Relatório </a>
+<a href="#" class="btn btn-success btn-mg"> Baixar Relatório </a>
 
 {% endblock %}

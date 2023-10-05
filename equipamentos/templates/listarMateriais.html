@@ -1,59 +1,51 @@
-
-{% extends 'base.html'%}
-{% block 'titulo'%} Lista de Materiais {% endblock %}
-{% block 'menu' %} 
-{% include 'menumaterial.html' %} 
-{% endblock %}
-{% block 'conteudo'%} 
+{% extends 'base.html'%} {% block 'titulo'%} Lista de Materiais {% endblock %}
+{% block 'menu' %} {% include 'menumaterial.html' %} {% endblock %} {% block
+'conteudo'%}
 <div class="text-center">
-    <br><br>
-    <h1>  Listas Materiais</h1>
+  <br /><br />
+  <h1>Listas Materiais</h1>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md"></div>
+    {% if status == 1 %}
+    <div class="alert alert-sucess" role="alert">
+      Dados Material Atualizados com sucesso
     </div>
-<div class ='container'>
-    <div class='row'>
-        <div class='col-md-3'>
-        </div>
-        <div class="col-md">
-        </div>
-        {% if status == 1 %}
-        <div class="alert alert-sucess" role="alert">
-            Dados Material Atualizados com sucesso 
-        </div>
-        {% endif %}
-        {% if status == 2 %}
-        <div class="alert alert-danger" role="alert">
-            Erro ao gravar dados Material
-        </div>
-        {% endif %}
-        <div class="table-responsive" style="max-height: 85vh;">
-            <table class="table table-hover">
-              <thead class="thead-light sticky-top">
-                  <tr>
-                    <th scope="col">Material</th>
-                    <th scope="col">Fornecedor</th>
-                    <th scope="col">Especificação</th>
-                    <th scope="col">Editar</th>
-                                      </tr>
-                </thead>
-                <tbody style="overflow-y: scroll;">
-                    <tr>
-            
+    {% endif %} {% if status == 2 %}
+    <div class="alert alert-danger" role="alert">
+      Erro ao gravar dados Material
+    </div>
+    {% endif %}
+    <div class="table-responsive" style="max-height: 85vh">
+      <table class="table table-hover">
+        <thead class="thead-light sticky-top">
+          <tr>
+            <th scope="col">Material</th>
+            <th scope="col">Fornecedor</th>
+            <th scope="col">Especificação</th>
+            <th scope="col">Editar</th>
           </tr>
+        </thead>
+        <tbody style="overflow-y: scroll">
+          <tr></tr>
           {% for mat in form %}
           <tr>
             <th scope="row">{{mat.nome_material}}</th>
-          <th scope="row">{{mat.fabricante}}</th>
-          <td>{{mat.especificacao_material}}</td>
-          <td><a href="{% url 'editarMaterial' %}?id={{ mat.id }}"><i class="bi bi-pencil-square"></i></a></td>
-               
-        </tr>
-        {% endfor %}
-        </tbody>    
-        </table>
-        </div>
+            <th scope="row">{{mat.fabricante}}</th>
+            <td>{{mat.especificacao_material}}</td>
+            <td>
+              <a href="{% url 'editarMaterial' %}?id={{ mat.id }}"
+                ><i class="bi bi-pencil-square"></i
+              ></a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-     </div>
- </div>
-        
- {% endblock %}
-            
+{% endblock %}
