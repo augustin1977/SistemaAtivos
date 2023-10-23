@@ -10,7 +10,7 @@
     {% endif %}  
     {% if status == '2' %}
     <div class="alert alert-danger" role="alert">
-        Flaha no envio do email, senha não redefinida!
+        Falha no envio do email, senha não redefinida!
         </div>
     {% endif %}  
     <form method ="POST" action="{% url 'esqueci_senha'%}"> {% csrf_token %}  
