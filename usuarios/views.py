@@ -220,6 +220,8 @@ def listarUsuarios(request):
         return redirect(f'/equipamentos/?status=50')
 
 def exibirUsuario(request):
+    if not request.session.get("usuario"):
+        return redirect("/auth/login/?status=2")
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     tipo=Tipo.objects.get(tipo="admin")
     user=Usuario.objects.get(id=request.GET.get('usuario'))
@@ -265,6 +267,7 @@ def editarUsuario(request):
         return redirect(f'/equipamentos/?status=50')
     
 def excluirUsuario(request):
+    
 
     if not request.session.get('usuario'):
         return redirect('/auth/login/?status=1')
@@ -281,3 +284,37 @@ def excluirUsuario(request):
             Log.exclusao(objeto=user,usuario=usuario,transacao='us')            
             return redirect('/listarUsuarios/')
     return  redirect(f'/equipamentos/?status=50')
+# Implementado e não testado
+
+def trocasenha(request):
+    if not request.session.get("usuario"):
+        return redirect("/auth/login/?status=2")
+    usuario=Usuario.objects.get(id=request.session.get('usuario'))
+    tipo=Tipo.objects.get(tipo="admin")
+    if(usuario.tipo==tipo):
+        usuarios=Usuario.objects.filter(ativo=True).order_by('nome')
+        if request.method=="GET":
+            id= request.GET.get('idUsuario')
+            try:
+                usuario_troca_senha=Usuario.objects.get(id=id,ativo=True)
+            except:
+                return render(request, "listaUsuarios.html", {'status':'1','usuarios':usuarios})# Usuario não cadastrado / Erro Geral
+            novasenha=gera_senha(12)
+            usuario_troca_senha.senha=sha256(novasenha.encode()).hexdigest()   
+            usuario_troca_senha.primeiro_acesso=True
+            try:
+                send_mail(subject='Recuperação de Senha Sistema de gestão de ativos',message=f"A sua nova senha é {novasenha}",
+                from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario_troca_senha.email,'gestaodeativos@outlook.com.br'])
+                usuario_adm=request.session['usuario']
+                log=Log(transacao='us',movimento='ed',usuario=usuario_adm,
+                        alteracao=f'O usuario {usuario_adm} recuperou a senha do {usuario_troca_senha} via sistema e eviou email para {usuario_troca_senha.email}')
+                log.save()
+                usuario_troca_senha.save()
+                return render(request, "listaUsuarios.html", {'status':'51','usuarios':usuarios}) # troca de senha efetuada com sucesso  
+            except:
+                return render(request, "listaUsuarios.html", {'status':'2','usuarios':usuarios}) # Erro no envio do email
+        
+    return redirect('/auth/login/?status=0')
+        
+        
+    

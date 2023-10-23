@@ -6,6 +6,22 @@
 {% endblock %}
 {% block 'conteudo'%} 
 <div class ='container'>
+  {% if status == '1' %}
+    <div class="alert alert-success" role="alert">
+        Usuário não encontrado
+      </div>
+  {% endif %}
+  {% if status == '2' %}
+    <div class="alert alert-success" role="alert">
+        Erro no envio do e-mail
+      </div>
+  {% endif %}
+  {% if status == '51' %}
+    <div class="alert alert-success" role="alert">
+        Nova senha enviada por e-mail com sucesso
+      </div>
+  {% endif %}
+  
   <div class='row'>
       <div class='col-md-3'>
         <br><br><br>
@@ -23,6 +39,7 @@
             <th scope="col">Primeiro Acesso</th>
             <th scope="col">Exibir</th>
             <th scope="col">Editar</th>
+            <th scope="col">Gerar Senha</th>
             <th scope="col">Excluir</th>
           </tr>
         </thead>
@@ -35,6 +52,7 @@
             <td>{{usuario.primeiro_acesso}}</td>
             <td><a href="{% url 'exibirUsuario' %}?usuario={{ usuario.id }}"><i class="bi bi-file-text"></i></a></td>
             <td><a href="{% url 'editarUsuario' %}?usuario={{ usuario.id }}"><i class="bi bi-pencil-square"></i></a></td>
+            <td><a href="{% url 'trocasenha' %}?idUsuario={{ usuario.id }}"><i class="bi bi-envelope"></i></a></td>
             <td><a href="{% url 'excluirUsuario' %}?usuario={{ usuario.id }}"><i class="bi bi-trash"></i></a></td>
           </tr>
           {% endfor %}

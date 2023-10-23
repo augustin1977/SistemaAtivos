@@ -17,6 +17,7 @@ urlpatterns = [
     path("exibirUsuario/",views.exibirUsuario, name="exibirUsuario"),
     path("editarUsuario/",views.editarUsuario, name="editarUsuario"),
     path("excluirUsuario/",views.excluirUsuario, name="excluirUsuario"),
+    path("trocasenha/",views.trocasenha, name="trocasenha"),
 ]
 
 
