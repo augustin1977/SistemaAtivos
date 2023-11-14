@@ -17,13 +17,16 @@ def formatar_data_por_extenso(data):
         12: 'dezembro'
     }
 
-    dia = data.day
-    mes_numero = data.month
-    mes_extenso = meses[mes_numero]
-    ano = data.year
+    try:
+        dia = data.day
+        mes_numero = data.month
+        mes_extenso = meses[mes_numero]
+        ano = data.year
 
-    data_por_extenso = f"{dia} de {mes_extenso} de {ano}"
-    return data_por_extenso
+        data_por_extenso = f"{dia} de {mes_extenso} de {ano}"
+        return data_por_extenso
+    except:
+        return None
 
 def retiraespacos(palavra):
     """Recebe um string e retorna esse string sem espaços ou caracteres não imprimiveis"""
