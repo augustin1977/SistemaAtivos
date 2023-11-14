@@ -79,7 +79,6 @@ def exibirDetalheEquipamento(request):
     equipamento = Equipamento.objects.get(id=id, ativo=True)
     equipamento.data_compra= funcoesAuxiliares.formatar_data_por_extenso(equipamento.data_compra)
     equipamento.data_ultima_calibracao= funcoesAuxiliares.formatar_data_por_extenso(equipamento.data_ultima_calibracao)
-    print(equipamento.data_compra,type(equipamento.data_compra))
     materiais = Material_consumo.objects.filter(equipamento__id=id)
     arquivos = Media.objects.filter(equipamento__id=id)
     usuario = Usuario.objects.get(id=request.session.get("usuario"))
