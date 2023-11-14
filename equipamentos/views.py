@@ -142,8 +142,8 @@ def editarEquipamento(request):
                     setattr(e, campo, details.cleaned_data[campo])
                 alteracao |= alterado
             if alteracao:
-                # print(e.data_cadastro)
                 e.save()
+                # print(e.data_cadastro)
             # bloco comentado pois os materiais não foram implementados
 
             # lista_materiais=Material_consumo.objects.filter(equipamento__id=details.cleaned_data['id'])
