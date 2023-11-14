@@ -1,5 +1,29 @@
 import random
+import datetime
 
+def formatar_data_por_extenso(data):
+    meses = {
+        1: 'janeiro',
+        2: 'fevereiro',
+        3: 'março',
+        4: 'abril',
+        5: 'maio',
+        6: 'junho',
+        7: 'julho',
+        8: 'agosto',
+        9: 'setembro',
+        10: 'outubro',
+        11: 'novembro',
+        12: 'dezembro'
+    }
+
+    dia = data.day
+    mes_numero = data.month
+    mes_extenso = meses[mes_numero]
+    ano = data.year
+
+    data_por_extenso = f"{dia} de {mes_extenso} de {ano}"
+    return data_por_extenso
 
 def retiraespacos(palavra):
     """Recebe um string e retorna esse string sem espaços ou caracteres não imprimiveis"""
