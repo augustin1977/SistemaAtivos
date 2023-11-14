@@ -59,7 +59,7 @@ class equipamentoEditarForm(Form):
     id=CharField(label="",widget=HiddenInput())
     nome_equipamento=CharField(widget= TextInput(attrs={'class': "form-control"}))
     modelo=CharField(widget= TextInput(attrs={'class': "form-control"}))
-    codigo=CharField(widget= TextInput(attrs={'class': "form-control"}))
+    codigo = CharField(widget=TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     fabricante=ModelChoiceField(queryset=Fabricante.objects.all() ,widget=Select (attrs={'class': "form-control"}))
     local=ModelChoiceField(queryset=Local_instalacao.objects.all(),widget=Select(attrs={'class': "form-control"}))
     tipo_equipamento=ModelChoiceField(queryset= Tipo_equipamento.objects.all(),widget=Select(attrs={'class': "form-control"}))
