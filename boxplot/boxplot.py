@@ -134,7 +134,7 @@ def geraPlot(arquivo, comMedia, labelcores):
     media = [0] * len(dados_verificados)
     for n in range(len(media)):
         media[n] = sum(dados_verificados[n]) / len(dados_verificados[n])
-        print(n+1,sum(dados_verificados[n]),len(dados_verificados[n]))
+        # print(n+1,sum(dados_verificados[n]),len(dados_verificados[n]))
     cols = 0
     # print(nomes)
     maxnomes = len(max(nomes, key=lambda x: len(x)))
