@@ -5,18 +5,6 @@ import matplotlib
 
 
 # ----------------funções auxiliares ------------------
-def transpoe_matriz(matriz):
-    novamatriz = []
-    for i in range(len(matriz[0])):
-        novalinha = []
-        for j in range(len(matriz)):
-            try:
-                novalinha.append(matriz[j][i])
-            except:
-                pass
-        novamatriz.append(novalinha)
-    return novamatriz
-
 
 def exclui_sem_none(colunas):
     continua = True
