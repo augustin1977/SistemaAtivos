@@ -131,21 +131,22 @@ def geraPlot(arquivo, comMedia, labelcores):
     dados_verificados = []
     contagem_colunas = [0] * len(nomes)
 
-    for l, linha in enumerate(dados_lidos):
-        nova_linha = []
-        for c, dado in enumerate(linha):
+    dados_verificados=[]
+    for linha in range(len(dados_lidos)):
+        for coluna in range(len(nomes)):
             try:
-                dado = dado.replace(",", ".")
-                nova_linha.append(float(dado))
-                contagem_colunas[c] += 1
+                dado = dados_lidos[linha][coluna].replace(",", ".")
+                if linha==0:
+                    dados_verificados.append([float(dado)])
+                else:
+                    dados_verificados[coluna].append(float(dado))
             except:
-                dados_lidos[l][c] = False
-        dados_verificados.append(nova_linha)
-    # print(dados_verificados)
-    dados_verificados = transpoe_matriz(dados_verificados)
+                pass
+	
     media = [0] * len(dados_verificados)
     for n in range(len(media)):
         media[n] = sum(dados_verificados[n]) / len(dados_verificados[n])
+        print(n+1,sum(dados_verificados[n]),len(dados_verificados[n]))
     cols = 0
     # print(nomes)
     maxnomes = len(max(nomes, key=lambda x: len(x)))
