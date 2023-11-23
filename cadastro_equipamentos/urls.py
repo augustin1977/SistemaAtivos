@@ -33,9 +33,10 @@ urlpatterns = [
     path('consulta_dados_sistema/', views.consulta_dados_sistema, name='consulta_dados_sistema'),
     path('estatisticas/', views.consulta_dados_sistema, name='estatisticas'),
     path('estatistica/', views.consulta_dados_sistema, name='estatistica'),
-    path('criarboxplot',boxplot.views.boxplotinicial,name='boxplotinicial'),
-    path('gerar_grafico/',boxplot.views.gerar_grafico,name='gerar_grafico'),
+    path('criarboxplot',boxplot.views.boxplotinicial2,name='boxplotinicial'),
+    path('gerar_grafico/',boxplot.views.gerar_grafico2,name='gerar_grafico'),
     path('download_model_csv/', boxplot.views.download_model_csv, name='download_model_csv'),
+
 ]
 urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
