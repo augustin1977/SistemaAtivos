@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from io import BytesIO
 import matplotlib
-# arquivo legado --- inutilizado
+# arquivo legado --- inutilizado -- apagar na proxima versão para evitar confusão
 
 # ----------------funções auxiliares ------------------
 
