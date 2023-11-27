@@ -147,7 +147,7 @@ class Boxplot():
             self.erro=2 # Erro - numero de nomes diferentes do numero de coluna de dados
         
         
-    def gera_grafico(self,linha_media,labelcores):
+    def gera_grafico(self,linha_media,labelcores,posicao_legenda):
         if self.erro==0:
             matplotlib.use("Agg")  # Modo não interativo
             maxnomes = len(max(self.nomes, key=lambda x: len(x))) # tamanho do maior nome de categoria
@@ -337,7 +337,7 @@ class Boxplot():
                     legenda.append(mpatches.Patch(color=corGrafico[color], label=color))
             legenda.reverse()
             # constroi a legenda
-            ax1.legend(handles=legenda).set_draggable(True)
+            ax1.legend(handles=legenda,loc=int(posicao_legenda)).set_draggable(True)
             # mostra o grafico
             buffer = BytesIO()
             plt.savefig(buffer, format="png")
@@ -350,7 +350,7 @@ class Boxplot():
 
 
 # Função que cria o objeto e chama as funções 
-def gera_boxplot(arquivo, comMedia, labelcores):
+def gera_boxplot(arquivo, comMedia, labelcores,legenda):
     boxplot=Boxplot(arquivo)
     boxplot.le_dados()
     if boxplot.status: # Se não ocorrer nenum erro
@@ -360,7 +360,7 @@ def gera_boxplot(arquivo, comMedia, labelcores):
     if boxplot.status: # Se não ocorrer nenum erro
         boxplot.organiza_dados()
     if boxplot.status: # Se não ocorrer nenum erro
-        grafico=boxplot.gera_grafico(comMedia,labelcores)
+        grafico=boxplot.gera_grafico(comMedia,labelcores,legenda)
     else: #caso contraria retorne False
         grafico=boxplot.erro
     return grafico

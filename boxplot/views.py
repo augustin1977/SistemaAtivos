@@ -56,6 +56,7 @@ def gerar_grafico2(request):
         file,
         request.POST.get("commedia") == "on",
         request.POST.get("labelcores") == "on",
+        request.POST.get("legenda")
     )
 
     if imagem:
