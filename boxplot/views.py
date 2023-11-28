@@ -27,9 +27,11 @@ def gerar_grafico2(request):
         return render(request, "boxplot.html", {"erro": "2"})
     imagem = boxplot.boxplot2.gera_boxplot(
         file,
-        request.POST.get("commedia") == "on",
+        request.POST.get("linha_media") == "on",
+        request.POST.get("valor_media") == "on",
         request.POST.get("labelcores") == "on",
         request.POST.get("legenda")
+        
     )
 
     if imagem:

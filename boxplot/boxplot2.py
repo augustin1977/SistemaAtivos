@@ -147,7 +147,7 @@ class Boxplot():
             self.erro=2 # Erro - numero de nomes diferentes do numero de coluna de dados
         
         
-    def gera_grafico(self,linha_media,labelcores,posicao_legenda):
+    def gera_grafico(self,linha_media,valor_media,labelcores,posicao_legenda):
         if self.erro==0:
             matplotlib.use("Agg")  # Modo não interativo
             maxnomes = len(max(self.nomes, key=lambda x: len(x))) # tamanho do maior nome de categoria
@@ -208,58 +208,59 @@ class Boxplot():
                     else:
                         label.set_color("black")
             # Coloca um texto com o valor da média de cada coluna no grafico
-            if len(self.medias) < 3:
-                offset = 1.1
-            elif len(self.medias) < 4:
-                offset = 1.2
-            else:
-                offset = 1.3
-            for i in range(len(self.medias)):
-                if self.medias[i] > 1000000:
-                    ax1.text(
-                        self.medias[i],
-                        i + offset,
-                        "{:d}".format(self.medias[i]),
-                        size=tamanho_texto,
-                        color=verde,
-                        horizontalalignment="center",
-                    )
-                elif self.medias[i] > 1000:
-                    ax1.text(
-                        self.medias[i],
-                        i + offset,
-                        "{:.1f}".format(self.medias[i]),
-                        size=tamanho_texto,
-                        color=verde,
-                        horizontalalignment="center",
-                    )
-                elif self.medias[i] > 1:
-                    ax1.text(
-                        self.medias[i],
-                        i + offset,
-                        "{:.2f}".format(self.medias[i]),
-                        size=tamanho_texto,
-                        color=verde,
-                        horizontalalignment="center",
-                    )
-                elif self.medias[i] > 0.0001:
-                    ax1.text(
-                        self.medias[i],
-                        i + offset,
-                        "{:.4f}".format(self.medias[i]),
-                        size=tamanho_texto,
-                        color=verde,
-                        horizontalalignment="center",
-                    )
+            if (valor_media):
+                if len(self.medias) < 3:
+                    offset = 1.1
+                elif len(self.medias) < 4:
+                    offset = 1.2
                 else:
-                    ax1.text(
-                        self.medias[i],
-                        i + offset,
-                        "{}".format(self.medias[i]),
-                        size=tamanho_texto,
-                        color=verde,
-                        horizontalalignment="center",
-                    )
+                    offset = 1.3
+                for i in range(len(self.medias)):
+                    if self.medias[i] > 1000000:
+                        ax1.text(
+                            self.medias[i],
+                            i + offset,
+                            "{:d}".format(self.medias[i]),
+                            size=tamanho_texto,
+                            color=verde,
+                            horizontalalignment="center",
+                        )
+                    elif self.medias[i] > 1000:
+                        ax1.text(
+                            self.medias[i],
+                            i + offset,
+                            "{:.1f}".format(self.medias[i]),
+                            size=tamanho_texto,
+                            color=verde,
+                            horizontalalignment="center",
+                        )
+                    elif self.medias[i] > 1:
+                        ax1.text(
+                            self.medias[i],
+                            i + offset,
+                            "{:.2f}".format(self.medias[i]),
+                            size=tamanho_texto,
+                            color=verde,
+                            horizontalalignment="center",
+                        )
+                    elif self.medias[i] > 0.0001:
+                        ax1.text(
+                            self.medias[i],
+                            i + offset,
+                            "{:.4f}".format(self.medias[i]),
+                            size=tamanho_texto,
+                            color=verde,
+                            horizontalalignment="center",
+                        )
+                    else:
+                        ax1.text(
+                            self.medias[i],
+                            i + offset,
+                            "{}".format(self.medias[i]),
+                            size=tamanho_texto,
+                            color=verde,
+                            horizontalalignment="center",
+                        )
 
             # define titulo do grafico e dos eixos
             if self.contagem_colunas > 20 and len(self.titulo) < 40:
@@ -269,13 +270,13 @@ class Boxplot():
                 ax1.set_xlabel(self.eixox, fontsize=tamanho_texto_grande, fontweight="bold")
                 ax1.set_ylabel(self.eixoy, fontsize=tamanho_texto_grande, fontweight="bold")
                 if maxnomes > 100:
-                    tamanho_fonte_eixo = tamanho_texto_super_pequeno
-                elif maxnomes > 60:
                     tamanho_fonte_eixo = tamanho_texto_pequeno
+                elif maxnomes > 60:
+                    tamanho_fonte_eixo = tamanho_texto_normal
                 elif maxnomes > 40:
                     tamanho_fonte_eixo = tamanho_texto_normal
                 else:
-                    tamanho_fonte_eixo = tamanho_texto_normal
+                    tamanho_fonte_eixo = tamanho_texto_grande
 
                     for yticklabel in ax1.get_yticklabels():
                         yticklabel.set_fontsize(tamanho_fonte_eixo)
@@ -350,18 +351,18 @@ class Boxplot():
 
 
 # Função que cria o objeto e chama as funções 
-def gera_boxplot(arquivo, comMedia, labelcores,legenda):
+def gera_boxplot(arquivo, linha_media,valor_media, labelcores,legenda):
     boxplot=Boxplot(arquivo)
-    boxplot.le_dados()
+    boxplot.le_dados() # faz a leitura dos dados do arquivo
     if boxplot.status: # Se não ocorrer nenum erro
-        boxplot.limpa_dados()
-    if comMedia and boxplot.status: # Se não ocorrer nenum erro e for necessário exibir as médias
-        boxplot.calcula_medias()
+        boxplot.limpa_dados() # limpa os dados incoerentes e celulas vazias
+    if (linha_media or valor_media) and boxplot.status: # Se não ocorrer nenum erro e for necessário exibir as médias
+        boxplot.calcula_medias() # calcula as medias
     if boxplot.status: # Se não ocorrer nenum erro
-        boxplot.organiza_dados()
+        boxplot.organiza_dados() # organiza os dados
     if boxplot.status: # Se não ocorrer nenum erro
-        grafico=boxplot.gera_grafico(comMedia,labelcores,legenda)
+        grafico=boxplot.gera_grafico(linha_media,valor_media,labelcores,legenda) # gera o gráfico
     else: #caso contraria retorne False
-        grafico=boxplot.erro
+        grafico=boxplot.erro # Reporta os erros cometidos
     return grafico
 
