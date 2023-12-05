@@ -151,15 +151,20 @@ class Boxplot():
         if self.erro==0:
             matplotlib.use("Agg")  # Modo não interativo
             maxnomes = len(max(self.nomes, key=lambda x: len(x))) # tamanho do maior nome de categoria
-            if self.contagem_colunas > 20:
-                tamanho_texto = tamanho_texto_pequeno
-            elif self.contagem_colunas> 10:
-                tamanho_texto = tamanho_texto_pequeno
+            
+            x=max((maxnomes) // 6 + self.contagem_colunas // 4, 12)
+            y=max(6+self.contagem_colunas // 4, 8)
+            
+            # Define o tamnaho do texto do gráfico
+            if (x>12 and y> 8):
+                tamanho_texto = tamanho_texto_grande
+                tamanho_texto_eixo=tamanho_texto_grande
             else:
                 tamanho_texto = tamanho_texto_normal
+                tamanho_texto_eixo=tamanho_texto_normal
             
-            fig1, ax1 = plt.subplots(
-                figsize=(max((maxnomes) // 6, 12), max(5 + self.contagem_colunas // 4, 8))    ) # define o tamanho do grafico
+            
+            fig1, ax1 = plt.subplots( figsize=(x, y)) # define o tamanho do grafico
             # definindo a cor das familias no boxplot
             corGrafico = {}
             j = 0
@@ -262,50 +267,67 @@ class Boxplot():
                             horizontalalignment="center",
                         )
 
-            # define titulo do grafico e dos eixos
-            if self.contagem_colunas > 20 and len(self.titulo) < 40:
-                ax1.set_title(
-                    self.titulo, fontsize=tamanho_texto_super_grande, fontweight="bold"
-                )
-                ax1.set_xlabel(self.eixox, fontsize=tamanho_texto_grande, fontweight="bold")
-                ax1.set_ylabel(self.eixoy, fontsize=tamanho_texto_grande, fontweight="bold")
-                if maxnomes > 100:
-                    tamanho_fonte_eixo = tamanho_texto_pequeno
-                elif maxnomes > 60:
-                    tamanho_fonte_eixo = tamanho_texto_normal
-                elif maxnomes > 40:
-                    tamanho_fonte_eixo = tamanho_texto_normal
-                else:
-                    tamanho_fonte_eixo = tamanho_texto_grande
+            
+            
+            # Aplica configuração dos texto no grafico
+            ax1.set_title(self.titulo, fontsize=tamanho_texto_super_grande, fontweight="bold")
+            ax1.set_xlabel(self.eixox, fontsize=tamanho_texto_eixo, fontweight="bold")
+            ax1.set_ylabel(self.eixoy, fontsize=tamanho_texto_eixo, fontweight="bold")
+            for yticklabel in ax1.get_yticklabels():
+                yticklabel.set_fontsize(tamanho_texto_eixo)
+            for xticklabel in ax1.get_xticklabels():
+                xticklabel.set_fontsize(tamanho_texto_eixo)
+                        
+            
+            ##### Suspenso para melhorias ######
+            # if maxnomes > 100:
+            #         tamanho_fonte_eixo = tamanho_texto_pequeno
+            # elif maxnomes > 60:
+            #     tamanho_fonte_eixo = tamanho_texto_normal
+            # elif maxnomes > 40:
+            #     tamanho_fonte_eixo = tamanho_texto_normal
+            # else:
+            #     tamanho_fonte_eixo = tamanho_texto_grande
 
-                    for yticklabel in ax1.get_yticklabels():
-                        yticklabel.set_fontsize(tamanho_fonte_eixo)
+            #     for yticklabel in ax1.get_yticklabels():
+            #         yticklabel.set_fontsize(tamanho_fonte_eixo)
+             
+            
+            # if self.contagem_colunas > 20 and len(self.titulo) < 40:
+            #     print("passei aqui")
+            #     ax1.set_title(
+            #         self.titulo, fontsize=tamanho_texto_super_grande, fontweight="bold"
+            #     )
+            #     ax1.set_xlabel(self.eixox, fontsize=tamanho_texto_grande, fontweight="bold")
+            #     ax1.set_ylabel(self.eixoy, fontsize=tamanho_texto_grande, fontweight="bold")
 
-            elif len(self.titulo) > 100:
-                ax1.set_title(
-                    self.titulo, fontsize=tamanho_texto_super_pequeno, fontweight="bold"
-                )
-                ax1.set_xlabel(
-                    self.eixox, fontsize=tamanho_texto_super_pequeno, fontweight="bold"
-                )
-                ax1.set_ylabel(
-                    self.eixoy, fontsize=tamanho_texto_super_pequeno, fontweight="bold"
-                )
-            elif len(self.titulo) > 40:
-                ax1.set_title(self.titulo, fontsize=tamanho_texto_pequeno, fontweight="bold")
-                ax1.set_xlabel(self.eixox, fontsize=tamanho_texto_pequeno, fontweight="bold")
-                ax1.set_ylabel(self.eixoy, fontsize=tamanho_texto_pequeno, fontweight="bold")
-            elif len(self.titulo) > 25:
-                ax1.set_title(self.titulo, fontsize=tamanho_texto_normal, fontweight="bold")
-                ax1.set_xlabel(self.eixox, fontsize=tamanho_texto_normal, fontweight="bold")
-                ax1.set_ylabel(self.eixoy, fontsize=tamanho_texto_normal, fontweight="bold")
-            else:
-                ax1.set_title(self.titulo, fontsize=tamanho_texto_grande, fontweight="bold")
-                ax1.set_xlabel(self.eixox, fontsize=tamanho_texto_normal, fontweight="bold")
-                ax1.set_ylabel(self.eixoy, fontsize=tamanho_texto_normal, fontweight="bold")
+            # elif len(self.titulo) > 100:
+            #     ax1.set_title(
+            #         self.titulo, fontsize=tamanho_texto_super_pequeno, fontweight="bold"
+            #     )
+            #     ax1.set_xlabel(
+            #         self.eixox, fontsize=tamanho_texto_super_pequeno, fontweight="bold"
+            #     )
+            #     ax1.set_ylabel(
+            #         self.eixoy, fontsize=tamanho_texto_super_pequeno, fontweight="bold"
+            #     )
+            # elif len(self.titulo) > 40:
+            #     ax1.set_title(self.titulo, fontsize=tamanho_texto_pequeno, fontweight="bold")
+            #     ax1.set_xlabel(self.eixox, fontsize=tamanho_texto_pequeno, fontweight="bold")
+            #     ax1.set_ylabel(self.eixoy, fontsize=tamanho_texto_pequeno, fontweight="bold")
+            # elif len(self.titulo) > 25:
+            #     ax1.set_title(self.titulo, fontsize=tamanho_texto_normal, fontweight="bold")
+            #     ax1.set_xlabel(self.eixox, fontsize=tamanho_texto_normal, fontweight="bold")
+            #     ax1.set_ylabel(self.eixoy, fontsize=tamanho_texto_normal, fontweight="bold")
+            # else:
+            #     ax1.set_title(self.titulo, fontsize=tamanho_texto_grande, fontweight="bold")
+            #     ax1.set_xlabel(self.eixox, fontsize=tamanho_texto_normal, fontweight="bold")
+            #     ax1.set_ylabel(self.eixoy, fontsize=tamanho_texto_normal, fontweight="bold")
 
-            # ajustes de posições para melhor enquadramento
-            # fig1.subplots_adjust(left=0.17,right=0.98,top=0.96,bottom=0.07)
+            ##### fim dos Suspenso para melhorias ######
+            
+            
+     
             fig1.tight_layout()
             # Faz a linha media do ensaio de referencia  se comMedia=True(ultimo)
             # print(comMedia)
