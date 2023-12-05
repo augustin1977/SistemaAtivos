@@ -113,7 +113,7 @@ class Boxplot():
         # print (tabela)
         self.titulo = tabela[0][0]
         # busca as familias dos ensaios na planilha
-        self.familias = tabela[1]
+        self.familias = exclui_sem_none(tabela[1])
         # busca atributos e segregando os dados
         self.eixox = tabela[0][1]
         self.eixoy = tabela[0][2]
@@ -331,6 +331,8 @@ class Boxplot():
             fig1.tight_layout()
             # Faz a linha media do ensaio de referencia  se comMedia=True(ultimo)
             # print(comMedia)
+            # print(self.medias)
+            # print(self.familias)
             if linha_media:
                 for i, familia in enumerate(self.familias):
                     if (
