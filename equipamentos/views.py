@@ -907,7 +907,6 @@ def cadastrarArquivo(request):
             )
             usuario = Usuario.objects.get(id=request.session.get("usuario"))
             media.save()
-            # alteração de atualização do equipamento
             equipamento= form.cleaned_data["equipamento"]
             utc=pytz.timezone(TIME_ZONE) # pytz.UTC
             equipamento.data_ultima_atualizaca=utc.localize( datetime.now())
@@ -925,8 +924,7 @@ def cadastrarArquivo(request):
                             equipamento=equipamento,
                             nota_equipamento=None )
             equipamento.save()
-            # fim da alteração
-            
+
             return redirect("cadastrarArquivo")
         else:
             pass
