@@ -21,6 +21,7 @@ import json
 from datetime import datetime, timedelta
 
 
+
 def home(request):
     if not request.session.get("usuario"):
         return redirect("/auth/login/?status=2")
@@ -906,12 +907,26 @@ def cadastrarArquivo(request):
             )
             usuario = Usuario.objects.get(id=request.session.get("usuario"))
             media.save()
+            # alteração de atualização do equipamento
+            equipamento= form.cleaned_data["equipamento"]
+            utc=pytz.timezone(TIME_ZONE) # pytz.UTC
+            equipamento.data_ultima_atualizaca=utc.localize( datetime.now())
             Log.cadastramento(
                 objeto=media,
                 usuario=usuario,
                 transacao="me",
                 equipamento=form.cleaned_data["equipamento"],
             )
+            Log.foiAlterado(objeto=equipamento,
+                            atributo="data_ultima_atualizacao",
+                            valor=utc.localize( datetime.now()),
+                            transacao="me",
+                            usuario=usuario,
+                            equipamento=equipamento,
+                            nota_equipamento=None )
+            equipamento.save()
+            # fim da alteração
+            
             return redirect("cadastrarArquivo")
         else:
             pass
