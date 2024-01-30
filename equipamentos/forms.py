@@ -143,7 +143,7 @@ class cadastraTipo_equipamento(Form):
         for tipo in tipos:
             siglas.append(tipo.sigla)
         cd['sigla']=cd['nome'][0:3].upper()
-        print(siglas)
+        # print(siglas)
         i=3
         while(cd['sigla'] in siglas  and i<len(cd['nome'])):
             cd['sigla']=cd['nome'][0:2].upper()+cd['nome'][i].upper()
