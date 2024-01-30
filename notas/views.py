@@ -245,43 +245,44 @@ def editarModoFalhaEquipamento(request):
     if(usuario.tipo not in tipo):
           return redirect(f'/equipamentos/?status=50')
     
-    return HttpResponse("<h1>Acesso não autorizado</h1>") # linha inserida para evitar execução do codigo abaixo, deve ser refeita essa rotina a luz de novos entendimento
-    perguntas=[{'numero':1,'texto':"É ligado na energia?","resposta":"resposta1",'sim':'sim1','nao':'nao1'},
-            {'numero':2,'texto':"Tem partes eletronicas?","resposta":"resposta2",'sim':'sim2','nao':'nao2'},
-            {'numero':3,'texto':"Tem alguns sistema hidraulico?","resposta":"resposta3",'sim':'sim3','nao':'nao3'},
-            {'numero':4,'texto':"Tem partes moveis?","resposta":"resposta4",'sim':'sim4','nao':'nao4'},
-            {'numero':5,'texto':"Necessita base Civil?","resposta":"resposta5",'sim':'sim5','nao':'nao5'},
-            {'numero':6,'texto':"Tem controlador ou PLC?","resposta":"resposta6",'sim':'sim6','nao':'nao6'},
-            {'}numero':7,'texto':"é conectado a uma computador ou é microprocessado?","resposta":"resposta7",'sim':'sim7','nao':'nao7'},]
-    lista=[]
-    for r in perguntas:
-        lista.append(r['resposta'])
-    if request.method=="GET":      
+    return HttpResponse("<h1>Acesso não autorizado</h1>") 
+    # linha inserida para evitar execução do codigo abaixo, deve ser refeita essa rotina a luz de novos entendimento
+    # perguntas=[{'numero':1,'texto':"É ligado na energia?","resposta":"resposta1",'sim':'sim1','nao':'nao1'},
+    #         {'numero':2,'texto':"Tem partes eletronicas?","resposta":"resposta2",'sim':'sim2','nao':'nao2'},
+    #         {'numero':3,'texto':"Tem alguns sistema hidraulico?","resposta":"resposta3",'sim':'sim3','nao':'nao3'},
+    #         {'numero':4,'texto':"Tem partes moveis?","resposta":"resposta4",'sim':'sim4','nao':'nao4'},
+    #         {'numero':5,'texto':"Necessita base Civil?","resposta":"resposta5",'sim':'sim5','nao':'nao5'},
+    #         {'numero':6,'texto':"Tem controlador ou PLC?","resposta":"resposta6",'sim':'sim6','nao':'nao6'},
+    #         {'}numero':7,'texto':"é conectado a uma computador ou é microprocessado?","resposta":"resposta7",'sim':'sim7','nao':'nao7'},]
+    # lista=[]
+    # for r in perguntas:
+    #     lista.append(r['resposta'])
+    # if request.method=="GET":      
         
         
-        mf=Modo_falha_equipamento.objects.get(id=request.GET.get('id'))
-        equipamento=mf.equipamento
-        modosFalha=Modo_falha_equipamento.objects.filter(equipamento=equipamento)
-        return  render(request, "editarModoFalhaEquipamento.html",
-                        {'modosFalha':modosFalha,'perguntas':perguntas,'equipamento':equipamento,'status':0})
+    #     mf=Modo_falha_equipamento.objects.get(id=request.GET.get('id'))
+    #     equipamento=mf.equipamento
+    #     modosFalha=Modo_falha_equipamento.objects.filter(equipamento=equipamento)
+    #     return  render(request, "editarModoFalhaEquipamento.html",
+    #                     {'modosFalha':modosFalha,'perguntas':perguntas,'equipamento':equipamento,'status':0})
     
 
-    equipamento=Equipamento.objects.get(id=request.POST.get('id')) 
-    modosFalha=Modo_falha_equipamento.objects.filter(equipamento=equipamento)
+    # equipamento=Equipamento.objects.get(id=request.POST.get('id')) 
+    # modosFalha=Modo_falha_equipamento.objects.filter(equipamento=equipamento)
     
-    respostas=[]                 
-    for l in lista:
-        res=request.POST.get(l)
-        if res=='1':
-            respostas.append(True)
-        elif res=='0':
-            respostas.append(False)
-        else:
-            respostas.append(None)   
+    # respostas=[]                 
+    # for l in lista:
+    #     res=request.POST.get(l)
+    #     if res=='1':
+    #         respostas.append(True)
+    #     elif res=='0':
+    #         respostas.append(False)
+    #     else:
+    #         respostas.append(None)   
         
-    resposta="-".join( str(valor) for valor in respostas)
+    # resposta="-".join( str(valor) for valor in respostas)
 
-    return redirect('/notas/exibirModoFalhaEquipamento')
+    # return redirect('/notas/exibirModoFalhaEquipamento')
 
 def exibirModoFalhaEquipamento(request):
     if not request.session.get('usuario'):

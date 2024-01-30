@@ -11,6 +11,7 @@ from cadastro_equipamentos import settings
 from django.http import HttpResponse, Http404
 from django.utils import timezone
 from cadastro_equipamentos.settings import TIME_ZONE
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 #Bibliotecas Gerais
 from os import path
@@ -118,7 +119,19 @@ def relatorioLog(request):
             lognovo.append({'id':i+1,'transacao':"Erro",'movimento':"Erro",
             'data_cadastro':item.data_cadastro,'usuario':item.usuario,'equipamento':"Erro",
             'ocorrencia_equipamento':"Erro",'alteracao':item.alteracao})
-    return render(request, "relatorioLog.html", {'lista_log':lognovo}) 
+    paginator=Paginator(lognovo, 25)
+    page = request.GET.get('page')# verifica se ja tem um pagina escolhida
+    try:
+        log_paginado = paginator.get_page(page) # cria paginas
+    except PageNotAnInteger:
+        # Se o número da página não for um inteiro, mostre a primeira página
+        log_paginado = paginator.get_page(1)
+    except EmptyPage:
+        # Se o número da página estiver fora do intervalo, mostre a última página
+        log_paginado = paginator.get_page(paginator.num_page)
+    
+    return render(request, "relatorioLog.html", {'lista_log':log_paginado}) 
+
 
 def baixarRelatorioLog(request):
     """ Cria arquivo e Baixa relatório de LOG no formato CSV"""
