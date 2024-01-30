@@ -148,7 +148,7 @@ class cadastraTipo_equipamento(Form):
         while(cd['sigla'] in siglas  and i<len(cd['nome'])):
             cd['sigla']=cd['nome'][0:2].upper()+cd['nome'][i].upper()
             i+=1
-            print(cd['sigla'])
+            #print(cd['sigla'])
         if i>len(cd['nome']):
             cd['sigla']=cd['nome'][0:2].upper()+'X'
             cd['sigla']=cd['sigla'].upper()
