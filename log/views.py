@@ -119,18 +119,9 @@ def relatorioLog(request):
             lognovo.append({'id':i+1,'transacao':"Erro",'movimento':"Erro",
             'data_cadastro':item.data_cadastro,'usuario':item.usuario,'equipamento':"Erro",
             'ocorrencia_equipamento':"Erro",'alteracao':item.alteracao})
-    paginator=Paginator(lognovo, 30)
-    page = request.GET.get('page')# verifica se ja tem um pagina escolhida
-    try:
-        log_paginado = paginator.get_page(page) # cria paginas
-    except PageNotAnInteger:
-        # Se o número da página não for um inteiro, mostre a primeira página
-        log_paginado = paginator.get_page(1)
-    except EmptyPage:
-        # Se o número da página estiver fora do intervalo, mostre a última página
-        log_paginado = paginator.get_page(paginator.num_page)
     
-    return render(request, "relatorioLog.html", {'lista_log':log_paginado}) 
+    
+    return render(request, "relatorioLog.html", {'lista_log':lognovo}) 
 
 
 def baixarRelatorioLog(request):
@@ -140,7 +131,7 @@ def baixarRelatorioLog(request):
     try :
         tempo=int(request.GET.get("tempo"))
     except:
-        tempo=60
+        tempo=30
     if tempo>0:
         date_limit = timezone.now() - timezone.timedelta(days=tempo)
         log=Log.objects.filter(data_cadastro__gte=date_limit).order_by('-data_cadastro')
