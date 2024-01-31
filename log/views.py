@@ -106,7 +106,7 @@ def relatorioLog(request):
     try :
         tempo=int(request.GET.get("tempo"))
     except:
-        tempo=30*6 # seis meses de hisórico corrido
+        tempo=30 # um mes de hisórico corrido
     date_limit = timezone.now() - timezone.timedelta(days=tempo)
     log=Log.objects.filter(data_cadastro__gte=date_limit).order_by('-data_cadastro')
     lognovo=[]
@@ -119,7 +119,7 @@ def relatorioLog(request):
             lognovo.append({'id':i+1,'transacao':"Erro",'movimento':"Erro",
             'data_cadastro':item.data_cadastro,'usuario':item.usuario,'equipamento':"Erro",
             'ocorrencia_equipamento':"Erro",'alteracao':item.alteracao})
-    paginator=Paginator(lognovo, 25)
+    paginator=Paginator(lognovo, 30)
     page = request.GET.get('page')# verifica se ja tem um pagina escolhida
     try:
         log_paginado = paginator.get_page(page) # cria paginas

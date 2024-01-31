@@ -46,23 +46,7 @@
         </tbody>
       </table>
       </div>
-      <div class="col-md">
-      <div class="pagination">
-        <span class="step-links">
-            {% if lista_log.has_previous %}
-                <a href="?page=1">&laquo; Primeira</a>
-                <a href="?page={{ lista_log.previous_page_number }}">Anterior.</a>
-            {% endif %}
       
-            <span class="current-page">{{ lista_log.number }}</span>
-      
-            {% if lista_log.has_next %}
-                <a href="?page={{ lista_log.next_page_number }}">Próxima</a>
-                <a href="?page={{ lista_log.paginator.num_pages }}">Última &raquo;</a>
-            {% endif %}
-        </span>
-      </div>
-    </div>
       
       <a href="{% url 'baixarRelatorioLog' %}?tempo=60"class="btn btn-success btn-mg"> Baixar Relatório 
         <i class="bi bi-filetype-csv"></i>
