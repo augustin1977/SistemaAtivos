@@ -168,8 +168,8 @@ def editarEquipamento(request):
 def cadastrarEquipamento(request):
     if not request.session.get("usuario"):
         return redirect("/auth/login/?status=2")
+    usuario = Usuario.objects.get(id=request.session.get("usuario"))
     agora = datetime.now()
-
     contagem_tempo = (agora.year - 2023) * 12 + (agora.month - 6)
 
     if contagem_tempo > 7:
@@ -179,7 +179,7 @@ def cadastrarEquipamento(request):
         tipo2 = Q(tipo="especialuser")
         tipo3 = Q(tipo="admin")
         tipo = Tipo.objects.filter(tipo1 | tipo2 | tipo3)
-        usuario = Usuario.objects.get(usuario=request.session.get("usuario"))
+        
         if usuario.tipo not in tipo:  # verifica se o usuário é tipo selecionado
             return redirect(
                 f"/equipamentos/?status=50"
