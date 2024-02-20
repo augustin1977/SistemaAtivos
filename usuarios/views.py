@@ -344,7 +344,7 @@ def maioresUsuarios(request):
     tipo=Tipo.objects.get(tipo="admin")
     if(usuario_adm.tipo==tipo):
         lista_usuarios={}
-        registros_por_usuario = Log.objects.values('usuario__nome').annotate(num_registros=Count('id'))
+        registros_por_usuario = Log.objects.values('usuario__nome').annotate(num_registros=Count('id')).order_by('-num_registros')
         for item in registros_por_usuario:
             lista_usuarios[item['usuario__nome']]=item['num_registros']
             retorno=json.dumps(lista_usuarios)
