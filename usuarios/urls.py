@@ -18,6 +18,8 @@ urlpatterns = [
     path("editarUsuario/",views.editarUsuario, name="editarUsuario"),
     path("excluirUsuario/",views.excluirUsuario, name="excluirUsuario"),
     path("trocasenha/",views.trocasenha, name="trocasenha"),
+    path("maioresUsuarios/",views.maioresUsuarios, name="maioresUsuarios"),
+    
 ]
 
 

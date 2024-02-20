@@ -11,6 +11,10 @@ import string
 import random
 from django.http import Http404
 from django.db.models import Q
+
+import json
+from django.db.models import Count
+from django.http import JsonResponse
 def vazio(request):
     return redirect('/auth/login/') 
 def login(request):
@@ -333,5 +337,16 @@ def trocasenha(request):
         
     return redirect('/auth/login/?status=0')
         
-        
-    
+def maioresUsuarios(request):
+    if not request.session.get("usuario"):
+        return redirect("/auth/login/?status=2")
+    usuario_adm=Usuario.objects.get(id=request.session.get('usuario')) 
+    tipo=Tipo.objects.get(tipo="admin")
+    if(usuario_adm.tipo==tipo):
+        lista_usuarios={}
+        registros_por_usuario = Log.objects.values('usuario__nome').annotate(num_registros=Count('id'))
+        for item in registros_por_usuario:
+            lista_usuarios[item['usuario__nome']]=item['num_registros']
+            retorno=json.dumps(lista_usuarios)
+        return JsonResponse(retorno,safe=False)
+    return redirect(f'/equipamentos/?status=0')
