@@ -78,7 +78,7 @@
           {% if confirmarexluir == '1' %}
           <th scope="row"> Excluir Equipamento</th>
           <td>
-            <a href="{% url 'excluiArquivo' %}?id={{ arquivo.id }}" class="delete-link"><i class="bi bi-trash"></i></a>
+            <a href="{% url 'excluirEquipamento' %}?id={{ equipamento.id }}&excluir=2" class="delete-link"><i class="bi bi-trash"></i></a>
           </td>
           
         </tr>
