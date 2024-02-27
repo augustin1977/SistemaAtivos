@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import *
 import boxplot.boxplot2 
+import boxplot.csv_intemperismo_converter
 from django.http import FileResponse
 from django.shortcuts import render
 
@@ -30,8 +31,7 @@ def gerar_grafico2(request):
         request.POST.get("linha_media") == "on",
         request.POST.get("valor_media") == "on",
         request.POST.get("labelcores") == "on",
-        request.POST.get("legenda")
-        
+        request.POST.get("legenda")  
     )
 
     if imagem:
@@ -44,3 +44,25 @@ def gerar_grafico2(request):
     else:
         return render(request, "boxplot.html", {"erro": "1"})
 
+def ferramentas(request):
+    return render(request, "ferramentas.html")
+
+def converte_intemperismo(request):
+    return render(request, "converte_imtemperismo.html")
+
+def gerar_arquivo_intemperismo(request):
+    file = request.FILES.get("arquivoAnexo")
+    name = str(file)
+    if name[-3:] != "csv":
+        # print(name[-3:])
+        return render(request, "converte_imtemperismo.html", {"erro": "2"})
+    arquivo = boxplot.csv_intemperismo_converter.geraXLS(file)
+    if arquivo:
+        response = HttpResponse(arquivo, content_type="application")
+        response["Content-Disposition"] = f"attachment; filename=resultado.xlsx"
+
+        return response
+    elif arquivo == 3:  # Erro de decodificação
+        return render(request, "converte_imtemperismo.html", {"erro": "3"})
+    else:
+        return render(request, "converte_imtemperismo.html", {"erro": "1"})

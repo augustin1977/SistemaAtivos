@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block 'titulo' %} Gestão Ativos MA {% endblock %}
+{% block 'menu' %} {% include 'menuferramentas.html' %} {% endblock %}
+{% block 'conteudo' %}
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-10 text-center">
+      <br><br>
+      <h1>Converte arquivo do intemperismo sob pressão</h1>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <form method="post" enctype="multipart/form-data" action="{% url 'gerar_arquivo_intemperismo' %}" class="custom-form">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="arquivo" class="form-label">Anexar arquivo:</label>
+          <input type="file" class="form-control-file" id="arquivoAnexo" name="arquivoAnexo">
+          {% if erro == '1' %}
+          <div class="alert alert-danger" role="alert">
+            Favor anexar arquivo válido, verifique se anexou um arquivo válido e sem erros.
+          </div>
+          {% endif %}
+          {% if erro == '2' %}
+          <div class="alert alert-danger" role="alert">
+            O Sistema processa apenas arquivos ".CSV".
+          </div>
+          {% endif %}
+          {% if erro == '3' %}
+          <div class="alert alert-danger" role="alert">
+            O arquivo não foi decodificado corretamente, verifique o documento e tente novamente.
+          </div>
+          {% endif %}
+        </div>
+        <div class="mb-3">
+          <button type="submit" class="btn btn-primary" id="imtemperismo">Gerar Boxplot</button>
+        </div>
+        <div class="mb-3">
+          <a href="http://gestaoativosma.ad.ipt.br/" class="btn btn-info" role="button">Voltar</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

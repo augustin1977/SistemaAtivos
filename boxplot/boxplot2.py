@@ -329,9 +329,7 @@ class Boxplot():
      
             fig1.tight_layout()
             # Faz a linha media do ensaio de referencia  se comMedia=True(ultimo)
-            # print(comMedia)
-            # print(self.medias)
-            # print(self.familias)
+
             if linha_media:
                 for i, familia in enumerate(self.familias):
                     if (
