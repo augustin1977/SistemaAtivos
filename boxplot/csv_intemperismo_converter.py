@@ -40,7 +40,6 @@ class Dados:
             }
 
     def retornaXLS(self):
-        dados=self.retorna_dados()
         df=pd.DataFrame(self.retorna_dados())
         buffer = BytesIO()
         file=df.to_excel(buffer,index=False)
