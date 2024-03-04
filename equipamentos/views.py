@@ -1068,4 +1068,5 @@ def consulta_dados_sistema(request):
         retorno += f"<br>Tempo desde o Go Live {converteBR(contagem_tempo,1)} meses"
     else:
         retorno += f"<br>Tempo desde o Go Live {converteBR(contagem_tempo/12,1)} anos"
+    retorno +='<br><a href="http://gestaoativosma.ad.ipt.br/listarUsuarios/">voltar'
     return HttpResponse(retorno)
