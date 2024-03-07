@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import *
 import boxplot.boxplot2 
-import boxplot.csv_intemperismo_converter
+import boxplot.csv_intemperismo_converter, boxplot.moinho_piloto_converter
 from django.http import FileResponse
 from django.shortcuts import render
 
@@ -69,3 +69,24 @@ def gerar_arquivo_intemperismo(request):
         return render(request, "converte_imtemperismo.html", {"erro": "3"})
     else:
         return render(request, "converte_imtemperismo.html", {"erro": "1"})
+
+
+def gerar_arquivo_moinho_piloto(request):
+    file = request.FILES.get("arquivoAnexo")
+    name = str(file)
+    if name[-3:] != "log":
+        # print(name[-3:])
+        return render(request, "converte_moinho_piloto.html", {"erro": "2"})
+    try:
+        arquivo = boxplot.moinho_piloto_converter.geraXLS(file)
+    except:
+        return render(request, "converte_moinho_piloto.html", {"erro": "3"}) 
+    if arquivo:
+        response = HttpResponse(arquivo, content_type="application")
+        response["Content-Disposition"] = f"attachment; filename=resultado.xlsx"
+
+        return response
+    elif arquivo == 3:  # Erro de decodificação
+        return render(request, "converte_moinho_piloto.html", {"erro": "3"})
+    else:
+        return render(request, "converte_moinho_piloto.html", {"erro": "1"})

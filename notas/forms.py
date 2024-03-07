@@ -85,7 +85,7 @@ class CadastraNota_equipamentoForm(ModelForm):
         utc=pytz.timezone(TIME_ZONE)
         cd['data_cadastro']=utc.localize( datetime.datetime.now())
         if (cd['calibracao']):
-               print('equipamento',cd['equipamento'])
+               #print('equipamento',cd['equipamento'])
                equipamento=Equipamento.objects.get(id=cd['equipamento'].id)
                equipamento.data_ultima_calibracao=utc.localize( datetime.datetime.now())
                equipamento.save()   
