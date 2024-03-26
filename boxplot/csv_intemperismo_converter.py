@@ -50,6 +50,5 @@ def geraXLS(file):
     dados_raw=file.read()
     dados_raw=boxplot.boxplot2.try_decode(dados_raw)
     dados=Dados()
-    print(dados.retorna_dados())
     dados.carrega_dados(dados_raw)
     return dados.retornaXLS()
