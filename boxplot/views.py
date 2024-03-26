@@ -58,8 +58,8 @@ def gerar_arquivo_intemperismo(request):
         return render(request, "converte_imtemperismo.html", {"erro": "2"})
     try:
         arquivo = boxplot.csv_intemperismo_converter.geraXLS(file)
-    except:
-        return render(request, "converte_imtemperismo.html", {"erro": "3"}) 
+    except Exception as mensagem:
+        return render(request, "converte_imtemperismo.html", {"erro": "3", "mensagem":mensagem}) 
     if arquivo:
         response = HttpResponse(arquivo, content_type="application")
         response["Content-Disposition"] = f"attachment; filename=resultado.xlsx"
