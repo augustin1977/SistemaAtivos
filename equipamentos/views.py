@@ -23,6 +23,14 @@ from datetime import datetime, timedelta
 
 
 def home(request):
+    """verify if has already a user logged in, if yes render home.html else redirect to login page
+
+    Args:
+        request (usuario): verifiy if there is a user loged in.
+
+    Returns:
+        HTML page: render home.thml
+    """
     if not request.session.get("usuario"):
         return redirect("/auth/login/?status=2")
     # cria a view do login do usuário
@@ -31,6 +39,14 @@ def home(request):
 
 
 def menuEquipoamento(request):
+    """Render initial page of system
+
+    Args:
+        request (request): request username login
+
+    Returns:
+        _type_: render equipamento.html
+    """
     if not request.session.get("usuario"):
         return redirect("/auth/login/?status=2")
     # cria a view do login do usuário
@@ -173,7 +189,6 @@ def cadastrarEquipamento(request):
     contagem_tempo = (agora.year - 2023) * 12 + (agora.month - 6)
 
     if contagem_tempo > 7:
-        pass
         ### Bloco de bloqueio de usuario para acesso ###
         tipo1 = Q(tipo="superuser")
         tipo2 = Q(tipo="especialuser")
