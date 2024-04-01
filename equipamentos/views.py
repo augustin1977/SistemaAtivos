@@ -21,7 +21,6 @@ import json
 from datetime import datetime, timedelta
 
 
-
 def home(request):
     """verify if has already a user logged in, if yes render home.html else redirect to login page
 
