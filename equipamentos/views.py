@@ -954,7 +954,7 @@ def excluiArquivo(request):
             )
             media.delete()
         except Exception as erro:
-            return HttpResponse("Erro Ao excluir o arquivo<br>" + str(erro))
+            return HttpResponse("<br><h2>Erro Ao excluir o arquivo</h2)<br>Favor entrar em contato com o Administrador do sistema")
         return redirect(f"/equipamentos/exibirDetalheEquipamento/?id={id_equipamento}")
 
     return HttpResponse("formulario de excluir arquivos")
