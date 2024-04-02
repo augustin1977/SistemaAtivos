@@ -61,11 +61,14 @@ def converte_intemperismo(request):
 def gerar_arquivo_intemperismo(request):
     file = request.FILES.get("arquivoAnexo")
     name = str(file)
+    opcao=request.POST.get("opcao")
+    # print(opcao)
+    
     if name[-3:] != "csv":
         # print(name[-3:])
         return render(request, "converte_imtemperismo.html", {"erro": "2"})
     try:
-        arquivo = boxplot.csv_intemperismo_converter.geraXLS(file)
+        arquivo = boxplot.csv_intemperismo_converter.geraXLS(file,opcao)
     except Exception as mensagem:
         return render(request, "converte_imtemperismo.html", {"erro": "3", "mensagem":mensagem}) 
     if arquivo:
