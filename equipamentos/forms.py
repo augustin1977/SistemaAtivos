@@ -184,8 +184,8 @@ class mediaForm(ModelForm):
     #id=CharField(label="",widget=HiddenInput(),required=False)
     def clean_documentos(self):
         documentos = self.cleaned_data['documentos']
-        if documentos.size > (40*1000*2**10) : # Se o Arquivo for maior que 40Mbytes
-            raise ValidationError('O nome do arquivo é muito grande. Por favor, divida o arquivo ou compacte seu contudo, o tamanho maximo aceito é 40MB.')
+        if documentos.size > (50*1000*2**10) : # Se o Arquivo for maior que 50Mbytes
+            raise ValidationError('O nome do arquivo é muito grande. Por favor, divida o arquivo ou compacte seu conteudo, o tamanho maximo aceito é 40MB.')
         if len(documentos._get_name()) > 128: # se o nome do arquivo foi maior que 128 caracteres
             raise ValidationError('O nome do arquivo é muito longo. Por favor, renomeie o arquivo reduza o tamanho para até 128 caracteres.')
         return documentos
