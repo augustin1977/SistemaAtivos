@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block 'titulo' %} Gestão Ativos MA {% endblock %}
+{% block 'menu' %} {% include 'menuferramentas.html' %} {% endblock %}
+{% block 'conteudo' %}
+<div class="text-center">
+  <br /><br />
+  <h1>Criar XLSX a partir do arquivo TXT do OCR IPT</h1>
+  <a href="https://ocr.ipt.br/">link para o OCR do IPT</a> <br>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+      <form method="post" enctype="multipart/form-data" action="{% url 'gerar_arquivo_OCR' %}" class="custom-form">
+        {% csrf_token %}
+        <!-- Anexar arquivo -->
+        <div class="form-group">
+          <label for="arquivoAnexo">Anexar arquivo:</label>
+          <input type="file" class="form-control-file" id="arquivoAnexo" name="arquivoAnexo" required>
+          {% if erro == '1' %}
+          <div class="alert alert-danger" role="alert">
+            Favor anexar arquivo válido, verifique se anexou um arquivo válido e sem erros.
+          </div>
+          {% endif %}
+          {% if erro == '2' %}
+          <div class="alert alert-danger" role="alert">
+            O Sistema processa apenas arquivos ".TXT".
+          </div>
+          {% endif %}
+          {% if erro == '3' %}
+          <div class="alert alert-danger" role="alert">
+            O arquivo não foi decodificado corretamente, verifique o documento e tente novamente.
+          </div>
+          {% endif %}
+        </div>
+        <!-- Inserir dados do formulário -->
+        <div class="form-group">
+            <label for="nomeGrandeza">Nome da grandeza Medida:</label>
+            <input type="text" class="form-control" id="nomeGrandeza" name="nomeGrandeza" required>
+          </div>
+        <div class="form-group">
+          <label for="valorMaximo">Valor Máximo:</label>
+          <input type="number" class="form-control" id="valorMaximo" name="valorMaximo" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="valorMinimo">Valor Mínimo:</label>
+          <input type="number" class="form-control" id="valorMinimo" name="valorMinimo" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="gradienteMaximo">Gradiente Máximo aceito(valor/segundo):</label>
+          <input type="number" class="form-control" id="gradienteMaximo" name="gradienteMaximo" step="0.0001" required>
+        </div>
+        <div class="form-group">
+          <label for="periodoMedia">Período Médio (segundo):</label>
+          <input type="number" class="form-control" id="periodoMedia" name="periodoMedia" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="confiancaMinima">Confiança Mínima (0-100 não colocar simbolo %):</label>
+          <input type="number" class="form-control" id="confiancaMinima" name="confiancaMinima" step="0.01" required>
+        </div>
+        <!-- Botão para executar a função desejada -->
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary" id="OCR">Gerar Arquivo XLSX</button>
+        </div>
+        <div class="form-group">
+          <a href="http://gestaoativosma.ad.ipt.br/" class="btn btn-info" role="button">Voltar</a>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+</div>
+{% endblock %}

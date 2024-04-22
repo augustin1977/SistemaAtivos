@@ -9,5 +9,7 @@ urlpatterns = [
     path('download_model_csv/', boxplot.views.download_model_csv, name='download_model_csv'),
     path('converte_intemperismo/',boxplot.views.converte_intemperismo,name='converte_intemperismo'),
     path('gerar_arquivo_intemperismo/',boxplot.views.gerar_arquivo_intemperismo,name='gerar_arquivo_intemperismo'),
+    path('converte_OCR/',boxplot.views.converte_OCR,name='converte_OCR'),
+    path('gerar_arquivo_OCR/',boxplot.views.gerar_arquivo_OCR,name='gerar_arquivo_OCR'),
 
     ]
