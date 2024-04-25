@@ -3,6 +3,28 @@ from datetime import datetime, timedelta
 import pandas as pd
 import boxplot.boxplot2
 from io import BytesIO
+def converte_texto_numero(numero,tipo):
+	digitos='0123456789'
+	if (tipo==float):
+		n=''
+		ponto=0
+		for digito in numero:
+			# ~ print(digito,digito.isdigit(), digito in digitos)
+			if (digito.isdigit()):
+				n+=str(digito)
+			if ((digito=='.' or digito==",") and ponto==0):
+				n+='.'
+				ponto+=1
+
+		
+		return float(n)
+	if (tipo==int):
+		n=''
+		for i in numero:
+			if i in digitos:
+				n+=i
+		return int(n)
+
 def limpa_texto(texto):
 	texto=texto.replace("\t"," ")
 	texto=texto.replace(chr(8194)," ")
@@ -25,8 +47,8 @@ def busca_separador(texto):
 
 		if len(texto_alternativo)==4:
 			try:
-				numero1=float(texto_alternativo[0])
-				numero2=int(texto_alternativo[1])
+				numero1=converte_texto_numero(texto_alternativo[0],float)
+				numero2=converte_texto_numero(texto_alternativo[1])
 
 				return chr(i)
 			except:
@@ -50,8 +72,8 @@ class Dados:
             dados_compilados=limpa_texto(linha).split(separador)
 
             if len(dados_compilados)==4:
-                valor=float(dados_compilados[0])
-                confianca=int(dados_compilados[1])
+                valor=converte_texto_numero(dados_compilados[0],float)
+                confianca=converte_texto_numero(dados_compilados[1],int)
                 data=datetime.strptime(dados_compilados[2]+" "+dados_compilados[3],"%Y-%m-%d %H:%M:%S\r")-timedelta(hours=2)
                 self.dados.append(valor)
                 self.datas.append(data)
