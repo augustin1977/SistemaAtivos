@@ -47,8 +47,8 @@ def busca_separador(texto):
 
 		if len(texto_alternativo)==4:
 			try:
-				numero1=converte_texto_numero(texto_alternativo[0],float)
-				numero2=converte_texto_numero(texto_alternativo[1])
+				numero1=float(texto_alternativo[0])
+				numero2=int(texto_alternativo[1])
 
 				return chr(i)
 			except:
