@@ -1,0 +1,44 @@
+
+{% extends 'base.html'%}
+{% block 'titulo'%} Gestão Ativos MA {% endblock %}
+{% block 'menu' %} 
+{% include 'menuAdmin.html' %} 
+{% endblock %}
+{% block 'conteudo'%} 
+<div class ='container'>
+  <br><br><br>
+    
+  <div class='row'>
+      <div class='col-md-5'>
+        
+        <h2 class="sticky-top"> Estatística dos Usuários</h2>
+      </div>
+      <div class="col-md">
+      </div>
+    <div class="table-responsive" style="max-height: 75vh;">
+    <table class="table table-hover" >
+      <thead class="thead-light sticky-top" > 
+          <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Quantidade de intervensões no Sistema</th>
+            
+          </tr>
+        </thead>
+        <tbody style="overflow: auto;" >
+            {% for usuario in usuarios %}
+            <tr>
+            <th scope="row">{{usuario.usuario__nome}}</th>
+            <td>{{usuario.num_registros}}</td>
+            
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <br>
+    <div class='col-md-3'></div> 
+    
+</div>
+
+{% endblock %}

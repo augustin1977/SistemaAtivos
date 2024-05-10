@@ -347,6 +347,9 @@ def maioresUsuarios(request):
         registros_por_usuario = Log.objects.values('usuario__nome').annotate(num_registros=Count('id')).order_by('-num_registros')
         for item in registros_por_usuario:
             lista_usuarios[item['usuario__nome']]=item['num_registros']
-        #print(lista_usuarios)    
-        return JsonResponse(lista_usuarios,safe=False)
+        # print(lista_usuarios)   
+        # print(registros_por_usuario )
+        return render(request, "maioresusuarios.html", {'usuarios':registros_por_usuario})
+    
+    # JsonResponse(lista_usuarios,safe=False)
     return redirect(f'/equipamentos/?status=0')
