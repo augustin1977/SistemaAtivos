@@ -4,26 +4,26 @@ import pandas as pd
 import boxplot.boxplot2
 from io import BytesIO
 def converte_texto_numero(numero,tipo):
-	digitos='0123456789'
-	if (tipo==float):
-		n=''
-		ponto=0
-		for digito in numero:
-			# ~ print(digito,digito.isdigit(), digito in digitos)
-			if (digito.isdigit()):
-				n+=str(digito)
-			if ((digito=='.' or digito==",") and ponto==0):
-				n+='.'
-				ponto+=1
-
-		
-		return float(n)
-	if (tipo==int):
-		n=''
-		for i in numero:
-			if i in digitos:
-				n+=i
-		return int(n)
+    digitos='0123456789'
+    if (tipo==float):
+        n=''
+        ponto=0
+        for digito in numero:
+            # ~ print(digito,digito.isdigit(), digito in digitos)
+            if (digito.isdigit()):
+                n+=str(digito)
+            elif ((digito=='.' or digito==",") and ponto==0):
+                n+='.'
+                ponto+=1
+        if (n==''):
+            return 0
+        return float(n)
+    if (tipo==int):
+        n=''
+        for i in numero:
+            if i in digitos:
+                n+=i
+        return int(n)
 
 def limpa_texto(texto):
 	texto=texto.replace("\t"," ")
