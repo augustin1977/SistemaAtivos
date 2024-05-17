@@ -945,7 +945,13 @@ def cadastrarArquivo(request):
             # print("Falhou")
 
     else:
-        form = mediaForm()
+        equipamento_id = request.GET.get('equipamento_id')
+        if equipamento_id:
+            initial_data = {}
+            initial_data['equipamento'] = equipamento_id
+            form = mediaForm(initial=initial_data)
+        else :
+            form = mediaForm()
     return render(request, "cadastrarArquivo.html", {"form": form})
 
 

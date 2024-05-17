@@ -66,8 +66,19 @@
                 {{material}} <br>
             {% endfor %}
             </td> </tr> -->
-            <th scope="row">Arquivos</th>
-            <td>
+            <tr>
+              <th scope="row">Arquivos</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th scope="row">Incluir Arquivos</th>
+              <td>
+                <a href="{% url 'cadastrarArquivo' %}?equipamento_id={{ equipamento.id }}" class="new-link">
+                  <i class="bi bi-cloud-arrow-up bi-lg" style="font-size: 2rem;"></i>
+              </a>
+              </td>
+            </tr>
+
               <table class="table table-hover">
               <thead>
                 <th> Nome Arquivo</th>
@@ -86,6 +97,7 @@
               </table>
             </td> 
           </tr>
+          
           {% if confirmarexluir == '1' %}
           <th scope="row"> Excluir Equipamento</th>
           <td>
