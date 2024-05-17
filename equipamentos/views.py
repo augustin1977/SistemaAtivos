@@ -938,8 +938,10 @@ def cadastrarArquivo(request):
                             equipamento=equipamento,
                             nota_equipamento=None )
             equipamento.save()
-
-            return redirect("cadastrarArquivo")
+            initial_data = {}
+            initial_data['equipamento'] = equipamento.id
+            form = mediaForm(initial=initial_data)
+            render(request, "cadastrarArquivo.html", {"form": form})
         else:
             pass
             # print("Falhou")
