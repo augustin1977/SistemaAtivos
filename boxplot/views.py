@@ -28,6 +28,7 @@ def gerar_grafico2(request):
         file,
         request.POST.get("linha_media") == "on",
         request.POST.get("valor_media") == "on",
+        request.POST.get("CV")=="on",
         request.POST.get("labelcores") == "on",
         request.POST.get("legenda")  
     )
