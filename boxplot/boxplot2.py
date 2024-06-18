@@ -251,7 +251,7 @@ class Boxplot():
                             )
                 # Coloca um texto com o valor da média de cada coluna no grafico
                 if (valor_media):
-                        if abs(self.medias[i] > 1000000):
+                        if abs(self.medias[i]) > 1000000:
                             ax1.text(self.medias[i],i + offset,
                                 "{:.0f}".format(self.medias[i]),
                                 size=tamanho_texto,
@@ -259,7 +259,7 @@ class Boxplot():
                                 horizontalalignment="center",
                             )
                             
-                        elif abs(self.medias[i] > 1000):
+                        elif abs(self.medias[i]) > 1000:
                             ax1.text(
                                 self.medias[i],
                                 i + offset,
@@ -269,7 +269,7 @@ class Boxplot():
                                 horizontalalignment="center",
                             )
                             
-                        elif abs(self.medias[i] > 1):
+                        elif abs(self.medias[i]) > 1:
                             ax1.text(
                                 self.medias[i],
                                 i + offset,
@@ -279,7 +279,7 @@ class Boxplot():
                                 horizontalalignment="center",
                             )
                             
-                        elif abs(self.medias[i] > 0.0001):
+                        elif abs(self.medias[i]) > 0.001:
                             ax1.text(
                                 self.medias[i],
                                 i + offset,
