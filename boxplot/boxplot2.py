@@ -144,7 +144,7 @@ class Boxplot():
         for n in range(len(self.medias)):
             self.medias[n] = sum(self.dados_verificados[n]) / len(self.dados_verificados[n])
             self.DP[n]=stdev(self.dados_verificados[n])
-            self.CV[n]=self.DP[n]/self.medias[n]*100
+            self.CV[n]=abs(self.DP[n]/self.medias[n]*100)
             self.maximo[n]=max(self.dados_verificados[n])
             
             
