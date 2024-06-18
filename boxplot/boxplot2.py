@@ -94,6 +94,7 @@ class Boxplot():
         self.eixoy=""
         self.titulo=""
         self.medias=[]
+        self.maximo=[]
         self.CV=[]
         self.DP=[]
         self.erro=0
@@ -139,13 +140,13 @@ class Boxplot():
         self.medias = [0] * len(self.dados_verificados)
         self.DP=[0] * len(self.dados_verificados)
         self.CV=[0] * len(self.dados_verificados)
-        self.maximo=max(self.dados_verificados[0])
+        self.maximo= [0] * len(self.dados_verificados)
         for n in range(len(self.medias)):
             self.medias[n] = sum(self.dados_verificados[n]) / len(self.dados_verificados[n])
             self.DP[n]=stdev(self.dados_verificados[n])
             self.CV[n]=self.DP[n]/self.medias[n]*100
-            # print(self.dados_verificados[n])
-            self.maximo=max(max(self.dados_verificados[n]),self.maximo)
+            self.maximo[n]=max(self.dados_verificados[n])
+            
             
 
     def organiza_dados(self):
@@ -154,6 +155,9 @@ class Boxplot():
             self.familias=colocareferencianofim(self.familias)
             self.medias=colocareferencianofim(self.medias)
             self.nomes=colocareferencianofim(self.nomes)
+            self.maximo=colocareferencianofim(self.maximo)
+            self.CV=colocareferencianofim(self.CV)
+            self.DP=colocareferencianofim(self.DP)
         else:
             self.erro=2 # Erro - numero de nomes diferentes do numero de coluna de dados
         
@@ -163,7 +167,7 @@ class Boxplot():
             matplotlib.use("Agg")  # Modo não interativo
             maxnomes = len(max(self.nomes, key=lambda x: len(x))) # tamanho do maior nome de categoria
             
-            x=max((maxnomes) // 6 + self.contagem_colunas // 4, 12)
+            x=max((maxnomes) // 10 + self.contagem_colunas // 3, 12)
             y=max(6+self.contagem_colunas // 4, 8)
             
             # Define o tamnaho do texto do gráfico
@@ -224,6 +228,7 @@ class Boxplot():
                     else:
                         label.set_color("black")
             # Define o offset do dos textos
+           
             if len(self.medias) < 3:
                 offset = 1.1
             elif len(self.medias) < 4:
@@ -232,22 +237,22 @@ class Boxplot():
                 offset = 1.3
             for i in range(len(self.medias)):
             # Coloca valor do coeficiente de variação no boxplot
+  
                 if (cv):
-                    ax1.text(
-                                self.maximo,
-                                i + offset,
-                                "CV:{:.2f}%".format(self.CV[i]),
-                                size=tamanho_texto,
-                                color="black",
-                                horizontalalignment="center",
+                    if self.CV[i]<10:
+                        x=self.maximo[i]+10*self.DP[i]
+                    else:
+                        x=self.maximo[i]
+                    ax1.text(x,i + offset-0.05,
+                        "CV:{:.2f}%".format(self.CV[i]),
+                        size=tamanho_texto,
+                        color="black",
+                        horizontalalignment="center",
                             )
                 # Coloca um texto com o valor da média de cada coluna no grafico
                 if (valor_media):
-                    
                         if self.medias[i] > 1000000:
-                            ax1.text(
-                                self.medias[i],
-                                i + offset,
+                            ax1.text(self.medias[i],i + offset,
                                 "{:.0f}".format(self.medias[i]),
                                 size=tamanho_texto,
                                 color=verde,
