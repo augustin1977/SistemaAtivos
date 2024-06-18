@@ -239,7 +239,7 @@ class Boxplot():
             # Coloca valor do coeficiente de variação no boxplot
   
                 if (cv):
-                    if self.CV[i]<10:
+                    if self.CV[i]<12:
                         x=self.maximo[i]+10*self.DP[i]
                     else:
                         x=self.maximo[i]
@@ -251,7 +251,7 @@ class Boxplot():
                             )
                 # Coloca um texto com o valor da média de cada coluna no grafico
                 if (valor_media):
-                        if self.medias[i] > 1000000:
+                        if abs(self.medias[i] > 1000000):
                             ax1.text(self.medias[i],i + offset,
                                 "{:.0f}".format(self.medias[i]),
                                 size=tamanho_texto,
@@ -259,7 +259,7 @@ class Boxplot():
                                 horizontalalignment="center",
                             )
                             
-                        elif self.medias[i] > 1000:
+                        elif abs(self.medias[i] > 1000):
                             ax1.text(
                                 self.medias[i],
                                 i + offset,
@@ -269,7 +269,7 @@ class Boxplot():
                                 horizontalalignment="center",
                             )
                             
-                        elif self.medias[i] > 1:
+                        elif abs(self.medias[i] > 1):
                             ax1.text(
                                 self.medias[i],
                                 i + offset,
@@ -279,7 +279,7 @@ class Boxplot():
                                 horizontalalignment="center",
                             )
                             
-                        elif self.medias[i] > 0.0001:
+                        elif abs(self.medias[i] > 0.0001):
                             ax1.text(
                                 self.medias[i],
                                 i + offset,
