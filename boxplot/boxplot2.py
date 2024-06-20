@@ -137,15 +137,27 @@ class Boxplot():
                     pass
 
     def calcula_medias(self):
-        self.medias = [0] * len(self.dados_verificados)
-        self.DP=[0] * len(self.dados_verificados)
-        self.CV=[0] * len(self.dados_verificados)
-        self.maximo= [0] * len(self.dados_verificados)
-        for n in range(len(self.medias)):
-            self.medias[n] = sum(self.dados_verificados[n]) / len(self.dados_verificados[n])
-            self.DP[n]=stdev(self.dados_verificados[n])
-            self.CV[n]=abs(self.DP[n]/self.medias[n]*100)
-            self.maximo[n]=max(self.dados_verificados[n])
+        tam=len(self.dados_verificados)
+        self.medias = [0] * tam
+        self.DP=[0] * tam
+        self.CV=[0] * tam
+        self.maximo= [float('-inf')] * tam
+        for n,dados in enumerate(self.dados_verificados):
+            if not dados:
+                raise ValueError("Foi encontrada coluna vazia no arquivo, favor corrigir")
+            self.medias[n] = sum(dados) / len(dados)
+            self.DP[n] = stdev(dados)
+            self.CV[n] = abs(self.DP[n]/ self.medias[n] ) * 100 if self.medias[n] != 0 else float('inf')  # Lida com média zero
+            self.maximo[n]=max(dados)
+        
+        
+        # for n in range(tam):
+        #     if not self.dados_verificados[n]:
+        #         raise ValueError(f"Sublista vazia encontrada na posição {n}")
+        #     self.medias[n] = sum(self.dados_verificados[n]) / len(self.dados_verificados[n])
+        #     self.DP[n] = stdev(self.dados_verificados[n])
+        #     self.CV[n] = abs(self.DP[n]/ self.medias[n] * 100) if self.medias[n] != 0 else float('inf')  # Lida com média zero
+        #     self.maximo[n]=max(self.dados_verificados[n])
             
             
 
@@ -239,9 +251,13 @@ class Boxplot():
             # Coloca valor do coeficiente de variação no boxplot
   
                 if (cv):
-                    if self.CV[i]<12:
-                        x=self.maximo[i]+10*self.DP[i]
+                    if self.CV[i]<15 and not self.maximo[i]==max(self.maximo):
+                        x=self.maximo[i]+abs(self.medias[i])
+                    elif(abs(self.medias[i])<3) and not self.maximo[i]==max(self.maximo):
+                        # print(i,"maximo",self.CV[i])
+                        x=self.maximo[i]+abs(self.medias[i])+3
                     else:
+                        # print(i,"minimo",self.CV[i])
                         x=self.maximo[i]
                     ax1.text(x,i + offset-0.05,
                         "CV:{:.2f}%".format(self.CV[i]),
@@ -269,7 +285,7 @@ class Boxplot():
                                 horizontalalignment="center",
                             )
                             
-                        elif abs(self.medias[i]) > 1:
+                        elif abs(self.medias[i]) > 50:
                             ax1.text(
                                 self.medias[i],
                                 i + offset,
@@ -279,7 +295,16 @@ class Boxplot():
                                 horizontalalignment="center",
                             )
                             
-                        elif abs(self.medias[i]) > 0.001:
+                        elif abs(self.medias[i]) > 1:
+                            ax1.text(
+                                self.medias[i],
+                                i + offset,
+                                "{:.3f}".format(self.medias[i]),
+                                size=tamanho_texto,
+                                color=verde,
+                                horizontalalignment="center",
+                            )
+                        elif abs(self.medias[i]) > 0.1:
                             ax1.text(
                                 self.medias[i],
                                 i + offset,
@@ -288,7 +313,15 @@ class Boxplot():
                                 color=verde,
                                 horizontalalignment="center",
                             )
-                            
+                        elif abs(self.medias[i]) > 0.001:
+                            ax1.text(
+                                self.medias[i],
+                                i + offset,
+                                "{:.6f}".format(self.medias[i]),
+                                size=tamanho_texto,
+                                color=verde,
+                                horizontalalignment="center",
+                            )    
                         else:
                             ax1.text(
                                 self.medias[i],
