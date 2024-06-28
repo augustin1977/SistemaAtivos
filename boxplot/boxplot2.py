@@ -179,7 +179,7 @@ class Boxplot():
             matplotlib.use("Agg")  # Modo não interativo
             maxnomes = len(max(self.nomes, key=lambda x: len(x))) # tamanho do maior nome de categoria
             
-            x=max((maxnomes) // 10 + self.contagem_colunas // 3, 12)
+            x=max((maxnomes) // 8 + self.contagem_colunas // 3, 12)
             y=max(6+self.contagem_colunas // 4, 8)
             
             # Define o tamnaho do texto do gráfico
@@ -251,19 +251,20 @@ class Boxplot():
             # Coloca valor do coeficiente de variação no boxplot
   
                 if (cv):
-                    if self.CV[i]<15 and not self.maximo[i]==max(self.maximo):
-                        x=self.maximo[i]+abs(self.medias[i])
-                    elif(abs(self.medias[i])<3) and not self.maximo[i]==max(self.maximo):
-                        # print(i,"maximo",self.CV[i])
-                        x=self.maximo[i]+abs(self.medias[i])+3
-                    else:
-                        # print(i,"minimo",self.CV[i])
-                        x=self.maximo[i]
-                    ax1.text(x,i + offset-0.05,
+                    x=(self.maximo[i])
+                    # if self.CV[i]<15 and not self.maximo[i]==max(self.maximo):
+                    #     x=self.maximo[i]+abs(self.medias[i])
+                    # elif(abs(self.medias[i])<3) and not self.maximo[i]==max(self.maximo):
+                    #     # print(i,"maximo",self.CV[i])
+                    #     x=self.maximo[i]+abs(self.medias[i])
+                    # else:
+                    #     # print(i,"minimo",self.CV[i])
+                    #     x=self.maximo[i]
+                    ax1.text(x,i + offset-0.40,
                         "CV:{:.2f}%".format(self.CV[i]),
                         size=tamanho_texto,
                         color="black",
-                        horizontalalignment="center",
+                        horizontalalignment="left", alpha=0.5
                             )
                 # Coloca um texto com o valor da média de cada coluna no grafico
                 if (valor_media):
@@ -342,56 +343,7 @@ class Boxplot():
                 yticklabel.set_fontsize(tamanho_texto_eixo)
             for xticklabel in ax1.get_xticklabels():
                 xticklabel.set_fontsize(tamanho_texto_eixo)
-                        
-            
-            ##### Suspenso para melhorias ######
-            # if maxnomes > 100:
-            #         tamanho_fonte_eixo = tamanho_texto_pequeno
-            # elif maxnomes > 60:
-            #     tamanho_fonte_eixo = tamanho_texto_normal
-            # elif maxnomes > 40:
-            #     tamanho_fonte_eixo = tamanho_texto_normal
-            # else:
-            #     tamanho_fonte_eixo = tamanho_texto_grande
-
-            #     for yticklabel in ax1.get_yticklabels():
-            #         yticklabel.set_fontsize(tamanho_fonte_eixo)
-             
-            
-            # if self.contagem_colunas > 20 and len(self.titulo) < 40:
-            #     print("passei aqui")
-            #     ax1.set_title(
-            #         self.titulo, fontsize=tamanho_texto_super_grande, fontweight="bold"
-            #     )
-            #     ax1.set_xlabel(self.eixox, fontsize=tamanho_texto_grande, fontweight="bold")
-            #     ax1.set_ylabel(self.eixoy, fontsize=tamanho_texto_grande, fontweight="bold")
-
-            # elif len(self.titulo) > 100:
-            #     ax1.set_title(
-            #         self.titulo, fontsize=tamanho_texto_super_pequeno, fontweight="bold"
-            #     )
-            #     ax1.set_xlabel(
-            #         self.eixox, fontsize=tamanho_texto_super_pequeno, fontweight="bold"
-            #     )
-            #     ax1.set_ylabel(
-            #         self.eixoy, fontsize=tamanho_texto_super_pequeno, fontweight="bold"
-            #     )
-            # elif len(self.titulo) > 40:
-            #     ax1.set_title(self.titulo, fontsize=tamanho_texto_pequeno, fontweight="bold")
-            #     ax1.set_xlabel(self.eixox, fontsize=tamanho_texto_pequeno, fontweight="bold")
-            #     ax1.set_ylabel(self.eixoy, fontsize=tamanho_texto_pequeno, fontweight="bold")
-            # elif len(self.titulo) > 25:
-            #     ax1.set_title(self.titulo, fontsize=tamanho_texto_normal, fontweight="bold")
-            #     ax1.set_xlabel(self.eixox, fontsize=tamanho_texto_normal, fontweight="bold")
-            #     ax1.set_ylabel(self.eixoy, fontsize=tamanho_texto_normal, fontweight="bold")
-            # else:
-            #     ax1.set_title(self.titulo, fontsize=tamanho_texto_grande, fontweight="bold")
-            #     ax1.set_xlabel(self.eixox, fontsize=tamanho_texto_normal, fontweight="bold")
-            #     ax1.set_ylabel(self.eixoy, fontsize=tamanho_texto_normal, fontweight="bold")
-
-            ##### fim dos Suspenso para melhorias ######
-            
-            
+  
      
             fig1.tight_layout()
             # Faz a linha media do ensaio de referencia  se comMedia=True(ultimo)
@@ -425,7 +377,7 @@ class Boxplot():
                     legenda.append(mpatches.Patch(color=corGrafico[color], label=color))
             legenda.reverse()
             # constroi a legenda
-            ax1.legend(handles=legenda,loc=int(posicao_legenda)).set_draggable(True)
+            ax1.legend(handles=legenda,framealpha =0.6,loc=int(posicao_legenda)).set_draggable(True)
             # mostra o grafico
             buffer = BytesIO()
             plt.savefig(buffer, format="png")
