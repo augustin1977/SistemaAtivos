@@ -1,6 +1,9 @@
 
 {% extends 'base.html'%}
 {% block 'titulo'%} Alteração de senha {% endblock %}
+{% block 'menu' %} 
+{% include 'menuAdmin.html' %} 
+{% endblock %}
 {% block 'conteudo'%} 
 <div class ='container'>
     {% if status == '1'%}
