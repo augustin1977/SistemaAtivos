@@ -163,4 +163,5 @@ FILE_UPLOAD_HANDLERS=[
 
 # session rules
 SESSION_COOKIE_AGE = 14400 # 4 horas em segundos
+SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Encerra sessão ao fechar o browser
