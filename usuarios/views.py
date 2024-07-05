@@ -86,8 +86,8 @@ def valida_cadastro(request):
     tipo=Tipo.objects.get(tipo="user")
     primeiro_acesso=True
     ativo=True
-    usuario= Usuario.objects.filter(email=email,ativo=True)
-    
+    usuario= Usuario.objects.filter(email=email)
+    usuario_cadastro=Usuario.objects.get(id=request.session.get('usuario'))
     if len(usuario)>0:
         if (usuario[0].ativo==True):
             return redirect('/auth/cadastrar/?status=1') # retorna erro de usuario ja existente
@@ -97,22 +97,14 @@ def valida_cadastro(request):
             usuario[0].senha=gera_senha(12)
             usuario[0].email=email
             usuario[0].chapa=chapa
-            try :
-                usuario_cadastro=Usuario.objects.get(id=request.session.get('usuario'))
-            except:
-                usuario_cadastro=False
-
             try:
                 send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória é {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'gestaodeativos@outlook.com.br']) 
             except:
                 raise Http404("Impossivel enviar o e-mail com a senha, favor contactar o Administrador")
             usuario[0].save() # salva o objeto usuário no banco de dados
-            if usuario_cadastro:
-                log=Log(transacao='us',movimento='cd',usuario=usuario_cadastro,alteracao=f'O usuario {usuario_cadastro} cadastrou {usuario[0]} no sistema')
-            else:
-                log=Log(transacao='us',movimento='cd',usuario=usuario[0],alteracao=f'O usuario {usuario[0]} se cadastrou no sistema')
+            log=Log(transacao='us',movimento='cd',usuario=usuario_cadastro,alteracao=f'O usuario {usuario_cadastro} cadastrou {usuario[0]} no sistema')
             log.save()
-            
+            return redirect('/listarUsuarios') # retorna sem  e com usuario
 
     if len(nome.strip())==0 :
         return redirect('/auth/cadastrar/?status=2') # retorna erro valor nulo
@@ -131,7 +123,21 @@ def valida_cadastro(request):
             usuario_cadastro=False
 
         try:
-            send_mail(subject='Senha Sistema de gestão de ativos',message=f"A sua senha provisória é {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'gestaodeativos@outlook.com.br']) 
+            conteudo_html = f"""<html>
+                                <head></head>
+                                <body>
+                                    <h2>Olá {nome}!</h2>
+                                    <p>Seu login foi criado no sistema de Gestão de Ativos do LPM.</p>
+                                    <p>Os dados para login são:</p>
+                                    <p>Seu nome de usuário: {email}</p>
+                                    <p>Sua senha provisória: {senha}</p>
+                                    <p>O link para acesso ao sistema é: <a href="http://gestaoativosma.ad.ipt.br/">gestaoativosma.ad.ipt.br </p>
+                                    <p>Obrigado!</p>
+                                    <p> Administrado do Sistema</p>
+                                </body>
+                                </html>"""
+            conteudo_plain=f"A sua senha provisória é {senha}"
+            send_mail(subject='Senha Sistema de gestão de ativos',message=conteudo_plain,html_message=conteudo_html, from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'gestaodeativos@outlook.com.br']) 
         except:
             raise Http404("Impossivel enviar o e-mail com a senha, favor contactar o Administrador")
         usuario.save() # salva o objeto usuário no banco de dados
@@ -147,7 +153,8 @@ def valida_cadastro(request):
         else:
             return redirect('/auth/login/?status=0') # retorna sem erro e sem usuario
 
-    except:
+    except Exception as e:
+        print(e)
         return redirect('/auth/cadastrar/?status=99') # retorna erro geral de gravação no banco de dados
   
     return HttpResponse("Erro na pagina de cadastro - View")
