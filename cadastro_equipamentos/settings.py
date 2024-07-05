@@ -26,7 +26,7 @@ MEDIA_ROOT=os.path.join(BASE_DIR,"images/")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = info_email.key 
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["gestaoativosma.ad.ipt.br","10.3.10.20","10.11.39.220","127.0.0.1","10.3.10.32"]
 
