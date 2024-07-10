@@ -97,6 +97,8 @@ def valida_cadastro(request):
             usuario[0].senha=gera_senha(12)
             usuario[0].email=email
             usuario[0].chapa=chapa
+            usuario[0].nome=nome
+            usuario[0].tipo=tipo
             try:
                 send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória é {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'gestaodeativos@outlook.com.br']) 
             except:
@@ -114,14 +116,11 @@ def valida_cadastro(request):
         return redirect('/auth/cadastrar/?status=4') # email invalido
     try:    
         senhacod= sha256(senha.encode()).hexdigest() # recuperando senha e codificando num hash sha256
-        ##print("cria Senha")
-
         usuario=Usuario(nome=nome, senha=senhacod, email=email, tipo=tipo, chapa=chapa, primeiro_acesso=primeiro_acesso,ativo=ativo) # cria um objeto usuário com as informações recebidas do fomulario
         try :
             usuario_cadastro=Usuario.objects.get(id=request.session.get('usuario'))
         except:
             usuario_cadastro=False
-
         try:
             conteudo_html = f"""<html>
                                 <head></head>

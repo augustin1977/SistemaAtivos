@@ -1,61 +1,62 @@
-{% extends 'base.html'%}
-{% block 'titulo'%} Relatório de LOG {% endblock %}
-
+{% extends 'base.html' %}
+{% block 'titulo' %} Relatório de LOG {% endblock %}
 
 {% block 'menu' %} 
 {% include 'menurelatorio.html' %} 
 {% endblock %}
-{% block 'conteudo'%} 
-<div class ='container'>
-    <div class='row'>
-        <div class='col-md-3'>
-        </div>
-        <div class="col-md">
-        </br></br>
+{% block 'conteudo' %} 
+<div class='container'>
+    <div class='row justify-content-center'>
+        <div class='col-md-50'>
+            <br><br>
             <h1> Relatório de Logs</h1>
+            <div class="table-responsive" style="max-height: 75vh; width: 100%;">
+                <table class="table table-hover table-sm wide-table">
+                    <thead class="thead-light sticky-top">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col" class="data-column">Data</th>
+                            <th scope="col">Transação</th>
+                            <th scope="col">Movimento</th>
+                            <th scope="col">Equipamento</th>
+                            <th scope="col">Ocorrência</th>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Alteração</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in lista_log %}
+                        <tr>
+                            <td>{{ log.id }}</td>
+                            <th scope="row" class="data-column">{{ log.data_cadastro }}</th>
+                            <td>{{ log.transacao }}</td>
+                            <td>{{ log.movimento }}</td>
+                            <td>{{ log.equipamento }}</td>
+                            <td>{{ log.nota_equipamento }}</td>
+                            <td>{{ log.usuario }}</td>
+                            <td>{{ log.alteracao }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <a href="{% url 'baixarRelatorioLog' %}?tempo=60" class="btn btn-success btn-mg"> Baixar Relatório 
+                <i class="bi bi-filetype-csv"></i>
+            </a>
         </div>
-        <div class="table-responsive" style="max-height: 75vh;">
-          <table class="table table-hover table-sm">
-            <thead class="thead-light sticky-top">
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Data</th>
-            <th scope="col">Transação</th>
-            <th scope="col">Movimento</th>
-            <th scope="col">Equipamento</th>
-            <th scope="col">Ocorrência</th>
-            <th scope="col">Usuario</th>
-            <th scope="col">Alteração</th>
-          </tr>
-        </thead>
-        <tbody style="overflow-y: scroll;">
-            {% for log in lista_log %}
-            <tr>
-             <td>{{ log.id }}</td>
-            <th scope="row">{{ log.data_cadastro }}</th>
-            <td>{{ log.transacao }}</td>
-            <td>{{ log.movimento }}</td>
-            <td>{{ log.equipamento }}</td>
-            <td>{{ log.nota_equipamento }}</td>
-            <td>{{ log.usuario }}</td>
-            <td>{{ log.alteracao }}</td>
-
-
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      </div>
-      
-      
-      <a href="{% url 'baixarRelatorioLog' %}?tempo=60"class="btn btn-success btn-mg"> Baixar Relatório 
-        <i class="bi bi-filetype-csv"></i>
-      </a>
-      </div>
-      
     </div>
-
-
 </div>
+
+<style>
+    .wide-table {
+        width: 100%;
+    }
+    .data-column {
+        width: 240px;
+    }
+    .table-responsive {
+        width: 100%;
+    }
+</style>
 
 {% endblock %}
