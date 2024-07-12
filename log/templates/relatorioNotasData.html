@@ -1,87 +1,78 @@
-
-{% extends 'base.html'%}
-{% block 'titulo'%} Gestão Ativos MA  {% endblock %}
+{% extends 'base.html' %}
+{% block 'titulo' %} Gestão Ativos MA {% endblock %}
 {% block 'menu' %} 
 {% include 'menurelatorio.html' %} 
 {% endblock %}
-{% block 'conteudo'%} 
-<div class ='container'>
+{% block 'conteudo' %} 
+<div class='container'>
     <br><br><br>
     {% if status == '50'%}
     <div class="alert alert-danger" role="alert">
         Você não tem permissão para acessar essa funcionalidade do sistema.
-      </div>
+    </div>
     {% endif %}
     {% if status == '99'%}
     <div class="alert alert-danger" role="alert">
         Erro Geral no sistema
-      </div>
+    </div>
     {% endif %}
     
     <div class='row'>
-        <div class='col-md-3'></div>
-
-        <form method ="POST" action="{% url 'relatorioNotasData' %}"> {% csrf_token %}
-            <div class="form-group"> 
-            </div>
-            <div class="form-group">
+        <div class='col-md-12'>
+            <form method="POST" action="{% url 'relatorioNotasData' %}"> {% csrf_token %}
+                <div class="form-group">
                     <label for="data_inicio">Data_Início:</label>
                     <input type="date" name="data_inicio" required value="{{ data_inicio }}">
                     
-                    <label for="data_fim">   Data_Fim:</label>
+                    <label for="data_fim">Data_Fim:</label>
                     <input type="date" name="data_fim" required value="{{ data_fim }}">
-                <button type="submit" class="btn btn-primary">OK</button>
-                <button type="button" class="btn btn-secondary">Cancelar</button>
-              <a href="{% url 'baixarRelatorionotasEquipamentodata' %}?data_inicio={{data_inicio}}&data_fim={{data_fim}}"class="btn btn-success btn-mg"> Baixar Relatório <i class="bi bi-filetype-csv"></i></a>
-
-          </div>
-        </form>
-        <div class="table-responsive" style="max-height: 65vh;">
-            <table class="table table-hover table-sm">
-              <thead class="thead-light sticky-top">
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Data Ocorrencia</th>
-              <th scope="col">Data Cadastro</th>
-              <th scope="col">Titulo</th>
-              <th scope="col">Descrição</th>
-              <th scope="col">Equipamento</th>
-              <th scope="col">Usuario</th>
-              <th scope="col">Editar</th>
-              <th scope="col">Excluir</th>
-            </tr>
-          </thead>
-          <tbody style="overflow-y: scroll;">
-              {% for nota in form %}
-              <tr>
-               <td>{{ nota.id }}</td>
-              <th scope="row">{{ nota.data_ocorrencia }}</th>
-              <td>{{ nota.data_cadastro }}</td>
-              <td>{{ nota.titulo }}</td>
-              <td>{{ nota.descricao }}</td>
-              <td>{{ nota.equipamento }}</td>
-              <td>{{ nota.usuario }}</td>
-              <td><a href="{% url 'editarNotas' %}?id={{ nota.id }}"><i class="bi bi-file-text"></i></a></td>
-              <td><a href="{% url 'excluirNotas' %}?id={{ nota.id }}&excluir=1"><i class="bi bi-trash"></i></a></td>
-  
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+                    <button type="submit" class="btn btn-primary">OK</button>
+                    <button type="button" class="btn btn-secondary">Cancelar</button>
+                    <a href="{% url 'baixarRelatorionotasEquipamentodata' %}?data_inicio={{data_inicio}}&data_fim={{data_fim}}" class="btn btn-success btn-mg"> Baixar Relatório <i class="bi bi-filetype-csv"></i></a>
+                </div>
+            </form>
             
-                
+            <div class="table-responsive" style="max-height: 70vh; width: 100%;">
+                <table class="table table-hover table-sm">
+                    <thead class="thead-light sticky-top">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Data Ocorrencia</th>
+                            <th scope="col">Data Cadastro</th>
+                            <th scope="col">Titulo</th>
+                            <th scope="col">Descrição</th>
+                            <th scope="col">Equipamento</th>
+                            <th scope="col">Melhoria</th>
+                            <th scope="col">Calibração</th>
+                            <th scope="col">Falha</th>
+                            <th scope="col">Lubrificação</th>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Editar</th>
+                            <th scope="col">Excluir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for nota in form %}
+                        <tr>
+                            <td>{{ nota.id }}</td>
+                            <td>{{ nota.data_ocorrencia }}</td>
+                            <td>{{ nota.data_cadastro }}</td>
+                            <td>{{ nota.titulo }}</td>
+                            <td>{{ nota.descricao }}</td>
+                            <td>{{ nota.equipamento }}</td>
+                            <td>{% if nota.melhoria %} <i class="bi bi-check-circle-fill"></i>{% else %} <i class="bi bi-stop"></i>{% endif %}</td>
+                            <td>{% if nota.calibracao %} <i class="bi bi-check-circle-fill"></i>{% else %} <i class="bi bi-stop"></i>{% endif %}</td>
+                            <td>{% if nota.falha %} <i class="bi bi-check-circle-fill"></i>{% else %} <i class="bi bi-stop"></i>{% endif %}</td>
+                            <td>{% if nota.lubrificao %} <i class="bi bi-check-circle-fill"></i>{% else %} <i class="bi bi-stop"></i>{% endif %}</td>
+                            <td>{{ nota.usuario }}</td>
+                            <td><a href="{% url 'editarNotas' %}?id={{ nota.id }}"><i class="bi bi-file-text"></i></a></td>
+                            <td><a href="{% url 'excluirNotas' %}?id={{ nota.id }}&excluir=1"><i class="bi bi-trash"></i></a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class='col-md-3'>
-        
-        </div>
-        </div>
-    
-        
-
-    
     </div>
-   
-        
 </div>
-
 {% endblock %}

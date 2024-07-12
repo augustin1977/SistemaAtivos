@@ -61,7 +61,7 @@ class CadastraNota_equipamentoForm(ModelForm):
 
     class Meta:
         model = Nota_equipamento
-        fields = ['titulo', 'descricao', 'equipamento', 'modo_Falha_equipamento',  'data_ocorrencia', 'falha', 'calibracao', 'lubrificao']
+        fields = ['titulo', 'descricao', 'equipamento', 'modo_Falha_equipamento',  'data_ocorrencia', 'melhoria','falha', 'calibracao', 'lubrificao']
         widgets = {
             'titulo': TextInput(attrs={'class': 'form-control','placeholder':'Nome da ocorrencia para futura referencia e pesquisa'}),
             'descricao': Textarea(attrs={'class': 'form-control','placeholder':'Descrição detalhada da ocorrencia'}),
@@ -69,6 +69,7 @@ class CadastraNota_equipamentoForm(ModelForm):
             'falha': CheckboxInput(attrs={'class': 'form-control'}),
             'calibracao': CheckboxInput(attrs={'class': 'form-control'}),
             'lubrificao': CheckboxInput(attrs={'class': 'form-control'}),
+            'melhoria': CheckboxInput(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -84,7 +85,7 @@ class CadastraNota_equipamentoForm(ModelForm):
         cd=self.cleaned_data
         utc=pytz.timezone(TIME_ZONE)
         cd['data_cadastro']=utc.localize( datetime.datetime.now())
-        if (cd['calibracao']):
+        if (cd['calibracao'] or cd['melhoria']):
                #print('equipamento',cd['equipamento'])
                equipamento=Equipamento.objects.get(id=cd['equipamento'].id)
                equipamento.data_ultima_calibracao=utc.localize( datetime.datetime.now())

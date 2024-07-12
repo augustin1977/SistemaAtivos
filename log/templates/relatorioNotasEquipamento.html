@@ -50,17 +50,21 @@
         <div class="table-responsive" style="max-height: 75vh;">
             <table class="table table-hover table-sm">
               <thead class="thead-light sticky-top">
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Data Ocorrencia</th>
-              <th scope="col">Data Cadastro</th>
-              <th scope="col">Titulo</th>
-              <th scope="col">Descrição</th>
-              <th scope="col">Equipamento</th>
-              <th scope="col">Usuario</th>
-              <th scope="col">Editar</th>
-              <th scope="col">Excluir</th>
-            </tr>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Data Ocorrencia</th>
+                  <th scope="col">Data Cadastro</th>
+                  <th scope="col">Titulo</th>
+                  <th scope="col">Descrição</th>
+                  <th scope="col">Equipamento</th>
+                  <th scope="col">Melhoria</th>
+                  <th scope="col">Calibração</th>
+                  <th scope="col">Falha</th>
+                  <th scope="col">Lubrificação</th>
+                  <th scope="col">Usuario</th>
+                  <th scope="col">Editar</th>
+                  <th scope="col">Excluir</th>
+                </tr>
           </thead>
           <tbody style="overflow-y: scroll;">
               {% for nota in lista_notas %}
@@ -71,6 +75,18 @@
               <td>{{ nota.titulo }}</td>
               <td>{{ nota.descricao }}</td>
               <td>{{ nota.equipamento }}</td>
+              <td> {% if nota.melhoria %} <i class="bi bi-check-circle-fill"></i>
+                {% else %}  <i class="bi bi-stop"></i>
+                {% endif %}
+              <td> {% if nota.calibracao %} <i class="bi bi-check-circle-fill"></i>
+                {% else %}  <i class="bi bi-stop"></i>
+                {% endif %}
+              <td> {% if nota.falha %} <i class="bi bi-check-circle-fill"></i>
+                {% else %}  <i class="bi bi-stop"></i>
+                {% endif %}
+              <td> {% if nota.lubrificao %} <i class="bi bi-check-circle-fill"></i>
+                {% else %}  <i class="bi bi-stop"></i>
+                {% endif %}
               <td>{{ nota.usuario }}</td>
               <td><a href="{% url 'editarNotas' %}?id={{ nota.id }}"><i class="bi bi-file-text"></i></a></td>
             <td><a href="{% url 'excluirNotas' %}?id={{ nota.id }}&excluir=1"><i class="bi bi-trash"></i></a></td>

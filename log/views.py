@@ -268,11 +268,11 @@ def baixarRelatorioNotaEquipamento(request):
     response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response, delimiter=';')
     # Escrever o cabeçalho do arquivo CSV
-    writer.writerow(['Data_ocorrencia','Data_cadastro', 'Titulo', 'Descrição','Equipamento','Usuario'])
+    writer.writerow(['Data_ocorrencia','Data_cadastro', 'Titulo', 'Descrição','Equipamento','melhoria','calibracao','falha','lubrificacao','Usuario'])
     # Executar a consulta no banco de dados e adicione os resultados ao arquivo CSV   
     for obj in notas:
         writer.writerow([obj.data_ocorrencia, obj.data_cadastro, obj.titulo,obj.descricao,obj.equipamento,
-            obj.usuario])
+                         obj.melhoria,obj.calibracao,obj.falha,obj.lubrificao, obj.usuario])
     return response
 
 def relatorioLogData(request):
@@ -327,11 +327,11 @@ def baixarRelatorionotasEquipamentodata(request):
     response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response, delimiter=';')
     # Escrever o cabeçalho do arquivo CSV
-    writer.writerow(['Data_ocorrencia','Data_cadastro', 'Titulo', 'Descrição','Equipamento','Usuario'])
+    writer.writerow(['Data_ocorrencia','Data_cadastro', 'Titulo', 'Descrição','Equipamento','melhoria','calibracao','falha','lubrificacao','Usuario'])
     # Executar a consulta no banco de dados e adicione os resultados ao arquivo CSV   
     for obj in notas:
         writer.writerow([obj.data_ocorrencia, obj.data_cadastro, obj.titulo,obj.descricao,obj.equipamento,
-            obj.usuario])
+            obj.melhoria,obj.calibracao,obj.falha, obj.lubrificao,  obj.usuario])
     return response
 
 def baixarRelatorioLogPDF(request):

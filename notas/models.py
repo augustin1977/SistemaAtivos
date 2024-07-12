@@ -46,6 +46,7 @@ class Nota_equipamento(models.Model):
     falha=models.BooleanField()
     calibracao=models.BooleanField()
     lubrificao=models.BooleanField()
+    melhoria=models.BooleanField()
     usuario=models.ForeignKey( Usuario ,on_delete=models.SET_NULL,null=True, blank=True)
     def __str__(self):
         return str(self.titulo)

@@ -140,6 +140,7 @@ def cadastrarNota(request):
                 falha=data['falha'],
                 calibracao=data['calibracao'],
                 lubrificao=data['lubrificao'],
+                melhoria=data['melhoria'],
                 usuario=usuario
             )
             nota.save()
@@ -148,7 +149,7 @@ def cadastrarNota(request):
                 #Nota_material
                 nota.material.add(material)
             """    
-            Log.cadastramento(usuario=Usuario.objects.get(id=request.session.get('usuario')),transacao='ne',objeto=nota,nota_equipamento=nota)
+            Log.cadastramento(usuario=Usuario.objects.get(id=request.session.get('usuario')),transacao='ne',objeto=nota,nota_equipamento=nota,equipamento=nota.equipamento)
             form=CadastraNota_equipamentoForm
             
             return render(request, "cadastrarNota.html", {'form':form,'status':1})
