@@ -106,7 +106,7 @@ def valida_cadastro(request):
                 
                 #send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória é {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'gestaodeativos@outlook.com.br']) # antigo sistema de envio
             except Exception as e:
-                print(e)
+                # print(e)
                 raise Http404("Impossivel enviar o e-mail com a senha, favor contactar o Administrador")
             usuario[0].save() # salva o objeto usuário no banco de dados
             log=Log(transacao='us',movimento='cd',usuario=usuario_cadastro,alteracao=f'O usuario {usuario_cadastro} cadastrou {usuario[0]} no sistema')
@@ -161,7 +161,7 @@ def valida_cadastro(request):
             return redirect('/auth/login/?status=0') # retorna sem erro e sem usuario
 
     except Exception as e:
-        print(e)
+        # print(e)
         return redirect('/auth/cadastrar/?status=99') # retorna erro geral de gravação no banco de dados
   
     return HttpResponse("Erro na pagina de cadastro - View")
@@ -349,7 +349,7 @@ def trocasenha(request):
                 usuario_troca_senha.save()
                 return render(request, "listaUsuarios.html", {'status':'51','usuarios':usuarios}) # troca de senha efetuada com sucesso  
             except Exception as e:
-                print(e)
+                # print(e)
                 return render(request, "listaUsuarios.html", {'status':'2','usuarios':usuarios}) # Erro no envio do email
         
     return redirect('/auth/login/?status=0')
