@@ -344,7 +344,7 @@ def editarNotas(request):
 
             nota= Nota_equipamento.objects.get(id=id)
             listaCampos=['titulo','descricao','equipamento','modo_Falha_equipamento','data_ocorrencia','falha',
-                         'calibracao','lubrificao']
+                         'calibracao','lubrificao','melhoria']
             alteracao=False
             for campo in listaCampos:
                 alterado=Log.foiAlterado(transacao='me',objeto=nota,atributo=campo,valor=form.cleaned_data[campo],usuario=usuario,nota_equipamento=nota) 
