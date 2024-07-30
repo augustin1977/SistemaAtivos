@@ -125,7 +125,9 @@ class equipamentoCadastrarForm(Form):
             raise ValidationError('Data Compra invalida: a data de compra deve ser anterior a data de hoje')
         tipo_equipamento=cd["tipo_equipamento"]
         tipo=Tipo_equipamento.objects.get(id=tipo_equipamento.id)
-        numero=len(Equipamento.objects.filter(tipo_equipamento=tipo_equipamento.id))+1
+        equipamentos_tipo=Equipamento.objects.filter(tipo_equipamento=tipo).order_by('-codigo')
+        ultimo_equipammento=equipamentos_tipo[0]
+        numero=int(ultimo_equipammento.codigo[-3:])+1
         cd['codigo']=f'{tipo.sigla.upper()}{numero:03d}'
         cd['data_ultima_atualizacao']=utc.localize( datetime.datetime.now())
         return cd
