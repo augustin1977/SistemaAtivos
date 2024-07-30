@@ -4,7 +4,7 @@ from .models import Usuario,Tipo
 from log.models import Log
 from django.shortcuts import redirect 
 from hashlib import sha256
-from django.core.mail import send_mail
+from usuarios.enviar_email import *
 from usuarios.forms import *
 import re
 import string
@@ -100,8 +100,13 @@ def valida_cadastro(request):
             usuario[0].nome=nome
             usuario[0].tipo=tipo
             try:
-                send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória é {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'gestaodeativos@outlook.com.br']) 
-            except:
+                enviar_email(subject='Senha Sistema de gestão de ativos',
+                             body=f"A senha provisória é {senha}",
+                             recipients=[email,'gestaoativosma@gmail.com'])
+                
+                #send_mail(subject='Senha Sistema de gestão de ativos',message=f"A senha provisória é {senha}", from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'gestaodeativos@outlook.com.br']) # antigo sistema de envio
+            except Exception as e:
+                print(e)
                 raise Http404("Impossivel enviar o e-mail com a senha, favor contactar o Administrador")
             usuario[0].save() # salva o objeto usuário no banco de dados
             log=Log(transacao='us',movimento='cd',usuario=usuario_cadastro,alteracao=f'O usuario {usuario_cadastro} cadastrou {usuario[0]} no sistema')
@@ -136,7 +141,10 @@ def valida_cadastro(request):
                                 </body>
                                 </html>"""
             conteudo_plain=f"A sua senha provisória é {senha}"
-            send_mail(subject='Senha Sistema de gestão de ativos',message=conteudo_plain,html_message=conteudo_html, from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'gestaodeativos@outlook.com.br']) 
+            enviar_email(subject='Senha Sistema de gestão de ativos',
+                         body=conteudo_html,
+                         recipients=[email,'gestaoativosma@gmail.com'])
+            #send_mail(subject='Senha Sistema de gestão de ativos',message=conteudo_plain,html_message=conteudo_html, from_email="gestaodeativos@outlook.com.br",recipient_list=[email,'gestaodeativos@outlook.com.br']) 
         except:
             raise Http404("Impossivel enviar o e-mail com a senha, favor contactar o Administrador")
         usuario.save() # salva o objeto usuário no banco de dados
@@ -328,17 +336,20 @@ def trocasenha(request):
                                     <p>Obrigado!</p>
                                 </body>
                                 </html>"""
-                              
-                send_mail(subject='Recuperação de Senha Sistema de gestão de ativos',message=f"{usuario_troca_senha} foi solicitado uma nova senha pelo usuario {usuario_adm} sua nova senha é {novasenha}",
-                    from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario_troca_senha.email,'gestaodeativos@outlook.com.br'],
-                    html_message=conteudo_html,)
+                enviar_email(subject='Senha Sistema de gestão de ativos',
+                         body=conteudo_html,
+                         recipients=[usuario_troca_senha.email,'gestaoativosma@gmail.com'])              
+                # send_mail(subject='Recuperação de Senha Sistema de gestão de ativos',message=f"{usuario_troca_senha} foi solicitado uma nova senha pelo usuario {usuario_adm} sua nova senha é {novasenha}",
+                #     from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario_troca_senha.email,'gestaodeativos@outlook.com.br'],
+                #     html_message=conteudo_html,)
                 
                 log=Log(transacao='us',movimento='ed',usuario=usuario_adm,
                         alteracao=f'O usuario {usuario_adm} recuperou a senha do {usuario_troca_senha} via sistema e eviou email para {usuario_troca_senha.email}')
                 log.save()
                 usuario_troca_senha.save()
                 return render(request, "listaUsuarios.html", {'status':'51','usuarios':usuarios}) # troca de senha efetuada com sucesso  
-            except:
+            except Exception as e:
+                print(e)
                 return render(request, "listaUsuarios.html", {'status':'2','usuarios':usuarios}) # Erro no envio do email
         
     return redirect('/auth/login/?status=0')

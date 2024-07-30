@@ -31,12 +31,12 @@ DEBUG = True
 ALLOWED_HOSTS = ["gestaoativosma.ad.ipt.br","10.3.10.20","10.11.39.220","127.0.0.1","10.3.10.32","10.20.1.237","t007214n.ad.ipt.br"]
 
 # email commands
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST_USER = info_email.info_email['email']
-EMAIL_HOST_PASSWORD = info_email.info_email['senha']
-EMAIL_HOST = 'outlook.office365.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = info_email.email
+EMAIL_HOST_PASSWORD = info_email.senha
+EMAIL_HOST = info_email.host
+EMAIL_PORT = info_email.port
+EMAIL_USE_TLS = info_email.TLS
 
 
 # Application definition
@@ -165,3 +165,6 @@ FILE_UPLOAD_HANDLERS=[
 SESSION_COOKIE_AGE = 14400 # 4 horas em segundos
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Encerra sessão ao fechar o browser
+
+
+
