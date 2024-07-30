@@ -104,7 +104,8 @@ class exibirDetalheNotaForm(ModelForm):
             'data_ocorrencia': DateInput(attrs={'class': 'form-control'}),
             'falha': CheckboxInput(attrs={'class': 'form-control'}),
             'calibracao': CheckboxInput(attrs={'class': 'form-control'}),
-            'lubrificao': CheckboxInput(attrs={'class': 'form-control'})}
+            'lubrificao': CheckboxInput(attrs={'class': 'form-control'}),
+            'melhoria': CheckboxInput(attrs={'class': 'form-control'}),}
         
 
 

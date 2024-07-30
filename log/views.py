@@ -22,15 +22,16 @@ import pytz
 import hashlib
 
 #Bibliotecas de criação de PDF
-from reportlab.lib.enums import TA_JUSTIFY
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import inch,mm
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 
-#### Criando Classe para colcoar o numero de paginas#####
+from reportlab.lib.enums import TA_JUSTIFY # type: ignore
+from reportlab.pdfgen import canvas # type: ignore
+from reportlab.lib.pagesizes import A4 # type: ignore
+from reportlab.lib import colors # type: ignore
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle # type: ignore
+from reportlab.lib.units import inch,mm # type: ignore
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer # type: ignore
+ 
+#### Criando Classe para colocar o numero de paginas#####
 class PageNumCanvas(canvas.Canvas):
     """Classe de criação de canvas para colocar pagina nas folhas dos arquivos PDF, exemplo tirado de:
     http://code.activestate.com/recipes/546511-page-x-of-y-with-reportlab/
@@ -123,7 +124,6 @@ def relatorioLog(request):
     
     return render(request, "relatorioLog.html", {'lista_log':lognovo}) 
 
-
 def baixarRelatorioLog(request):
     """ Cria arquivo e Baixa relatório de LOG no formato CSV"""
     if not request.session.get('usuario'):
@@ -184,7 +184,7 @@ def relatorioNotasData(request):
         data_fim =datafim+ timedelta(days=1)
         filtro1=Q(data_ocorrencia__gte=datainicio)
         filtro2=Q(data_ocorrencia__lte=data_fim)
-        notas=Nota_equipamento.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
+        notas=Nota_equipamento.objects.filter(filtro1 & filtro2).order_by('-data_ocorrencia')
         # print(notas)
 
         return render(request,'relatorioNotasData.html',{'form':notas,'data_inicio':str(datainicio.date()), 'data_fim':str(datafim.date()),'selected':0})
@@ -248,7 +248,7 @@ def relatorioNotasEquipamento(request):
         return render(request,'relatorioNotasEquipamento.html',{'form':equipamento, 'lista_notas':[],'selected':0})
     else:
         equipamentoid=request.POST.get('equipamento')
-        notas=Nota_equipamento.objects.filter(equipamento=equipamentoid).order_by('-data_cadastro')
+        notas=Nota_equipamento.objects.filter(equipamento=equipamentoid).order_by('-data_ocorrencia')
         equipamento=Equipamento.objects.filter(ativo=True)
         return render(request,'relatorioNotasEquipamento.html',{'form':equipamento, 'lista_notas':notas,'selected':int(equipamentoid)})
     return HttpResponse("Parcialmente implementado")
@@ -261,7 +261,7 @@ def baixarRelatorioNotaEquipamento(request):
     except:
         busca=0
         
-    notas=Nota_equipamento.objects.filter(equipamento=busca).order_by('-data_cadastro')
+    notas=Nota_equipamento.objects.filter(equipamento=busca).order_by('-data_ocorrencia')
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="relatorio.csv"'
     # Criar um objeto CSV Writer
@@ -292,9 +292,9 @@ def relatorioLogData(request):
         datafim=utc.localize(datetime.combine(datetime.strptime(request.POST.get("data_fim"),'%Y-%m-%d').date(),datetime.min.time()))
         data_fim =datafim+ timedelta(days=1)
 
-        filtro1=Q(data_cadastro__gte=datainicio)
-        filtro2=Q(data_cadastro__lte=data_fim)
-        log=Log.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
+        filtro1=Q(data_ocorrencia__gte=datainicio)
+        filtro2=Q(data_ocorrencia__lte=data_fim)
+        log=Log.objects.filter(filtro1 & filtro2).order_by('-data_ocorrencia')
         #print(notas)
         lognovo=[]
         for i,item in enumerate(log):
@@ -320,7 +320,7 @@ def baixarRelatorionotasEquipamentodata(request):
         dataf=0
     filtro1=Q(data_ocorrencia__gte=datai)
     filtro2=Q(data_ocorrencia__lte=dataf)
-    notas=Nota_equipamento.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
+    notas=Nota_equipamento.objects.filter(filtro1 & filtro2).order_by('-data_ocorrencia')
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="relatorio.csv"'
     # Criar um objeto CSV Writer
