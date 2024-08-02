@@ -983,22 +983,25 @@ def excluiArquivo(request):
 
 
 def download_arquivo(request):
-    nome_arquivo = request.POST.get("filename")
-    # caminho=os.path.join(MEDIA_ROOT,nome_arquivo)
+    nome_arquivo = request.GET.get("filename") or request.POST.get("filename")
     fullpath = os.path.normpath(os.path.join(MEDIA_ROOT, nome_arquivo))
-    # print(fullpath, MEDIA_ROOT)
-    if not fullpath.startswith(MEDIA_ROOT[:-1]):
-        raise PermissionError
+    if not fullpath.startswith(os.path.abspath(MEDIA_ROOT)):
+        raise PermissionError("Acesso não permitido")
+
     with open(fullpath, "rb") as arquivo:
-        figuras = ["jpg", "bmp", "gif", "svg", "png"]
-        if nome_arquivo[-3:].lower() in figuras:
-            response = HttpResponse(arquivo.read(), content_type="image")
+        figuras = ["jpg", "jpeg", "bmp", "gif", "svg", "png"]
+        ext = nome_arquivo.split(".")[-1].lower()
+        
+        if ext in figuras:
+            content_type = f'image/{ext if ext != "jpg" else "jpeg"}'  # Exceção para 'jpg' que deve ser 'jpeg'
+            response = HttpResponse(arquivo.read(), content_type=content_type)
         else:
             response = HttpResponse(
                 arquivo.read(), content_type="application/octet-stream"
             )
-        filename = nome_arquivo.split("/")
-        response["Content-Disposition"] = f'attachment; filename="{filename[-1]}"'
+            filename = nome_arquivo.split("/")[-1]
+            response["Content-Disposition"] = f'attachment; filename="{filename}"'
+
     return response
 
 
