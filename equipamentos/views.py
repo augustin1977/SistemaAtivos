@@ -259,11 +259,15 @@ def cadastrarEquipamento(request):
             mecanica = Disciplina.objects.get(disciplina="Mecânica")
             geral = Disciplina.objects.get(disciplina="Geral")
             outros = Disciplina.objects.get(disciplina="Outros")
+            melhoria=Disciplina.objects.get(disciplina="Melhoria")
+            movimentacao=Disciplina.objects.get(disciplina="Movimentação")
 
             filtro1 = Q(disciplina=mecanica)
             filtro2 = Q(disciplina=geral)
             filtro3 = Q(disciplina=outros)
-            modos = Modo_Falha.objects.filter(filtro1 | filtro2 | filtro3)
+            filtro4 = Q(disciplina=melhoria)
+            filtro5 = Q(disciplina=movimentacao)
+            modos = Modo_Falha.objects.filter(filtro1 | filtro2 | filtro3 | filtro4 | filtro5)
             for modo in modos:
                 m = Modo_falha_equipamento(equipamento=e, modo_falha=modo)
                 m.save()

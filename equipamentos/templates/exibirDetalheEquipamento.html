@@ -86,8 +86,7 @@
               </thead>
             {% for arquivo in media %}   
                 {% if arquivo.documentos %}
-                <tr><th scope="row"> 
-                  <a href="{% url 'download_arquivo' %}?filename={{ arquivo.documentos }}" target="_blank">{{ arquivo.nome }}</a>
+                <tr><th scope="row"> <a href="{% url 'download_arquivo' %}?filename={{ arquivo.documentos }}" target="_blank">{{ arquivo.nome }}</a>
                 <td> <a href="{% url 'excluiArquivo' %}?id={{ arquivo.id }}"><i class="bi bi-trash"></i></a></td></tr>
                               
                 {% endif %}
