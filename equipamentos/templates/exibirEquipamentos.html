@@ -13,7 +13,7 @@
 
       debounceTimeout = setTimeout(function () {
         fazerChamadaAjax(nome_equipamento);
-      }, 400); // Defina um tempo de atraso adequado em milissegundos (por exemplo, 400ms)
+      }, 600); // Defina um tempo de atraso adequado em milissegundos (por exemplo, 400ms)
     });
 
     function fazerChamadaAjax(nome_equipamento) {
@@ -30,7 +30,7 @@
           $("#equipamentos_list").empty();
           equipamentos.forEach(function (equipamento) {
             var row = $("<tr>");
-            var nome = $("<td>").text(equipamento.nome_equipamento);
+            var nome = $("<th>").attr("scope", "row").text(equipamento.nome_equipamento);
             var codigo = $("<td>").text(equipamento.codigo);
             var modelo = $("<td>").text(equipamento.modelo);
             var tipo = $("<td>").text(equipamento.tipo_equipamento);
