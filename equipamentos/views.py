@@ -175,7 +175,32 @@ def editarEquipamento(request):
             #         e.material_consumo.remove(material)
             #         log=Log(transacao='mc',movimento='dl',usuario=usuario,equipmento=e,alteracao=f'o usuario {usuario} excluiu o material {material} do equipamento {e}')
             #         log.save()
-
+    mecanica = Disciplina.objects.get(disciplina="Mecânica")
+    geral = Disciplina.objects.get(disciplina="Geral")
+    outros = Disciplina.objects.get(disciplina="Outros")
+    melhoria=Disciplina.objects.get(disciplina="Melhoria")
+    movimentacao=Disciplina.objects.get(disciplina="Movimentação")
+    filtro1 = Q(disciplina=mecanica)
+    filtro2 = Q(disciplina=geral)
+    filtro3 = Q(disciplina=outros)
+    filtro4 = Q(disciplina=melhoria)
+    filtro5 = Q(disciplina=movimentacao)
+    modos = Modo_Falha.objects.filter(filtro1 | filtro2 | filtro3 | filtro4 | filtro5)
+    filtroequipamento= Q(equipamento=e) 
+    for modo in modos:
+        filtromodo= Q(modo_falha=modo) 
+        if not Modo_falha_equipamento.objects.filter(filtroequipamento & filtromodo):
+            m = Modo_falha_equipamento(equipamento=e, modo_falha=modo)
+            m.save()
+    if e.potencia_eletrica or e.tensao_eletrica:
+        modos = Modo_Falha.objects.filter(
+            disciplina=Disciplina.objects.get(disciplina="Elétrica")
+        )
+        for modo in modos:
+            filtromodo= Q(modo_falha=modo) 
+            if not Modo_falha_equipamento.objects.filter(filtroequipamento & filtromodo):
+                m = Modo_falha_equipamento(equipamento=e, modo_falha=modo)
+                m.save()
     equipamentos = Equipamento.objects.filter(ativo=True)
     return render(request, "exibirEquipamentos.html", {"equipamentos": equipamentos})
 
