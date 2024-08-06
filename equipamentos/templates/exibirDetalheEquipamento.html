@@ -94,16 +94,17 @@
               </table>
             </td> 
           </tr>
-          
+          <div class="text-center">
           {% if confirmarexluir == '1' %}
-          <th scope="row"> Excluir Equipamento</th>
+          <th scope="row"> </th>
           <td>
-            <a href="{% url 'excluirEquipamento' %}?id={{ equipamento.id }}&excluir=2" class="delete-link"><i class="bi bi-trash"></i></a>
+            <a href="{% url 'excluirEquipamento' %}?id={{ equipamento.id }}&excluir=2" class="btn btn-danger">Excluir Equipamento <i class="bi bi-trash"></i></a>
           </td>
-          
+          <br>
+          <br>
         </tr>
           {% endif %}
-          
+      </div>
         </tbody>
       </table>
 
