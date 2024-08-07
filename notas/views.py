@@ -109,7 +109,7 @@ def cadastrarModo_FalhaEquipamento(request):
             data=form.cleaned_data
             modofalhaequipamento=Modo_falha_equipamento(equipamento=data['equipamento'],modo_falha=data['modo_falha'])
             modofalhaequipamento.save()
-            Log.cadastramento(usuario=Usuario.objects.get(id=request.session.get('usuario')),transacao='me',objeto=modofalhaequipamento)
+            Log.cadastramento(usuario=Usuario.objects.get(id=request.session.get('usuario')),transacao='mq',objeto=modofalhaequipamento)
             form=CadastraModo_falha_equipamentoForm
                         
             return render(request, "cadastrarModoFalhaEquipamento.html", {'form':form,'status':1})
@@ -347,7 +347,7 @@ def editarNotas(request):
                          'calibracao','lubrificao','melhoria']
             alteracao=False
             for campo in listaCampos:
-                alterado=Log.foiAlterado(transacao='me',objeto=nota,atributo=campo,valor=form.cleaned_data[campo],usuario=usuario,nota_equipamento=nota) 
+                alterado=Log.foiAlterado(transacao='ne',objeto=nota,atributo=campo,valor=form.cleaned_data[campo],usuario=usuario,nota_equipamento=nota, equipamento=nota.equipamento) 
                 if alterado:
                     setattr(nota,campo,form.cleaned_data[campo])
                 alteracao|=alterado
