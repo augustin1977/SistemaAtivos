@@ -198,10 +198,25 @@ def esqueci_senha(request):
         novasenha=gera_senha(12)
         usuario[0].senha=sha256(novasenha.encode()).hexdigest()   
         usuario[0].primeiro_acesso=True
+        email=usuario[0].email
+        nome=usuario[0].nome
         try:
-            
-            enviar_email(subject='Recuperação de Senha Sistema de gestão de ativos',message=f"A sua nova senha é {novasenha}",
-            from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario[0].email,'gestaodeativos@outlook.com.br'])  
+            conteudo_html = f"""<html>
+                                <head></head>
+                                <body>
+                                    <h2>Olá {nome}!</h2>
+                                    <p>Você solicitou envio de nova senha para sua conta.</p>
+                                    <p>Os dados para login são:</p>
+                                    <p>Seu nome de usuário: {email}</p>
+                                    <p>Sua senha provisória: {novasenha}</p>
+                                    <p>O link para acesso ao sistema é: <a href="http://gestaoativosma.ad.ipt.br/">gestaoativosma.ad.ipt.br </p>
+                                    <p>Obrigado!</p>
+                                    <p> Administrado do Sistema</p>
+                                </body>
+                                </html>"""
+            enviar_email(subject='Senha Sistema de gestão de ativos',
+                         body=conteudo_html,
+                         recipients=[email,'gestaoativosma@gmail.com'])
         except:
             return redirect('/auth/esqueci_senha/?status=2') # Falha no envio
         
