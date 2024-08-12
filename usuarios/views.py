@@ -200,7 +200,7 @@ def esqueci_senha(request):
         usuario[0].primeiro_acesso=True
         try:
             
-            send_mail(subject='Recuperação de Senha Sistema de gestão de ativos',message=f"A sua nova senha é {novasenha}",
+            enviar_email(subject='Recuperação de Senha Sistema de gestão de ativos',message=f"A sua nova senha é {novasenha}",
             from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario[0].email,'gestaodeativos@outlook.com.br'])  
         except:
             return redirect('/auth/esqueci_senha/?status=2') # Falha no envio
