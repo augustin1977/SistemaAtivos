@@ -292,8 +292,8 @@ def relatorioLogData(request):
         datafim=utc.localize(datetime.combine(datetime.strptime(request.POST.get("data_fim"),'%Y-%m-%d').date(),datetime.min.time()))
         data_fim =datafim+ timedelta(days=1)
 
-        filtro1=Q(data_ocorrencia__gte=datainicio)
-        filtro2=Q(data_ocorrencia__lte=data_fim)
+        filtro1=Q(data_cadastro__gte=datainicio)
+        filtro2=Q(data_cadastro__lte=data_fim)
         log=Log.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
         #print(notas)
         lognovo=[]
