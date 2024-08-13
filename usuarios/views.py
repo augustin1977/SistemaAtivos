@@ -162,6 +162,7 @@ def valida_cadastro(request):
 
     except Exception as e:
         # print(e)
+        
         return redirect('/auth/cadastrar/?status=99') # retorna erro geral de gravação no banco de dados
   
     return HttpResponse("Erro na pagina de cadastro - View")

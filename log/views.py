@@ -294,7 +294,7 @@ def relatorioLogData(request):
 
         filtro1=Q(data_ocorrencia__gte=datainicio)
         filtro2=Q(data_ocorrencia__lte=data_fim)
-        log=Log.objects.filter(filtro1 & filtro2).order_by('-data_ocorrencia')
+        log=Log.objects.filter(filtro1 & filtro2).order_by('-data_cadastro')
         #print(notas)
         lognovo=[]
         for i,item in enumerate(log):
