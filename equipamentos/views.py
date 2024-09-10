@@ -122,11 +122,11 @@ def editarEquipamento(request):
         dados_paraformulario = dados.dados_para_form()
         form = equipamentoEditarForm(initial=dados_paraformulario)
         return render(request, "editarEquipamento.html", {"form": form})
-    else:
-        details = equipamentoEditarForm(request.POST)
+    elif request.method == "POST":
+        form  = equipamentoEditarForm(request.POST)
         
-        if details.is_valid():
-            e = Equipamento.objects.get(id=details.cleaned_data["id"], ativo=True)
+        if form.is_valid():
+            e = Equipamento.objects.get(id=form.cleaned_data["id"], ativo=True)
             listaCampos = [
                 "nome_equipamento",
                 "modelo",
@@ -154,11 +154,11 @@ def editarEquipamento(request):
                     objeto=e,
                     atributo=campo,
                     equipamento=e,
-                    valor=details.cleaned_data[campo],
+                    valor=form.cleaned_data[campo],
                     usuario=usuario,
                 )
                 if alterado:
-                    setattr(e, campo, details.cleaned_data[campo])
+                    setattr(e, campo, form.cleaned_data[campo])
                 alteracao |= alterado
             if alteracao:
                 e.save()
@@ -201,9 +201,14 @@ def editarEquipamento(request):
                     filtromodo= Q(modo_falha=modo) 
                     if not Modo_falha_equipamento.objects.filter(filtroequipamento & filtromodo):
                         m = Modo_falha_equipamento(equipamento=e, modo_falha=modo)
-                        m.save()
-    equipamentos = Equipamento.objects.filter(ativo=True)
-    return render(request, "exibirEquipamentos.html", {"equipamentos": equipamentos})
+                        m.save()   
+            equipamentos = Equipamento.objects.filter(ativo=True)
+            return render(request, "exibirEquipamentos.html", {"equipamentos": equipamentos})
+        else:
+            # Renderizar o formulário novamente com os erros
+            equipamento_id = request.POST.get("id")
+            equipamento = Equipamento.objects.get(id=equipamento_id, ativo=True)
+            return render(request, "editarEquipamento.html", {"form": form, "equipamento": equipamento})
 
 
 def cadastrarEquipamento(request):

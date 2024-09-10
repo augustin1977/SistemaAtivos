@@ -77,18 +77,25 @@ class equipamentoEditarForm(Form):
     especificacao=CharField(required=False,widget= Textarea(attrs={'class': "form-control"}))
     outros_dados=CharField(required=False,widget= Textarea(attrs={'class': "form-control"}))
 
-       
+    def clean_data_compra(self):
+        data_compra = self.cleaned_data.get('data_compra')
+        if not(type(data_compra)==datetime.datetime):
+            raise ValidationError('Data Compra invalida: não está no formato "dd/mm/aaaa"')
+        data_cadastro=Equipamento.objects.get(id=self.cleaned_data['id']).data_cadastro
+        if data_compra>data_cadastro:
+            raise ValidationError('Data Compra invalida: a data de compra deve ser anterior a data de cadastro')
+        return data_compra
+    def clean_data_ultima_calibracao(self):
+  
+        data_ultima_calibracao = self.cleaned_data.get('data_ultima_calibracao')
+        if not(type(data_ultima_calibracao)==datetime.datetime):
+            raise ValidationError('Data Compra invalida: não está no formato "dd/mm/aaaa"')
+        return data_ultima_calibracao    
+
     def clean(self):
         super().clean()
         utc=pytz.timezone(TIME_ZONE) # pytz.UTC
         cd=self.cleaned_data
-        # print(cd)
-        data_compra=cd["data_compra"]
-        data_cadastro=Equipamento.objects.get(id=cd['id']).data_cadastro
-        # print(data_cadastro)
-        if data_compra>data_cadastro:
-            raise ValidationError('Data Compra invalida: a data de compra deve ser anterior a data de hoje')
-        #tipo_equipamento=cd["tipo_equipamento"]
         cd['data_ultima_atualizacao']=utc.localize( datetime.datetime.now())
         return cd
         
