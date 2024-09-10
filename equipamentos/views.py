@@ -124,8 +124,8 @@ def editarEquipamento(request):
         return render(request, "editarEquipamento.html", {"form": form})
     else:
         details = equipamentoEditarForm(request.POST)
+        e = Equipamento.objects.get(id=details.cleaned_data["id"], ativo=True)
         if details.is_valid():
-            e = Equipamento.objects.get(id=details.cleaned_data["id"], ativo=True)
             listaCampos = [
                 "nome_equipamento",
                 "modelo",
