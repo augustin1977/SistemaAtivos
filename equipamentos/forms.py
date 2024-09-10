@@ -63,8 +63,8 @@ class equipamentoEditarForm(Form):
     fabricante=ModelChoiceField(queryset=Fabricante.objects.all() ,widget=Select (attrs={'class': "form-control"}))
     local=ModelChoiceField(queryset=Local_instalacao.objects.all(),widget=Select(attrs={'class': "form-control"}))
     tipo_equipamento=ModelChoiceField(queryset= Tipo_equipamento.objects.all(),widget=Select(attrs={'class': "form-control"}))
-    data_compra=DateTimeField(widget=DateInput( attrs={'class': 'form-control'}))
-    data_ultima_calibracao=DateTimeField(required=False,widget=DateInput( attrs={'class': 'form-control'}))
+    data_compra=DateTimeField(widget=DateInput( attrs={'class': 'form-control'})error_messages={'invalid': 'Por favor, insira uma data válida.'} )
+    data_ultima_calibracao=DateTimeField(required=False,widget=DateInput( attrs={'class': 'form-control'}),error_messages={'invalid': 'Por favor, insira uma data válida.'} )
     patrimonio=CharField(widget= TextInput(attrs={'class': "form-control"}))
     # material_consumo=ModelMultipleChoiceField(required=False,blank=True,queryset= Material_consumo.objects.all(),widget=SelectMultiple(attrs={'class': "form-control"}))
     usuario=CharField(label="",widget=HiddenInput())
@@ -77,7 +77,7 @@ class equipamentoEditarForm(Form):
     especificacao=CharField(required=False,widget= Textarea(attrs={'class': "form-control"}))
     outros_dados=CharField(required=False,widget= Textarea(attrs={'class': "form-control"}))
 
-   
+       
     def clean(self):
         super().clean()
         utc=pytz.timezone(TIME_ZONE) # pytz.UTC
@@ -91,6 +91,8 @@ class equipamentoEditarForm(Form):
         #tipo_equipamento=cd["tipo_equipamento"]
         cd['data_ultima_atualizacao']=utc.localize( datetime.datetime.now())
         return cd
+    def clean_data_compra(self):
+        
 
 class equipamentoCadastrarForm(Form):
     nome_equipamento=CharField(widget= TextInput(attrs={'class': "form-control",'placeholder':'Nome do Equipamentos'}))
