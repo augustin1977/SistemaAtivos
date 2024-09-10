@@ -91,7 +91,6 @@ class equipamentoEditarForm(Form):
         #tipo_equipamento=cd["tipo_equipamento"]
         cd['data_ultima_atualizacao']=utc.localize( datetime.datetime.now())
         return cd
-    def clean_data_compra(self):
         
 
 class equipamentoCadastrarForm(Form):
