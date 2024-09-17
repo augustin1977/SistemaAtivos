@@ -84,6 +84,8 @@ def gerar_arquivo_intemperismo(request):
         return render(request, "converte_imtemperismo.html", {"erro": "1"})
 
 # funções de conversão do arquivo do moinho piloto
+def converte_moinho_piloto(request):
+    return render(request,"moinho_piloto.html")
 def gerar_arquivo_moinho_piloto(request):
     file = request.FILES.get("arquivoAnexo")
     name = str(file)

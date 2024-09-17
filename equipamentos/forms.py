@@ -134,8 +134,11 @@ class equipamentoCadastrarForm(Form):
         tipo_equipamento=cd["tipo_equipamento"]
         tipo=Tipo_equipamento.objects.get(id=tipo_equipamento.id)
         equipamentos_tipo=Equipamento.objects.filter(tipo_equipamento=tipo).order_by('-codigo')
-        ultimo_equipammento=equipamentos_tipo[0]
-        numero=int(ultimo_equipammento.codigo[-3:])+1
+        if len(equipamentos_tipo)==0:
+            numero=1
+        else:
+            ultimo_equipammento=equipamentos_tipo[0]
+            numero=int(ultimo_equipammento.codigo[-3:])+1
         cd['codigo']=f'{tipo.sigla.upper()}{numero:03d}'
         cd['data_ultima_atualizacao']=utc.localize( datetime.datetime.now())
         return cd

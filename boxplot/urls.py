@@ -11,5 +11,7 @@ urlpatterns = [
     path('gerar_arquivo_intemperismo/',boxplot.views.gerar_arquivo_intemperismo,name='gerar_arquivo_intemperismo'),
     path('converte_OCR/',boxplot.views.converte_OCR,name='converte_OCR'),
     path('gerar_arquivo_OCR/',boxplot.views.gerar_arquivo_OCR,name='gerar_arquivo_OCR'),
+    path('gerar_arquivo_moinho_piloto/',boxplot.views.gerar_arquivo_moinho_piloto,name='gerar_arquivo_moinho_piloto'),
+    path('converte_moinho_piloto/',boxplot.views.converte_moinho_piloto,name='converte_moinho_piloto'),
 
     ]
