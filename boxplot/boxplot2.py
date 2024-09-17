@@ -377,7 +377,8 @@ class Boxplot():
                     legenda.append(mpatches.Patch(color=corGrafico[color], label=color))
             legenda.reverse()
             # constroi a legenda
-            ax1.legend(handles=legenda,framealpha =0.6,loc=int(posicao_legenda)).set_draggable(True)
+            if not(posicao_legenda=="NA"): # Se a posição foi diferente de NA
+                ax1.legend(handles=legenda,framealpha =0.6,loc=int(posicao_legenda)).set_draggable(True)
             # mostra o grafico
             buffer = BytesIO()
             plt.savefig(buffer, format="png")
