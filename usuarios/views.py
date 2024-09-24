@@ -137,7 +137,7 @@ def valida_cadastro(request):
                                     <p>Sua senha provisória: {senha}</p>
                                     <p>O link para acesso ao sistema é: <a href="http://gestaoativosma.ad.ipt.br/">gestaoativosma.ad.ipt.br </p>
                                     <p>Obrigado!</p>
-                                    <p> Administrado do Sistema</p>
+                                    <p> Administrador do Sistema</p>
                                 </body>
                                 </html>"""
             conteudo_plain=f"A sua senha provisória é {senha}"
@@ -212,7 +212,7 @@ def esqueci_senha(request):
                                     <p>Sua senha provisória: {novasenha}</p>
                                     <p>O link para acesso ao sistema é: <a href="http://gestaoativosma.ad.ipt.br/">gestaoativosma.ad.ipt.br </p>
                                     <p>Obrigado!</p>
-                                    <p> Administrado do Sistema</p>
+                                    <p> Administrador do Sistema</p>
                                 </body>
                                 </html>"""
             enviar_email(subject='Senha Sistema de gestão de ativos',
