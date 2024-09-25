@@ -95,7 +95,6 @@ class Boxplot():
         self.titulo=""
         self.medias=[]
         self.maximo=[]
-        self.minimo=[]
         self.CV=[]
         self.DP=[]
         self.erro=0
@@ -110,10 +109,34 @@ class Boxplot():
         if self.dados == None:
             self.erro=3 # impossivel decodificar
     def limpa_dados(self):
-        self.dados_verificados=self.dados
-        self.calcula_estatisticas()
+        tabela = []
+        linhas = self.dados.split("\n")
+        for linha in linhas:
+            l = linha.split("\r")
+            tabela.append(l[0].split(";"))
+        # print (tabela)
+        self.titulo = tabela[0][0]
+        # busca as familias dos ensaios na planilha
+        self.familias = exclui_sem_none(tabela[1])
+        # busca atributos e segregando os dados
+        self.eixox = tabela[0][1]
+        self.eixoy = tabela[0][2]
+        self.nomes=exclui_sem_none(tabela[2])
 
-    def calcula_estatisticas(self):
+        dados_lidos = tabela[3:]
+        self.contagem_colunas = len(self.nomes)
+        for linha in range(len(dados_lidos)):
+            for coluna in range(len(self.nomes)):
+                try:
+                    dado = dados_lidos[linha][coluna].replace(",", ".")
+                    if linha==0:
+                        self.dados_verificados.append([float(dado)])
+                    else:
+                        self.dados_verificados[coluna].append(float(dado))
+                except:
+                    pass
+
+    def calcula_medias(self):
         tam=len(self.dados_verificados)
         self.medias = [0] * tam
         self.DP=[0] * tam
@@ -126,10 +149,29 @@ class Boxplot():
             self.DP[n] = stdev(dados)
             self.CV[n] = abs(self.DP[n]/ self.medias[n] ) * 100 if self.medias[n] != 0 else float('inf')  # Lida com média zero
             self.maximo[n]=max(dados)
-            self.minimo[n]=min(dados)
         
+        
+        # for n in range(tam):
+        #     if not self.dados_verificados[n]:
+        #         raise ValueError(f"Sublista vazia encontrada na posição {n}")
+        #     self.medias[n] = sum(self.dados_verificados[n]) / len(self.dados_verificados[n])
+        #     self.DP[n] = stdev(self.dados_verificados[n])
+        #     self.CV[n] = abs(self.DP[n]/ self.medias[n] * 100) if self.medias[n] != 0 else float('inf')  # Lida com média zero
+        #     self.maximo[n]=max(self.dados_verificados[n])
+            
+            
 
-
+    def organiza_dados(self):
+        if len(self.nomes)==len(self.dados_verificados):
+            self.dados_verificados=colocareferencianofim(self.dados_verificados)
+            self.familias=colocareferencianofim(self.familias)
+            self.medias=colocareferencianofim(self.medias)
+            self.nomes=colocareferencianofim(self.nomes)
+            self.maximo=colocareferencianofim(self.maximo)
+            self.CV=colocareferencianofim(self.CV)
+            self.DP=colocareferencianofim(self.DP)
+        else:
+            self.erro=2 # Erro - numero de nomes diferentes do numero de coluna de dados
         
         
     def gera_grafico(self,linha_media,valor_media,cv,labelcores,posicao_legenda):

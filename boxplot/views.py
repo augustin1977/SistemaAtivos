@@ -2,13 +2,13 @@ from django.shortcuts import render
 from django.http import *
 import boxplot.Converte_OCR
 import boxplot.boxplot2 
+import boxplot.boxplot3
 import boxplot.csv_intemperismo_converter, boxplot.moinho_piloto_converter
 from django.http import FileResponse
 from django.shortcuts import render
 
 # Funçõres de geração de tela para entrada de dados
-def boxplotinicial2(request):
-    return render(request, "boxplot.html")
+
 def ferramentas(request):
     return render(request, "ferramentas.html")
 
@@ -18,12 +18,14 @@ def converte_intemperismo(request):
 def converte_OCR(request):
     return render(request,"OCR.html")
 # funções de geração do BOXPLOT
+def boxplotinicial2(request):
+    return render(request, "boxplot2.html")
 def gerar_grafico2(request):
     file = request.FILES.get("arquivoAnexo")
     name = str(file)
     if name[-3:] != "csv":
         # print(name[-3:])
-        return render(request, "boxplot.html", {"erro": "2"})
+        return render(request, "boxplot2.html", {"erro": "2"})
     imagem = boxplot.boxplot2.gera_boxplot(
         file,
         request.POST.get("linha_media") == "on",
@@ -39,10 +41,10 @@ def gerar_grafico2(request):
 
         return response
     elif imagem == 3:  # Erro de decodificação
-        return render(request, "boxplot.html", {"erro": "3"})
+        return render(request, "boxplot2.html", {"erro": "3"})
     else:
-        return render(request, "boxplot.html", {"erro": "1"})
-def download_model_csv(request) -> FileResponse:
+        return render(request, "boxplot2.html", {"erro": "1"})
+def download_model_csv2(request) -> FileResponse:
     """Return a file in csv in a model format to the user to generetar boxplot
 
     Args:
@@ -135,3 +137,61 @@ def gerar_arquivo_OCR(request):
         return render(request, "OCR.html", {"erro": "3"})
     else:
         return render(request, "OCR.html", {"erro": "1"})
+
+def boxplotinicial3(request):
+    return render(request, "boxplot3.html")
+
+def gerar_grafico3(request):
+    file = request.FILES.get("arquivoAnexo")
+    name = str(file)
+    # print(name)
+    if name[-3:] != "csv":
+        # print(name,"erro")
+        return render(request, "boxplot3.html", {"erro": "2"})
+    imagem = boxplot.boxplot3.gera_boxplot(
+        file,
+        request.POST.get("linha_media") == "on",
+        request.POST.get("valor_media") == "on",
+        request.POST.get("CV")=="on",
+        request.POST.get("labelcores") == "on",
+        request.POST.get("legenda")  
+    )
+
+    if imagem:
+        response = HttpResponse(imagem, content_type="image/png")
+        response["Content-Disposition"] = f"attachment; filename=boxplot.png"
+
+        return response
+    elif imagem == 3:  # Erro de decodificação
+        return render(request, "boxplot3.html", {"erro": "3"})
+    else:
+        return render(request, "boxplot3.html", {"erro": "1"})
+def download_model_csv3(request) -> FileResponse:
+    """Return a file in csv in a model format to the user to generetar boxplot
+
+    Args:
+        request (None): None is requested
+
+    Returns:
+        _type_: file CSV with model to create a boxplot picture
+    """
+    # Crie o conteúdo do modelo CSV
+    content = """Titulo;Legenda Eixo X;Legenda Eixo Y;;
+        Referencia;Grafico 1;Grafico 1;Grafico 2;Grafico 2
+        Referencia;Familia1;Familia2;Familia1;Familia2
+        A;B;C;B;C
+        1;4;1;5;9
+        3;5;2;6;8
+        3;3;3;7;7
+        4;4;8;4;6
+        5;6;5;6;7
+        3;4;5;7;8
+        4;5;8;8;8
+        3;8;8;8;9
+        2;7;4;9;9"""
+
+    # Crie uma resposta de arquivo para o modelo CSV
+    response = HttpResponse(content, content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="modelo.csv"'
+
+    return response

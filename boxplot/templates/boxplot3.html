@@ -1,0 +1,129 @@
+{% extends 'base.html'%} {% block 'titulo'%} Gestão Ativos MA {% endblock %} 
+{%block 'menu' %} {% include 'menuferramentas.html' %} {% endblock %} 
+{% block 'conteudo'%}
+
+<div class="text-center">
+  <br /><br />
+  <h1>Criar Boxplot com colunas a partir de Excel padrão</h1>
+</div>
+<div class="container">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <form
+      class="row g-3"
+      method="post"
+      enctype="multipart/form-data"
+      action="{% url 'gerar_grafico3' %}"
+      class="custom-form"
+    >
+      {% csrf_token %}
+      <!-- Caixa de seleção para escolher uma opção -->
+      <div class="col-12">
+        <a
+          href="{% url 'download_model_csv3' %}"
+          class="btn btn-success"
+          role="button"
+          >Baixar Modelo de Arquivo</a
+        >
+      </div>
+      <div class="col-12">
+        <label for="arquivo">Anexar arquivo:</label>
+        <input
+          type="file"
+          class="form-control-file"
+          id="arquivoAnexo"
+          name="arquivoAnexo"
+        />
+        {% if erro == '1'%}
+        <div class="alert alert-danger" role="alert">
+          Favor anexar arquivo válido, verifque se anexou um arquivo válido e
+          sem erros.
+        </div>
+        {% endif %} {% if erro == '2'%}
+        <div class="alert alert-danger" role="alert">
+          O Sistema processa apenas arquvos ".CSV".
+        </div>
+        {% endif %} {% if erro == '3'%}
+        <div class="alert alert-danger" role="alert">
+          O arquivo não foi decodificado corretamento, verifique o documento e
+          tente novamente.
+        </div>
+        {% endif %}
+      </div>
+      <div class="col-12">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="linha_media"
+          name="linha_media"
+        />
+        <label class="form-check-label" for="checkbox">
+          Exibir Linha de Média da Referência
+        </label>
+      </div>
+      <div class="col-12">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="valor_media"
+          name="valor_media"
+        />
+        <label class="form-check-label" for="checkbox">
+          Exibir valor das médias no grafico
+        </label>
+      </div>
+      <div class="col-12">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="CV"
+          name="CV"
+        />
+        <label class="form-check-label" for="checkbox">
+          Exibir coeficiente de variação no grafico
+        </label>
+      </div>
+      <div class="col-12">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="labelcores"
+          name="labelcores"
+        />
+        <label class="form-check-label" for="checkbox">
+          Exibir Nome da categoria "Referencia" em Vermelho
+        </label>
+      </div>
+      <div class="col-12">
+        <label for="legenda">Posição da Legenda: </label>
+        <select name="legenda">
+          <option value="0" selected>Automático</option>
+          <option value="1">Superior Direito</option>
+          <option value="2">Superior Esquerdo</option>
+          <option value="4">Inferior Direito</option>
+          <option value="3">Inferior Esquerdo</option>
+          <option value="NA">Sem legenda</option>
+        </select>
+      </div>
+
+      <!-- Botão para executar a função desejada -->
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary" id="BoxPlot">
+          Gerar Boxplot
+        </button>
+        <div class="form-group"></div>
+      </div>
+      <div class="col-12">
+        <a
+          href="http://gestaoativosma.ad.ipt.br/"
+          class="btn btn-info"
+          role="button"
+          >Voltar</a
+        >
+      </div>
+    </form>
+  </div>
+  <div class="col-md-1"></div>
+</div>
+
+{% endblock %}

@@ -1,4 +1,16 @@
-<a class="navbar-link text-light" href="{% url 'boxplotinicial' %}">Boxplot</a>
+
 <a class="navbar-link text-light" href="{% url 'converte_intemperismo' %}">Arquivos Inovtec </a>
 <a class="navbar-link text-light" href="{% url 'converte_OCR' %}">Arquivos OCR </a>
+
+<li class="navbar navbar-dark bg-dark nav-item dropdown ">
+    <a class="navbar-link dropdown-toggle text-light bg-dark"  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      BoxPlot
+    </a>
+    
+    <div class="dropdown-menu text-light bg-dark" aria-labelledby="navbarDropdown">
+      <a class="navbar navbar-dark bg-dark dropdown-item text-light" href="{% url 'boxplotinicial2' %}">Boxplot</a>
+      <a class="navbar navbar-dark bg-dark dropdown-item text-light" href="{% url 'boxplotinicial3' %}">Boxplot c/ Colunas</a>
+    </div>
+   
+  </li>
 <a class="navbar-link text-light" href="{% url 'converte_moinho_piloto' %}">Arquivos Moinho Piloto </a>
