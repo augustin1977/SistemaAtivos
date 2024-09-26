@@ -114,7 +114,7 @@ class Boxplot():
         for linha in linhas:
             l = linha.split("\r")
             tabela.append(l[0].split(";"))
-        # print (tabela)
+        print (tabela)
         self.titulo = tabela[0][0]
         # busca as familias dos ensaios na planilha
         self.familias = exclui_sem_none(tabela[1])
@@ -122,9 +122,10 @@ class Boxplot():
         self.eixox = tabela[0][1]
         self.eixoy = tabela[0][2]
         self.nomes=exclui_sem_none(tabela[2])
-
+        print(self.titulo,self.familias,self.eixox,self.eixoy,self.nomes)
         dados_lidos = tabela[3:]
         self.contagem_colunas = len(self.nomes)
+        print(dados_lidos)
         for linha in range(len(dados_lidos)):
             for coluna in range(len(self.nomes)):
                 try:
@@ -135,6 +136,7 @@ class Boxplot():
                         self.dados_verificados[coluna].append(float(dado))
                 except:
                     pass
+        print(self.dados_verificados)
 
     def calcula_medias(self):
         tam=len(self.dados_verificados)
@@ -393,14 +395,17 @@ class Boxplot():
 # Função que cria o objeto e chama as funções 
 def gera_boxplot(arquivo, linha_media,valor_media,cv, labelcores,legenda):
     boxplot=Boxplot(arquivo)
+    print("Carregou boxplot")
     boxplot.le_dados() # faz a leitura dos dados do arquivo
-    if boxplot.status: # Se não ocorrer nenum erro
+    print("Leu dados\n",boxplot.dados)
+    print(f"Status={boxplot.status()}")
+    if boxplot.status(): # Se não ocorrer nenum erro
         boxplot.limpa_dados() # limpa os dados incoerentes e celulas vazias
     if (linha_media or valor_media) and boxplot.status: # Se não ocorrer nenum erro e for necessário exibir as médias
         boxplot.calcula_medias() # calcula as medias
-    if boxplot.status: # Se não ocorrer nenum erro
+    if boxplot.status(): # Se não ocorrer nenum erro
         boxplot.organiza_dados() # organiza os dados
-    if boxplot.status: # Se não ocorrer nenum erro
+    if boxplot.status(): # Se não ocorrer nenum erro
         grafico=boxplot.gera_grafico(linha_media,valor_media,cv,labelcores,legenda) # gera o gráfico
     else: #caso contraria retorne False
         grafico=boxplot.erro # Reporta os erros cometidos

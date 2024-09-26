@@ -156,7 +156,7 @@ def gerar_grafico3(request):
         request.POST.get("labelcores") == "on",
         request.POST.get("legenda")  
     )
-
+    print(f"view imagem={imagem}")
     if imagem:
         response = HttpResponse(imagem, content_type="image/png")
         response["Content-Disposition"] = f"attachment; filename=boxplot.png"
