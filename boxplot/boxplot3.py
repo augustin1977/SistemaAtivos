@@ -151,16 +151,6 @@ class Boxplot():
             self.DP[n] = stdev(dados)
             self.CV[n] = abs(self.DP[n]/ self.medias[n] ) * 100 if self.medias[n] != 0 else float('inf')  # Lida com média zero
             self.maximo[n]=max(dados)
-        
-        
-        # for n in range(tam):
-        #     if not self.dados_verificados[n]:
-        #         raise ValueError(f"Sublista vazia encontrada na posição {n}")
-        #     self.medias[n] = sum(self.dados_verificados[n]) / len(self.dados_verificados[n])
-        #     self.DP[n] = stdev(self.dados_verificados[n])
-        #     self.CV[n] = abs(self.DP[n]/ self.medias[n] * 100) if self.medias[n] != 0 else float('inf')  # Lida com média zero
-        #     self.maximo[n]=max(self.dados_verificados[n])
-            
             
 
     def organiza_dados(self):
