@@ -154,9 +154,9 @@ def gerar_grafico3(request):
         request.POST.get("valor_media") == "on",
         request.POST.get("CV")=="on",
         request.POST.get("labelcores") == "on",
-        request.POST.get("legenda")  
+        request.POST.get("legenda")
     )
-    print(f"view imagem={imagem}")
+    # print(f"view imagem={imagem}")
     if imagem:
         response = HttpResponse(imagem, content_type="image/png")
         response["Content-Disposition"] = f"attachment; filename=boxplot.png"
@@ -176,19 +176,19 @@ def download_model_csv3(request) -> FileResponse:
         _type_: file CSV with model to create a boxplot picture
     """
     # Crie o conteúdo do modelo CSV
-    content = """Titulo;Legenda Eixo X;Legenda Eixo Y;;
-        Referencia;Grafico 1;Grafico 1;Grafico 2;Grafico 2
-        Referencia;Familia1;Familia2;Familia1;Familia2
-        A;B;C;B;C
-        1;4;1;5;9
-        3;5;2;6;8
-        3;3;3;7;7
-        4;4;8;4;6
-        5;6;5;6;7
-        3;4;5;7;8
-        4;5;8;8;8
-        3;8;8;8;9
-        2;7;4;9;9"""
+    content = """Titulo;Legenda Eixo X;Legenda Eixo Y;;;
+Grafico1;Grafico2;Grafico1;Grafico1;Grafico2;Grafico2
+Referencia;Referencia;Familia1;Familia2;Familia1;Familia2
+Referencia;Referencia;B;C;B;C
+1;1;4;1;5;9
+3;5;5;2;6;8
+3;4;3;3;7;7
+4;4;4;8;4;6
+5;4;6;5;6;7
+3;3;4;5;7;8
+4;5;5;8;8;8
+3;4;8;8;8;9
+2;2;7;4;9;9"""
 
     # Crie uma resposta de arquivo para o modelo CSV
     response = HttpResponse(content, content_type="text/csv")

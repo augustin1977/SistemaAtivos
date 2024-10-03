@@ -214,6 +214,7 @@ class Boxplot():
             propriedades_medias = {"linestyle": "-", "color": verde}
 
             # cria boxplot mostrando medias e linha de medias(showmean e meanline True) com dados na vertical (vert=False) com outliers
+            # print(self.dados_verificados)
             graf = ax1.boxplot(
                 self.dados_verificados,
                 labels=self.nomes,
@@ -400,6 +401,7 @@ def gera_boxplot(arquivo, linha_media,valor_media,cv, labelcores,legenda):
         boxplot.calcula_medias() # calcula as medias
     if boxplot.status: # Se não ocorrer nenum erro
         boxplot.organiza_dados() # organiza os dados
+        # print(boxplot.dados_verificados)
     if boxplot.status: # Se não ocorrer nenum erro
         grafico=boxplot.gera_grafico(linha_media,valor_media,cv,labelcores,legenda) # gera o gráfico
     else: #caso contraria retorne False
