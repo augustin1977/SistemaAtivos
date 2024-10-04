@@ -45,8 +45,7 @@
         </div>
         {% endif %} {% if erro == '3'%}
         <div class="alert alert-danger" role="alert">
-          O arquivo não foi decodificado corretamento, verifique o documento e
-          tente novamente.
+          {{mensagemErro}}
         </div>
         {% endif %}
       </div>
@@ -95,7 +94,18 @@
         </label>
       </div>
       <div class="col-12">
-        <label for="legenda">Posição da Legenda: </label>
+        <label for="legenda">Gráfico da Legenda: </label>
+        <select name="graficolegenda">
+          <option value="0" selected>Gráfico 1</option>
+          <option value="1">Gráfico 2</option>
+          <option value="2">Gráfico 3</option>
+          <option value="3">Gráfico 4</option>
+          <option value="4">Gráfico 5</option>
+          <option value="-1">Ultimo Gráfico</option>
+        </select>
+      </div>
+      <div class="col-12">
+        <label for="legenda">Posição da Legenda no gráfico: </label>
         <select name="legenda">
           <option value="0" selected>Automático</option>
           <option value="1">Superior Direito</option>

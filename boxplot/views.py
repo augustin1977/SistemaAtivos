@@ -148,22 +148,25 @@ def gerar_grafico3(request):
     if name[-3:] != "csv":
         # print(name,"erro")
         return render(request, "boxplot3.html", {"erro": "2"})
-    imagem = boxplot.boxplot3.gera_boxplot(
+    imagem,mensagemErro = boxplot.boxplot3.gera_boxplot(
         file,
         request.POST.get("linha_media") == "on",
         request.POST.get("valor_media") == "on",
         request.POST.get("CV")=="on",
         request.POST.get("labelcores") == "on",
-        request.POST.get("legenda")
+        request.POST.get("legenda"),
+        int(request.POST.get("graficolegenda"))
     )
     # print(f"view imagem={imagem}")
-    if imagem:
+    if imagem == 3:  # Erro de decodificação
+        return render(request, "boxplot3.html", {"erro": "3","mensagemErro":mensagemErro})
+    elif imagem:
         response = HttpResponse(imagem, content_type="image/png")
         response["Content-Disposition"] = f"attachment; filename=boxplot.png"
 
         return response
-    elif imagem == 3:  # Erro de decodificação
-        return render(request, "boxplot3.html", {"erro": "3"})
+    if imagem == 3:  # Erro de decodificação
+        return render(request, "boxplot3.html", {"erro": "3","mensagemErro":mensagemErro})
     else:
         return render(request, "boxplot3.html", {"erro": "1"})
 def download_model_csv3(request) -> FileResponse:
@@ -176,19 +179,21 @@ def download_model_csv3(request) -> FileResponse:
         _type_: file CSV with model to create a boxplot picture
     """
     # Crie o conteúdo do modelo CSV
-    content = """Titulo;Legenda Eixo X;Legenda Eixo Y;;;
-Grafico1;Grafico2;Grafico1;Grafico1;Grafico2;Grafico2
-Referencia;Referencia;Familia1;Familia2;Familia1;Familia2
-Referencia;Referencia;B;C;B;C
-1;1;4;1;5;9
-3;5;5;2;6;8
-3;4;3;3;7;7
-4;4;4;8;4;6
-5;4;6;5;6;7
-3;3;4;5;7;8
-4;5;5;8;8;8
-3;4;8;8;8;9
-2;2;7;4;9;9"""
+    content = """Titulo;Legenda Eixo X;Legenda Eixo Y;;;;;;;;;;;;;;
+G1;G2;G3;G1;G1;G1;G1;G1;G1;G2;G2;G2;G3;G3;G3;G3;G3
+Referencia;Referencia;Referencia;Familia1;Familia1;Familia2;Familia3;Familia2;Familia2;Familia4;Familia2;Familia1;Familia5;Familia1;Familia3;Familia4;Familia4
+Referencia;Referencia;Referencia;A;B;C;D;E;F;A;B;C;A;C;D;F;G
+1;2;1;5;4;1;5;5;5;8;8;5;9;1;1;2;15
+2;3;3;6;4;2;6;6;5;8;9;6;8;2;2;6;16
+3;4;5;7;5;3;7;7;3;9;8;7;7;3;3;7;17
+4;5;7;8;5;1;5;5;4;9;9;8;8;4;4;8;15
+5;6;9;9;6;2;5;5;5;8;8;9;5;5;5;5;12
+1;2;11;10;6;3;4;3;5;8;9;10;7;6;6;3;18
+2;3;13;7;6;4;6;6;7;8;8;7;8;7;7;6;22
+3;4;15;8;4;7;5;4;8;8;7;8;10;8;8;4;1
+11;5;17;6;7;3;6;6;6;9;7;6;12;9;9;5;5
+12;6;10;7;1;5;7;7;7;9;8;7;9;5;5;7;17
+"""
 
     # Crie uma resposta de arquivo para o modelo CSV
     response = HttpResponse(content, content_type="text/csv")
