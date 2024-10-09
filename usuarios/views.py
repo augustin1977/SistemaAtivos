@@ -386,3 +386,19 @@ def maioresUsuarios(request):
     
     # JsonResponse(lista_usuarios,safe=False)
     return redirect(f'/equipamentos/?status=0')
+def envia_mensagem_usuarios(request):
+    if not request.session.get("usuario"):
+        return redirect("/auth/login/?status=2")
+    usuario_adm=Usuario.objects.get(id=request.session.get('usuario')) 
+    tipo=Tipo.objects.get(tipo="admin")
+    if(usuario_adm.tipo==tipo):
+        todos=Usuario.objects.filter(ativo=True)
+        emails=[]
+        assunto="Teste"
+        conteudo="Teste"
+        
+        for usuario in todos:
+            emails.append(str(usuario.email))
+        enviar_email(subject=assunto,body=conteudo,recipients=emails)
+            
+    return redirect(f'/equipamentos/?status=0')
