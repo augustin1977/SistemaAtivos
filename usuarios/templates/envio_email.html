@@ -1,0 +1,61 @@
+{% extends 'base.html'%} {% block 'titulo'%} Gestão Ativos MA {% endblock %} 
+{%block 'menu' %} {% include 'menuferramentas.html' %} {% endblock %} 
+{% block 'conteudo'%}
+
+<div class="text-center">
+  <br /><br />
+  <h1>Enviar e-mail para todos os Usuários</h1>
+</div>
+<div class="container">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <form
+      class="row g-3"
+      method="post"
+      enctype="multipart/form-data"
+      action="{% url 'gerar_grafico2' %}"
+      class="custom-form"
+    >
+      {% csrf_token %}
+      
+      <div class="col-12">
+        <label for="arquivo">Anexar arquivo:</label>
+        <input
+          type="file"
+          class="form-control-file"
+          id="arquivoAnexo"
+          name="arquivoAnexo"
+        />
+        {% if erro == '1'%}
+        <div class="alert alert-danger" role="alert">
+          Favor anexar arquivo válido, verifque se anexou um arquivo válido e
+          sem erros.
+        </div>
+        {% endif %} {% if erro == '2'%}
+        <div class="alert alert-danger" role="alert">
+          O Sistema processa apenas arquvos ".HTML ou TXT".
+        </div>
+        {% endif %} 
+        <br/>
+      </div>
+      
+
+      <!-- Botão para executar a função desejada -->
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary" id="BoxPlot">
+          Enviar Email
+        </button>
+        <div class="form-group"></div>
+      </div>
+      <div class="col-12">
+        <a href="http://gestaoativosma.ad.ipt.br/"
+          class="btn btn-info"
+          role="button" >
+          Voltar</a>
+      </div>
+    </form>
+  </div>
+  <div class="col-md-1"></div>
+</div>
+
+{% endblock %}

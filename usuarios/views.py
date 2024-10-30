@@ -392,6 +392,9 @@ def envia_mensagem_usuarios(request):
     usuario_adm=Usuario.objects.get(id=request.session.get('usuario')) 
     tipo=Tipo.objects.get(tipo="admin")
     if(usuario_adm.tipo==tipo):
+        if request.method=="GET":
+            return render(request, "envio_email.html",{})
+        
         todos=Usuario.objects.filter(ativo=True)
         emails=[]
         assunto="Teste"
@@ -400,5 +403,5 @@ def envia_mensagem_usuarios(request):
         for usuario in todos:
             emails.append(str(usuario.email))
         enviar_email(subject=assunto,body=conteudo,recipients=emails)
-            
+        #print(emails)    
     return redirect(f'/equipamentos/?status=0')
