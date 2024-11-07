@@ -1,6 +1,24 @@
 import pandas as pd
 from io import BytesIO
-
+def try_decode(
+    text,
+    encodings=[
+        "utf-8",
+        "iso-8859-1",
+        "windows-1252",
+        "CP850",
+        "iso-8859-15 ",
+        "MacRoman",
+    ],
+):
+    for encoding in encodings:
+        try:
+            decoded_text = text.decode(encoding)
+            return decoded_text
+        except UnicodeDecodeError:
+            pass
+    # Se nenhuma codificação funcionou, retorne None ou levante uma exceção, dependendo do seu caso.
+    return None  # Ou raise Exception("Nenhuma codificação válida encontrada")
 class Converte_dados:
     def __init__(self,dados):
         self._raw_dados=dados
@@ -19,6 +37,7 @@ class Converte_dados:
                     self._dados[cabecalho][nome_valor[0]]=float(nome_valor[1])
                 else:
                     self._dados[cabecalho][nome_valor[0]]=int(nome_valor[1])
+     
     def retornaXLS(self):
         df = pd.DataFrame(self._dados).T # transforma o dicionário num dataframe Pandas
         buffer = BytesIO()
@@ -28,8 +47,12 @@ class Converte_dados:
 
 def geraXLS(file):
     dados_raw=file.read()
+    dados_raw=try_decode(dados_raw)
+    print("Leu dados")
     dados=Converte_dados(dados_raw)
+    print("Converteu dados")
     dados.processa_dados()
+    print("Processou dados")
 
     
     return dados.retornaXLS()
