@@ -95,11 +95,11 @@ def gerar_arquivo_moinho_piloto(request):
         # print(name[-3:])
         return render(request, "moinho_piloto.html", {"erro": "2"})
     arquivo = boxplot.moinho_piloto_converter.geraXLS(file)
-    # try:
-    #     arquivo = boxplot.moinho_piloto_converter.geraXLS(file)
-    # except Exception as e:
-    #     print(e)
-    #     return render(request, "moinho_piloto.html", {"erro": "3"}) 
+    try:
+        arquivo = boxplot.moinho_piloto_converter.geraXLS(file)
+    except Exception as e:
+        print(e)
+        return render(request, "moinho_piloto.html", {"erro": "3"}) 
     
     if arquivo:
         response = HttpResponse(arquivo, content_type="application")
