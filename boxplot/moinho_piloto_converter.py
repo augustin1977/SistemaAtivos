@@ -48,11 +48,9 @@ class Converte_dados:
 def geraXLS(file):
     dados_raw=file.read()
     dados_raw=try_decode(dados_raw)
-    print("Leu dados")
     dados=Converte_dados(dados_raw)
-    print("Converteu dados")
     dados.processa_dados()
-    print("Processou dados")
+
 
     
     return dados.retornaXLS()
