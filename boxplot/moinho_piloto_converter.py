@@ -1,5 +1,6 @@
 import pandas as pd
 from io import BytesIO
+from datetime import datetime
 def try_decode(
     text,
     encodings=[
@@ -31,7 +32,8 @@ class Converte_dados:
             elif linha[0]=='1': # caso o valor do primeiro caracter seja 1 inicia a leitura um novo horário
                 cabecalho=linha.split("?")[1].split("^")[0]
                 self._dados[cabecalho]={}# cria o novo dicionário do horário
-                self._dados[cabecalho]["data"]=cabecalho
+                data_registro=datetime.strptime(cabecalho,"%Y-%m-%dT%H:%M:%S") # Decodifica string para data
+                self._dados[cabecalho]["data"]=data_registro # grava a data na coluna data do arquivo
             elif linha[0]=='2': # caso o valor do primeiro caracter seja 2 faz a leitura dos dados dentro do horário
                 nome_valor=linha.split("?")[1].split("^") # Separa o nome da variavel do valor 
                 if "." in nome_valor[1]: # verifica se o valor é um float, casdo contrario é um int
