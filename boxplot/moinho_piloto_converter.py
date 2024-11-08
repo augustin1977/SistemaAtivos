@@ -54,6 +54,4 @@ def geraXLS(file):
     dados=Converte_dados(dados_raw)
     dados.processa_dados()
 
-
-    
     return dados.retornaXLS()
