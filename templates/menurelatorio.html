@@ -1,6 +1,20 @@
 <a class="navbar-link text-light" href="{% url 'menuRelatorios' %}">Relatórios</a>
-<a class="navbar-link text-light" href="{% url 'relatorioNotasData' %}">Relatório de Ocorrências por Data</a>
-<a class="navbar-link text-light" href="{% url 'relatorioNotasEquipamento' %}">Relatório de Ocorrências por equipamento</a>
-<a class="navbar-link text-light" href="{% url 'relatorioLogData' %}">Relatório de LOG por Data</a>
-<a class="navbar-link text-light" href="{% url 'relatorioLogEquipamento' %}">Relatório de LOG por equipamento</a>
-<a class="navbar-link text-light" href="{% url 'relatorioLog' %}?tempo=60">Relatório de LOGs</a>
+<li class="navbar navbar-dark bg-dark nav-item dropdown ">
+    <a class="navbar-link text-light dropdown-toggle "  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Relatório de Ocorrencias
+    </a>
+    <div class="dropdown-menu text-light bg-dark" aria-labelledby="navbarDropdown">
+        <a class="navbar-link bg-dark dropdown-item text-light" href="{% url 'relatorioNotasData' %}"> Relatório de Ocorrências por Data</a>
+        <a class="navbar-link bg-dark dropdown-item text-light"href="{% url 'relatorioNotasEquipamento' %}">Relatório de Ocorrências por equipamento</a>
+    </div>
+</li>
+<li class="navbar navbar-dark bg-dark nav-item dropdown ">
+    <a class="navbar-link text-light dropdown-toggle "  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Relatório de Logs do Sistema
+    </a>
+    <div class="dropdown-menu text-light bg-dark" aria-labelledby="navbarDropdown">
+        <a class="navbar-link bg-dark dropdown-item text-light" href="{% url 'relatorioLogData' %}">Relatório de LOG por Data</a>
+        <a class="navbar-link bg-dark dropdown-item text-light" href="{% url 'relatorioLogEquipamento' %}">Relatório de LOG por equipamento</a>
+        <a class="navbar-link bg-dark dropdown-item text-light" href="{% url 'relatorioLog' %}?tempo=60"> Relatório de LOG dos ultimos 60 dias</a>
+    </div>
+</li>
