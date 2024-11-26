@@ -156,7 +156,10 @@ class Boxplot:
         for linha in range(len(dados_lidos)):
             for coluna in range(len(tabela[3])):
                 try:
-                    dado = dados_lidos[linha][coluna].replace(",", ".")
+                    if linha>2:
+                        dado = dados_lidos[linha][coluna].replace(",", ".")
+                    else:
+                        dado = dados_lidos[linha][coluna]
                 except:
                     pass
                 if linha == 0:
@@ -229,6 +232,7 @@ class Boxplot:
             self.CV.append(cvs[::-1])
             self.maximo.append(maximo[::-1])
             self.quartilsuperior.append(quartilsuperior[::-1])
+
         self.ensaios=self.ensaios[::-1]
         self.familias=self.familias[::-1]
 
@@ -269,6 +273,7 @@ class Boxplot:
                         labels_Boxplot=self.ensaios
                     else:
                         labels_Boxplot=[""]*len(self.ensaios)
+
                     graf = ax1[i].boxplot(
                         self.dados[i],
                         labels=labels_Boxplot,
