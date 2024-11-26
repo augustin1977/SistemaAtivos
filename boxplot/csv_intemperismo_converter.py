@@ -13,6 +13,11 @@ class Dados:
         self._temperatura=[]
         self._forca=[]
         self._troca_agua=[]
+        self._posicao=[]
+        self._ph=[]
+        self._agua_ligada=[]
+        self._agua_desligada=[]
+        self._nobreak=[]
         self._peso=[]
         self._opcao=opcao
         
@@ -30,7 +35,20 @@ class Dados:
                         self._dataHora.append(converte_data(dado_aux[1]+" "+dado_aux[2]))
                         self._temperatura.append(float(dado_aux[3]))
                         self._forca.append(float(dado_aux[4]))
-                        self._troca_agua.append(int(dado_aux[5]))
+                        self._posicao.append(float(dado_aux[5]))
+                        self._ph.append(float(dado_aux[6]))
+                        if int(dado_aux[8])==1:
+                            self._troca_agua.append("Sim")
+                        else:
+                            self._troca_agua.append("Não")
+                        if int(dado_aux[9])==1:
+                            self._nobreak.append("Energia")
+                        else:
+                            self._nobreak.append("No_Break")
+                        
+                        agua=dado_aux[7].replace('"',"").split("#")
+                        self._agua_ligada=int(agua[1])
+                        self._agua_desligada=int(agua[0])
                 else:
                     if dado:
                         self._record.append(int(dado_aux[0]))
@@ -43,9 +61,14 @@ class Dados:
         if self._opcao=="Intemperismo":
             dados={"record":self._record,
                 "Data_Hora": self._dataHora,
-                "temperatura":self._temperatura,
-                "forca":self._forca,
-                "troca_agua":self._troca_agua
+                "temperatura(°C)":self._temperatura,
+                "forca(kgf)":self._forca,
+                "posição(mm)":self._posicao,
+                "pH":self._ph,
+                "Agua_ligada(min)":self._agua_ligada,
+                "Agua_Desligada(min)":self._agua_desligada,
+                "troca_agua":self._troca_agua,
+                "Fonte_Energia":self._nobreak,
                 }
         else:
             dados={"record":self._record,
