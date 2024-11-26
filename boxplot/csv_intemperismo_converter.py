@@ -73,7 +73,7 @@ class Dados:
         else:
             dados={"record":self._record,
                 "Data_Hora": self._dataHora,
-                "peso":self._peso,
+                "peso(g)":self._peso,
                 }
         
         return dados
