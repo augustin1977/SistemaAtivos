@@ -45,7 +45,7 @@ def busca_separador(texto):
 		
 		texto_alternativo=texto_limpo.split(chr(i))
 
-		if len(texto_alternativo)==4:
+		if len(texto_alternativo)==3:
 			try:
 				numero1=float(texto_alternativo[0])
 				numero2=int(texto_alternativo[1])
@@ -70,13 +70,13 @@ class Dados:
         separador=busca_separador(dados_raw[0])
         for linha in dados_raw:
             dados_compilados=limpa_texto(linha).split(separador)
-            if len(dados_compilados)==4:
+            if len(dados_compilados)==3:
                 valor=converte_texto_numero(dados_compilados[0],float)
                 confianca=converte_texto_numero(dados_compilados[1],int)
-                if ("\r" in dados_compilados[3]):
-                    data=datetime.strptime(dados_compilados[2]+" "+dados_compilados[3],"%Y-%m-%d %H:%M:%S\r")-timedelta(hours=2)
+                if ("\r" in dados_compilados[2]):
+                    data=datetime.strptime(dados_compilados[2],"%Y-%m-%d %H:%M:%S\r")-timedelta(hours=2)
                 else:
-                    data=datetime.strptime(dados_compilados[2]+" "+dados_compilados[3],"%Y-%m-%d %H:%M:%S")-timedelta(hours=2)
+                    data=datetime.strptime(dados_compilados[2],"%Y-%m-%d %H:%M:%S")-timedelta(hours=2)
                 self.dados.append(valor)
                 self.datas.append(data)
                 self.confiancas.append(confianca)
