@@ -13,6 +13,7 @@ class Dados:
         self._temperatura=[]
         self._forca=[]
         self._troca_agua=[]
+        self._troca_agua_n=[]
         self._posicao=[]
         self._ph=[]
         self._agua_ligada=[]
@@ -37,8 +38,10 @@ class Dados:
                         self._forca.append(float(dado_aux[4]))
                         self._posicao.append(float(dado_aux[5]))
                         self._ph.append(float(dado_aux[6]))
+                        self._troca_agua_n.append(int(dado_aux[8]))
                         if int(dado_aux[8])==1:
                             self._troca_agua.append("Sim")
+                            
                         else:
                             self._troca_agua.append("Não")
                         if int(dado_aux[9])==1:
@@ -61,13 +64,14 @@ class Dados:
         if self._opcao=="Intemperismo":
             dados={"record":self._record,
                 "Data_Hora": self._dataHora,
-                "temperatura(°C)":self._temperatura,
-                "forca(kgf)":self._forca,
-                "posição(mm)":self._posicao,
+                "Temperatura(°C)":self._temperatura,
+                "Forca(kgf)":self._forca,
+                "Posição(mm)":self._posicao,
                 "pH":self._ph,
                 "Agua_ligada(min)":self._agua_ligada,
                 "Agua_Desligada(min)":self._agua_desligada,
-                "troca_agua":self._troca_agua,
+                "Troca_agua":self._troca_agua,
+                "Troca_agua_codificada":self._troca_agua_n,
                 "Fonte_Energia":self._nobreak,
                 }
         else:
