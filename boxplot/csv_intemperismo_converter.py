@@ -71,7 +71,7 @@ class Dados:
                 "Agua_ligada(min)":self._agua_ligada,
                 "Agua_Desligada(min)":self._agua_desligada,
                 "Troca_agua":self._troca_agua,
-                "Troca_agua_staus":self._troca_agua_n,
+                "Troca_agua_status":self._troca_agua_n,
                 "Fonte_Energia":self._nobreak,
                 }
         else:
