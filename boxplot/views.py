@@ -67,7 +67,7 @@ def gerar_arquivo_intemperismo(request):
     name = str(file)
     opcao=request.POST.get("opcao")
     # print(opcao)
-    
+    nome=name[:-4]
     if name[-3:] != "csv":
         # print(name[-3:])
         return render(request, "converte_imtemperismo.html", {"erro": "2"})
@@ -77,7 +77,7 @@ def gerar_arquivo_intemperismo(request):
         return render(request, "converte_imtemperismo.html", {"erro": "3", "mensagem":mensagem}) 
     if arquivo:
         response = HttpResponse(arquivo, content_type="application")
-        response["Content-Disposition"] = f"attachment; filename=resultado.xlsx"
+        response["Content-Disposition"] = f"attachment; filename={nome}.xlsx"
 
         return response
     elif arquivo == 3:  # Erro de decodificação
