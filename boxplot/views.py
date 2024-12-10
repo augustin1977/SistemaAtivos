@@ -197,7 +197,6 @@ Referencia;Referencia;Referencia;A;B;C;D;E;F;A;B;C;A;C;D;F;G
 11;5;17;6;7;3;6;6;6;9;7;6;12;9;9;5;5
 12;6;10;7;1;5;7;7;7;9;8;7;9;5;5;7;17
 """
-
     # Crie uma resposta de arquivo para o modelo CSV
     response = HttpResponse(content, content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename="modelo.csv"'
