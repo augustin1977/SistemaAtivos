@@ -19,6 +19,7 @@ class Dados:
         self._agua_ligada=[]
         self._agua_desligada=[]
         self._nobreak=[]
+        self._nobreak_n=[]
         self._peso=[]
         self._opcao=opcao
         
@@ -39,6 +40,7 @@ class Dados:
                         self._posicao.append(float(dado_aux[5]))
                         self._ph.append(float(dado_aux[6]))
                         self._troca_agua_n.append(int(dado_aux[8]))
+                        self._nobreak_n.append(int(dado_aux[9]))
                         if int(dado_aux[8])==1:
                             self._troca_agua.append("Sim")
                             
@@ -48,7 +50,6 @@ class Dados:
                             self._nobreak.append("Energia")
                         else:
                             self._nobreak.append("No_Break")
-                        
                         agua=dado_aux[7].replace('"',"").split("#")
                         self._agua_ligada=int(agua[1])
                         self._agua_desligada=int(agua[0])
@@ -73,6 +74,7 @@ class Dados:
                 "Troca_agua":self._troca_agua,
                 "Troca_agua_status":self._troca_agua_n,
                 "Fonte_Energia":self._nobreak,
+                "Fonte_Energia_status":self._nobreak_n,
                 }
         else:
             dados={"record":self._record,
