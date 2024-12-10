@@ -173,13 +173,13 @@ def gerar_grafico3(request):
     else:
         return render(request, "boxplot3.html", {"erro": "1"})
 def download_model_csv3(request) -> FileResponse:
-    """Return a file in csv in a model format to the user to generetar boxplot
+    """Retorna um arquivoi CSV modelo para gerar o boxplot
 
-    Args:
-        request (None): None is requested
+    Argumentos:
+        nenhum argumento é necessário, request=None
 
-    Returns:
-        _type_: file CSV with model to create a boxplot picture
+    Retorna:
+        Retorna um arquivo CSV para gerar o boxplot
     """
     # Crie o conteúdo do modelo CSV
     content = """Titulo;Legenda Eixo X;Legenda Eixo Y;;;;;;;;;;;;;;
