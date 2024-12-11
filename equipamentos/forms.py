@@ -9,6 +9,7 @@ import pytz
 import os
 
 class CustomMoney(MoneyField):
+    """Cria padrão para exibição de valores em dinheiro, subistituindo . por ,"""
     def clean(self, value):
         value[0] = value[0].replace(',', '.')
         value= super().clean(value)
@@ -16,6 +17,7 @@ class CustomMoney(MoneyField):
         return value
 
 class localFormCadastro(ModelForm):
+    """ Cria formulário de cadastro de local de instalação"""
     class Meta:
         model = Local_instalacao
         fields = '__all__'
@@ -33,6 +35,7 @@ class localFormCadastro(ModelForm):
         
 
 class localFormEditar(ModelForm):
+    """Cria formaulario de edição do local de instalação"""
     id=CharField(label="",widget=HiddenInput())
     class Meta:
         model = Local_instalacao
@@ -50,12 +53,14 @@ class localFormEditar(ModelForm):
         }
 
 class  localFormlista(ModelForm):
+    """Cria lista de locais de instalação"""
     ListaLocais = modelformset_factory(Local_instalacao, fields=('__all__'))
     class Meta:
         model = Local_instalacao
         fields = '__all__'
 
 class equipamentoEditarForm(Form):
+    """Cria formulario de edição do cadastro dos equipamentos"""
     id=CharField(label="",widget=HiddenInput())
     nome_equipamento=CharField(widget= TextInput(attrs={'class': "form-control"}))
     modelo=CharField(widget= TextInput(attrs={'class': "form-control"}))
@@ -78,6 +83,7 @@ class equipamentoEditarForm(Form):
     outros_dados=CharField(required=False,widget= Textarea(attrs={'class': "form-control"}))
 
     def clean_data_compra(self):
+        """Faz a validação da data da compra aplicando regra de negocio: data da compra deve ser anterior a data de cadastro"""
         data_compra = self.cleaned_data.get('data_compra')
         if not(type(data_compra)==datetime.datetime):
             raise ValidationError('Data Compra invalida: não está no formato "dd/mm/aaaa"')
@@ -86,13 +92,14 @@ class equipamentoEditarForm(Form):
             raise ValidationError('Data Compra invalida: a data de compra deve ser anterior a data de cadastro')
         return data_compra
     def clean_data_ultima_calibracao(self):
-  
+        """Faz a valiação da regra de negocio da data de calibração"""
         data_ultima_calibracao = self.cleaned_data.get('data_ultima_calibracao')
         if not(type(data_ultima_calibracao)==datetime.datetime):
             raise ValidationError('Data Compra invalida: não está no formato "dd/mm/aaaa"')
         return data_ultima_calibracao    
 
     def clean(self):
+        """Faz a validação final dos dados e define o campo ultima alteração = agora"""
         super().clean()
         utc=pytz.timezone(TIME_ZONE) # pytz.UTC
         cd=self.cleaned_data
@@ -101,6 +108,7 @@ class equipamentoEditarForm(Form):
         
 
 class equipamentoCadastrarForm(Form):
+    """formulário de cadastro de novas equipamentos"""
     nome_equipamento=CharField(widget= TextInput(attrs={'class': "form-control",'placeholder':'Nome do Equipamentos'}))
     modelo=CharField(widget= TextInput(attrs={'class': "form-control",'placeholder':'Modelo'}))
     fabricante=ModelChoiceField(queryset=Fabricante.objects.all() ,widget=Select (attrs={'class': "form-control"}))
@@ -122,6 +130,10 @@ class equipamentoCadastrarForm(Form):
 
     
     def clean(self):
+        """Faz a valiação dos dados e das regras de negocio :
+        - data de cadastro = agora
+        - data de compra deve ser anterior a hoje
+        - cria codigo do equipamento considerando a sigla do tipo + numero sequencial com pelo menos 3 digitos ex: AGI001"""
         super().clean()
         utc=pytz.timezone(TIME_ZONE)# pytz.UTC
         cd=self.cleaned_data
