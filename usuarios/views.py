@@ -47,7 +47,7 @@ def editar(request):
     if request.method=="GET":
 
         return render(request, "editar.html",{'usuario':usuario})
-
+    
     senha_antiga=request.POST.get("senha_antiga")
     nova_senha=request.POST.get("senha_nova")
     nova_senha2=request.POST.get("senha_nova2")
@@ -201,6 +201,26 @@ def esqueci_senha(request):
         usuario[0].primeiro_acesso=True
         email=usuario[0].email
         nome=usuario[0].nome
+        conteudo_admin = f"""<html>
+                            <head></head>
+                            <body>
+                                <h2>Notificação de recuperação de senha</h2>
+                                <p>O usuário {nome} ({email}) solicitou uma nova senha.</p>
+                            </body>
+                            </html>"""
+        tipo=Tipo.objects.get(tipo="admin")
+        administradores= Usuario.objects.filter(tipo=tipo)
+        lista_admim=[]
+        
+        for administrador in administradores:
+            lista_admim.append(administrador.email)
+        print(lista_admim)
+        enviar_email_background(
+            subject='Notificação automática de recuperação de senha',
+            body=conteudo_admin,
+            recipients=lista_admim  # Lista de e-mails dos administradores
+        )
+        
         try:
             conteudo_html = f"""<html>
                                 <head></head>
