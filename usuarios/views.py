@@ -21,7 +21,7 @@ def login(request):
     # cria a view do login do usuário
     status=str(request.GET.get('status'))
     tipo=Tipo.objects.get(tipo="admin")
-    administradores= Usuario.objects.filter(tipo=tipo)
+    administradores= Usuario.objects.filter(tipo=tipo).exclude(nome="System")
     print(administradores)
     return render(request, "login.html", {'status':status,'administradores':administradores})
 
