@@ -214,7 +214,7 @@ def esqueci_senha(request):
         
         for administrador in administradores:
             lista_admim.append(administrador.email)
-        print(lista_admim)
+        # print(lista_admim)
         enviar_email_background(
             subject='Notificação automática de recuperação de senha',
             body=conteudo_admin,
