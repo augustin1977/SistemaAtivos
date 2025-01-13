@@ -20,7 +20,10 @@ def vazio(request):
 def login(request):
     # cria a view do login do usuário
     status=str(request.GET.get('status'))
-    return render(request, "login.html", {'status':status})
+    tipo=Tipo.objects.get(tipo="admin")
+    administradores= Usuario.objects.filter(tipo=tipo)
+    print(administradores)
+    return render(request, "login.html", {'status':status,'administradores':administradores})
 
 def cadastrar(request):
     # cria a view do cadastro de usuaário
