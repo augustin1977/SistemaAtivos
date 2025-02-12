@@ -94,8 +94,10 @@ class equipamentoEditarForm(Form):
     def clean_data_ultima_calibracao(self):
         """Faz a valiação da regra de negocio da data de calibração"""
         data_ultima_calibracao = self.cleaned_data.get('data_ultima_calibracao')
+        if data_ultima_calibracao==None:
+            return data_ultima_calibracao 
         if not(type(data_ultima_calibracao)==datetime.datetime):
-            raise ValidationError('Data Compra invalida: não está no formato "dd/mm/aaaa"')
+            raise ValidationError('Data caliração invalida : não está no formato "dd/mm/aaaa"')
         return data_ultima_calibracao    
 
     def clean(self):
