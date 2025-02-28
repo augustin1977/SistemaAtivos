@@ -28,7 +28,7 @@ SECRET_KEY = info_email.key
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["gestaoativosma.ad.ipt.br","10.3.10.20","10.11.39.220","127.0.0.1","10.3.10.32","10.20.1.237","t007214n.ad.ipt.br"]
+ALLOWED_HOSTS = ["gestaoativosma.ad.ipt.br","127.0.0.1",]
 
 # email commands
 
