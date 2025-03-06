@@ -273,7 +273,7 @@ class Boxplot:
                         labels_Boxplot=self.ensaios
                     else:
                         labels_Boxplot=[""]*len(self.ensaios)
-
+                    #print(len(self.dados[i]), len(labels_Boxplot))
                     graf = ax1[i].boxplot(
                         self.dados[i],
                         labels=labels_Boxplot,
@@ -430,7 +430,10 @@ class Boxplot:
                 return self.erro
         except ValueError as e:
             self.erro=3
-            self.mensagemErro="Ocorreu o seguinte erro ao decodificar o documento. ["+str(e)+"]. Verifique o arquivo e tente novamente"
+            self.mensagemErro="Ocorreu o seguinte erro ao decodificar o documento. ["+str(e)+"]."
+            if len(self.dados[i])!= len(labels_Boxplot):
+                self.mensagemErro+=" Podem haver colunas com nomes duplicados ou outro erro com o nome das colunas."
+            self.mensagemErro+=" Verifique o arquivo e tente novamente."
             return self.erro
 
 
