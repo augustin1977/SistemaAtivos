@@ -106,6 +106,7 @@ def calcula_energia(dados:list[list[float]])->float:
     Returns:
         list[float,float]: retorna uma lista com os valores de energia de cada aglomerado calculado pelo metodo dos trapezios
     """
+    
     energia={}
 
     for j in range(len(dados[0])//3):
@@ -113,7 +114,9 @@ def calcula_energia(dados:list[list[float]])->float:
             try:
                 if (j+1) not in energia:
                     energia[j+1]=0
-                energia[j+1]+=(dados[i][j*3+1]+dados[i-1][j*3+1])*(dados[i][j*3+2]-dados[i-1][j*3+2])/2
+                energia_calculdada=(dados[i][j*3+1]+dados[i-1][j*3+1])*(dados[i][j*3+2]-dados[i-1][j*3+2])/2
+                # print(energia_calculdada)
+                energia[j+1]+=energia_calculdada
             except:
                 pass
         
