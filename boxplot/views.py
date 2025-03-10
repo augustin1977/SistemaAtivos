@@ -3,6 +3,7 @@ from django.http import *
 import boxplot.Converte_OCR
 import boxplot.boxplot2 
 import boxplot.boxplot3
+import boxplot.integral_trapezios
 import boxplot.csv_intemperismo_converter, boxplot.moinho_piloto_converter
 from django.http import FileResponse
 from django.shortcuts import render
@@ -172,6 +173,7 @@ def gerar_grafico3(request):
         return render(request, "boxplot3.html", {"erro": "3","mensagemErro":mensagemErro})
     else:
         return render(request, "boxplot3.html", {"erro": "1"})
+
 def download_model_csv3(request) -> FileResponse:
     """Retorna um arquivoi CSV modelo para gerar o boxplot
 
@@ -202,3 +204,21 @@ Referencia;Referencia;Referencia;A;B;C;D;E;F;A;B;C;A;C;D;F;G
     response["Content-Disposition"] = 'attachment; filename="modelo.csv"'
 
     return response
+
+def calcula_energia_ruptura(request):
+    if request.method=="GET":
+        return render(request, "calcula_energia_ruptura.html",{"lista":[]})
+    else:
+        #print(request.POST.get("opcao"))
+        arquivo=request.FILES.get("arquivoAnexo")   
+        if request.POST.get("opcao")=="Maquina1":
+            dados=boxplot.integral_trapezios.decodifica_Shimatsu(arquivo)
+        elif request.POST.get("opcao")=="Maquina2":
+            dados=boxplot.integral_trapezios.decodifica_EMIC(arquivo)
+        elif request.POST.get("opcao")=="Maquina3":
+            dados=boxplot.integral_trapezios.decodifica_MEC_ROCHAS(arquivo)
+        else:
+            return render(request, "calcula_energia_ruptura.html",{"lista":[],"erro":"3"})
+        energia=boxplot.integral_trapezios.calcula_energia(dados)
+        return render(request, "calcula_energia_ruptura.html",{"lista":energia})
+    

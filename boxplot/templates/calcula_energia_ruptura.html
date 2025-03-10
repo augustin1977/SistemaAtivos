@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block 'titulo' %} Gestão Ativos MA {% endblock %}
+{% block 'menu' %} {% include 'menuferramentas.html' %} {% endblock %}
+{% block 'conteudo' %}
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-10 text-center">
+      <br><br>
+      <h1>Calcula energia de ruptura a partir do arquivo da Máquina de ensaios</h1>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <form method="post" enctype="multipart/form-data" action="{% url 'calcula_energia_ruptura' %}" class="custom-form">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="arquivo" class="form-label">Anexar arquivo:</label>
+          <input type="file" class="form-control-file" id="arquivoAnexo" name="arquivoAnexo">
+          {% if erro == '1' %}
+          <div class="alert alert-danger" role="alert">
+            Favor anexar arquivo válido, verifique se anexou um arquivo válido e sem erros.
+          </div>
+          {% endif %}
+          {% if erro == '2' %}
+          <div class="alert alert-danger" role="alert">
+            O Sistema processa apenas arquivos ".CSV".
+          </div>
+          {% endif %}
+          {% if erro == '3' %}
+          <div class="alert alert-danger" role="alert">
+            O arquivo não foi decodificado corretamente, verifique o documento e tente novamente.
+            <br>Erro:
+            {{mensagem}}
+          </div>
+          {% endif %}
+        </div>
+        Selecione máquina universal de ensaios:<br>
+        <input type="radio" id="Maquina1" name="opcao" value="Maquina1" checked>
+        <label for="Maquina1">Shimatshu </label><br>
+        <input type="radio" id="Maquina2" name="opcao" value="Maquina2">
+        <label for="Maquina2">EMIC</label><br>
+        <input type="radio" id="Maquina3" name="opcao" value="Maquina3">
+        <label for="Maquina3">MEC_ROCHAS</label><br>
+        <div class="mb-3">
+          <button type="submit" class="btn btn-primary" id="imtemperismo">Enviar arquivo para calculo</button>
+        </div>
+        <div class="mb-3">
+          <a href="http://gestaoativosma.ad.ipt.br/" class="btn btn-info" role="button">Voltar</a>
+        </div>
+      </form>
+      <h3>Resultado:</h3>
+      <br>
+      <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Energia (Joule)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item,valor  in lista.items %}
+            <tr>
+                <td>{{ item }}</td>
+                <td>{{ valor|floatformat:5 }} </td>
+            </tr>
+            {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

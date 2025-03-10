@@ -16,5 +16,6 @@ urlpatterns = [
     path('criarboxplot3',boxplot.views.boxplotinicial3,name='boxplotinicial3'),
     path('gerar_grafico3/',boxplot.views.gerar_grafico3,name='gerar_grafico3'),
     path('download_model_csv3/', boxplot.views.download_model_csv3, name='download_model_csv3'),
-
+    path('calcula_energia_ruptura/', boxplot.views.calcula_energia_ruptura, name='calcula_energia_ruptura'),
     ]
+
