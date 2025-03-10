@@ -49,6 +49,7 @@
           <a href="http://gestaoativosma.ad.ipt.br/" class="btn btn-info" role="button">Voltar</a>
         </div>
       </form>
+      {% if lista.items %}
       <h3>Resultado:</h3>
       <br>
       <table class="table table-striped">
@@ -65,6 +66,10 @@
                 <td>{{ valor|floatformat:5 }} </td>
             </tr>
             {% endfor %}
+
+        </tbody>
+      </table>
+      {% endif %}
     </div>
   </div>
 </div>
