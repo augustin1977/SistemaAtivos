@@ -5,38 +5,54 @@ import matplotlib.pyplot as plt
 import io
 import matplotlib
 import numpy as np  
+import logging
 
-def decodifica_Shimatsu(arquivo:StringIO) -> list[list[float]]:
+def decodifica_Shimatsu(arquivo: StringIO) -> list[list[float]]:
     """Decodifica o arquivo csv da máquina 1
 
     Args:
         arquivo (StringIO): Recebe a referencia em memória de um arquivo csv proveniente da máquina 1
 
     Returns:
-        list[list[float]]: retorna uma lista com os valores de força e deslocamento para cada aglomerado analisado
-        sendo na primeira posição o tempo na segunda posição a força e na terceira posição o deslocamento
+        list[list[float]]: Retorna uma matriz de valores numéricos processados
     """
-    replace_comas=lambda match: match.group().replace(",",".")
-    pattern = r'"\d+,\d+"'
-    raw_data=arquivo.read().decode("ISO-8859-1") 
-    # Substituir as vírgulas dentro dos números
+
+    replace_comas = lambda match: match.group().replace(",", ".")
+    pattern = r'"\d+,\d+"'  # Regex para encontrar números decimais entre aspas
+
+    # Leitura do arquivo e substituição de vírgulas dentro de números
+    raw_data = arquivo.read().decode("ISO-8859-1")
     modified_csv = re.sub(pattern, replace_comas, raw_data)
-    csv_reader = csv.reader(StringIO(modified_csv))
+    
+    csv_reader = csv.reader(StringIO(modified_csv), delimiter=",")  # Lendo CSV corretamente
     data = []
-    for row in csv_reader:
+
+    for index, row in enumerate(csv_reader):
+        if index < 3:  # Ignorar cabeçalhos e unidades (as 3 primeiras linhas)
+            continue  
+
         new_row = []
-        for id,value in enumerate(row):
+        for id, value in enumerate(row):
+            
             try:
-                if id%3 ==1:
-                    new_row.append(float(value)*10)  # Tenta converter para float e corrige unidade de kgf->N
-                elif id%3==2:
-                    new_row.append(float(value)/1000)  # Tenta converter para float e corrige unidade de mm->m
-                else:
-                    new_row.append(float(value)) # converte os demais valores    
+                if id % 3 == 1:  # Coluna de Força (conversão para Newtons)
+                    new_row.append(float(value) * 10)  
+                    # logger.info(f"{id} {id//3} %3=1 - Foorça - {float(value) * 10}")      
+                elif id % 3 == 2:  # Coluna de Deslocamento (conversão para metros)
+                    new_row.append(float(value) / 1000) 
+                    # logger.info(f"{id} {id//3} %3=2 - Deslocamento - {float(value) /1000}")     
+                else:  # Tempo (ou outra métrica sem conversão)
+                    new_row.append(float(value))
+                    # logger.info(f"{id} {id//3} else - tempo - {float(value)}")   
             except ValueError:
-                new_row.append(value)  # Mantém como string se não for número
+                new_row.append(None)  # Evita erros caso a conversão falhe
+                # logger.warning(f"{id} {id//3} - '{(value)}'") 
+
+        # Adiciona a linha ao dataset apenas se houver valores numéricos relevantes
+
         data.append(new_row)
-    return data[4:]
+        # logger.info(f"linha {id} - {new_row}")
+    return data
 def decodifica_EMIC(arquivo:StringIO) -> list[list[float]]:
     """Decodifica o arquivo csv da máquina 2
 
@@ -114,7 +130,6 @@ def calcula_energia(dados:list[list[float]])->float:
     Returns:
         list[float,float]: retorna uma lista com os valores de energia de cada aglomerado calculado pelo metodo dos trapezios
     """
-    
     energia={}
 
     for j in range(len(dados[0])//3):
@@ -125,17 +140,17 @@ def calcula_energia(dados:list[list[float]])->float:
                 energia_calculdada=(dados[i][j*3+1]+dados[i-1][j*3+1])*(dados[i][j*3+2]-dados[i-1][j*3+2])/2
                 # print(energia_calculdada)
                 energia[j+1]+=energia_calculdada
-            except:
+                
+            except Exception as e:
                 pass
-        
+                
     return energia
 
 def gerar_grafico_forca_deslocamento(dados, selecionados):
     if selecionados:
         dados_lista = [list(row) for row in dados]
         matplotlib.use("Agg")  # Modo não interativo
-        plt.figure(figsize=(8, 6))
-        print(selecionados)
+        plt.figure(figsize=(12, 9))
         colunas_selecionadas=[]
         for item in selecionados:
             colunas_selecionadas.append(int(item)-1)
@@ -145,9 +160,9 @@ def gerar_grafico_forca_deslocamento(dados, selecionados):
             deslocamento=[]
             indice.append(col_idx+1)
             for row in dados_lista:
-                if row[col_idx] not in ["", None] and row[col_idx+1] not in ["", None] and row[col_idx+2] not in ["", None]:
-                    forca.append( float(row[col_idx+1]))
-                    deslocamento.append( float(row[col_idx+2]))
+                if row[3*col_idx+1] not in ["", None] and row[3*col_idx+2] not in ["", None]:
+                    forca.append( float(row[3*col_idx+1]))
+                    deslocamento.append( float(row[3*col_idx+2]))
 
             plt.plot(deslocamento, forca, marker="+", linestyle="-", label=f"ID {item}")
 
