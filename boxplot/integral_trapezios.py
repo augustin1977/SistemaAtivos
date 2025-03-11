@@ -1,6 +1,11 @@
 import re
 import csv
 from io import StringIO
+import matplotlib.pyplot as plt
+import io
+import matplotlib
+import numpy as np  
+
 def decodifica_Shimatsu(arquivo:StringIO) -> list[list[float]]:
     """Decodifica o arquivo csv da máquina 1
 
@@ -78,6 +83,8 @@ def decodifica_MEC_ROCHAS(arquivo:StringIO) -> list[list[float]]:
     for row in raw_data:
         new_row = [0,0,0]
         split_row=row.split("\t")
+        if len(split_row)<3:
+            continue
         for id,value in enumerate(split_row):
             try:
                 if id%3 ==1:
@@ -87,10 +94,11 @@ def decodifica_MEC_ROCHAS(arquivo:StringIO) -> list[list[float]]:
                 else:
                     new_row[0]=(float(value)) # converte os demais valores    
             except ValueError:
-                new_row.append(value)  # Mantém como string se não for número
+                # new_row.append(value)  # Mantém como string se não for número
+                pass
         data.append(new_row)
        
-    return data
+    return data[:-1]
     
 
 def calcula_energia(dados:list[list[float]])->float:
@@ -122,4 +130,34 @@ def calcula_energia(dados:list[list[float]])->float:
         
     return energia
 
+def gerar_grafico_forca_deslocamento(dados, selecionados):
+    if selecionados:
+        dados_lista = [list(row) for row in dados]
+        matplotlib.use("Agg")  # Modo não interativo
+        plt.figure(figsize=(8, 6))
+        print(selecionados)
+        colunas_selecionadas=[]
+        for item in selecionados:
+            colunas_selecionadas.append(int(item)-1)
+        indice=[]
+        for col_idx in map(int, colunas_selecionadas):
+            forca=[]
+            deslocamento=[]
+            indice.append(col_idx+1)
+            for row in dados_lista:
+                if row[col_idx] not in ["", None] and row[col_idx+1] not in ["", None] and row[col_idx+2] not in ["", None]:
+                    forca.append( float(row[col_idx+1]))
+                    deslocamento.append( float(row[col_idx+2]))
 
+            plt.plot(deslocamento, forca, marker="+", linestyle="-", label=f"ID {item}")
+
+        plt.xlabel("Deslocamento (m)")
+        plt.ylabel("Força (N)")
+        plt.title("Gráfico de Força x Deslocamento")
+        plt.legend(labels=indice)
+        plt.grid()
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format="png")
+        buffer.seek(0)
+        return buffer
+    return None

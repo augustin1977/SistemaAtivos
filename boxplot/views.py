@@ -7,6 +7,8 @@ import boxplot.integral_trapezios
 import boxplot.csv_intemperismo_converter, boxplot.moinho_piloto_converter
 from django.http import FileResponse
 from django.shortcuts import render
+import json
+
 
 # Funçõres de geração de tela para entrada de dados
 
@@ -211,14 +213,30 @@ def calcula_energia_ruptura(request):
     else:
         #print(request.POST.get("opcao"))
         arquivo=request.FILES.get("arquivoAnexo")   
-        if request.POST.get("opcao")=="Maquina1":
-            dados=boxplot.integral_trapezios.decodifica_Shimatsu(arquivo)
-        elif request.POST.get("opcao")=="Maquina2":
-            dados=boxplot.integral_trapezios.decodifica_EMIC(arquivo)
-        elif request.POST.get("opcao")=="Maquina3":
-            dados=boxplot.integral_trapezios.decodifica_MEC_ROCHAS(arquivo)
-        else:
-            return render(request, "calcula_energia_ruptura.html",{"lista":[],"erro":"3"})
+        if arquivo:  
+            if request.POST.get("opcao")=="Maquina1":
+                dados=boxplot.integral_trapezios.decodifica_Shimatsu(arquivo)
+            elif request.POST.get("opcao")=="Maquina2":
+                dados=boxplot.integral_trapezios.decodifica_EMIC(arquivo)
+            elif request.POST.get("opcao")=="Maquina3":
+                dados=boxplot.integral_trapezios.decodifica_MEC_ROCHAS(arquivo)
+            else:
+                return render(request, "calcula_energia_ruptura.html",{"lista":[],"erro":"3"})
+            energia=boxplot.integral_trapezios.calcula_energia(dados)
+            request.session["dados_armazenados"] = json.dumps(dados)
+            return render(request, "calcula_energia_ruptura.html",{"lista":energia})
+        
+        dados=json.loads(request.session["dados_armazenados"])
+        selecionados = request.POST.getlist("selecionados")
+        grafico_url = boxplot.integral_trapezios.gerar_grafico_forca_deslocamento(dados, selecionados)
+        if grafico_url:
+            
+            response = HttpResponse(grafico_url, content_type="image/png")
+            response["Content-Disposition"] = f"attachment; filename=Forca_deslocamento.png"
+
+            return response
         energia=boxplot.integral_trapezios.calcula_energia(dados)
-        return render(request, "calcula_energia_ruptura.html",{"lista":energia})
-    
+        return render(request, "calcula_energia_ruptura.html",{"lista":energia,"erro":"1"})
+
+
+

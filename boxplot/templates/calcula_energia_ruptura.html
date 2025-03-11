@@ -7,19 +7,9 @@
   <div class="row justify-content-center">
     <div class="col-md-10 text-center">
       <br><br>
-      <h1>Calcula energia de ruptura a partir do arquivo da Máquina de ensaios</h1>
-    </div>
-  </div>
-  <div class="row justify-content-center">
-    <div class="col-md-10">
-      <form method="post" enctype="multipart/form-data" action="{% url 'calcula_energia_ruptura' %}" class="custom-form">
-        {% csrf_token %}
-        <div class="mb-3">
-          <label for="arquivo" class="form-label">Anexar arquivo:</label>
-          <input type="file" class="form-control-file" id="arquivoAnexo" name="arquivoAnexo">
-          {% if erro == '1' %}
+      {% if erro == '1' %}
           <div class="alert alert-danger" role="alert">
-            Favor anexar arquivo válido, verifique se anexou um arquivo válido e sem erros.
+            Você não selecionou nenhum dado para gerar o gráfico.
           </div>
           {% endif %}
           {% if erro == '2' %}
@@ -34,6 +24,17 @@
             {{mensagem}}
           </div>
           {% endif %}
+      <h1>Calcula energia de ruptura a partir do arquivo da Máquina de ensaios</h1>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <form method="post" enctype="multipart/form-data" action="{% url 'calcula_energia_ruptura' %}" class="custom-form">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="arquivo" class="form-label">Anexar arquivo:</label>
+          <input type="file" class="form-control-file" id="arquivoAnexo" name="arquivoAnexo">
+          
         </div>
         Selecione máquina universal de ensaios:<br>
         <input type="radio" id="Maquina1" name="opcao" value="Maquina1" checked>
@@ -52,9 +53,12 @@
       {% if lista.items %}
       <h3>Resultado:</h3>
       <br>
+      <form method="post" action="{% url 'calcula_energia_ruptura' %}">
+        {% csrf_token %}
       <table class="table table-striped">
         <thead>
             <tr>
+                <th>Selecionar</th>
                 <th>ID</th>
                 <th>Energia (Joule)</th>
             </tr>
@@ -62,6 +66,7 @@
         <tbody>
             {% for item,valor  in lista.items %}
             <tr>
+                <td><input type="checkbox" name="selecionados" value="{{ item }}"></td>
                 <td>{{ item }}</td>
                 <td>{{ valor|floatformat:5 }} </td>
             </tr>
@@ -69,6 +74,8 @@
 
         </tbody>
       </table>
+      <button type="submit" name="gerar_grafico" value="1" class="btn btn-success">Gerar Gráfico</button>
+      </form>
       {% endif %}
     </div>
   </div>
