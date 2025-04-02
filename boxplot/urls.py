@@ -17,5 +17,7 @@ urlpatterns = [
     path('gerar_grafico3/',boxplot.views.gerar_grafico3,name='gerar_grafico3'),
     path('download_model_csv3/', boxplot.views.download_model_csv3, name='download_model_csv3'),
     path('calcula_energia_ruptura/', boxplot.views.calcula_energia_ruptura, name='calcula_energia_ruptura'),
+    path('fact/', views.upload_fact, name='upload_fact'),
+    path('fact/download/', views.download_excel_fact, name='download_excel_fact'),
     ]
 

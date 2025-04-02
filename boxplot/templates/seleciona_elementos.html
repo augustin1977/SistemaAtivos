@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block 'titulo' %} Selecionar Elementos {% endblock %}
+{% block 'menu' %} {% include 'menuferramentas.html' %} {% endblock %}
+{% block 'conteudo' %}
+<div class="container mt-4">
+  <h2 class="text-center">Selecionar Elementos e Fases</h2>
+  <p class="text-center">Selecione os elementos da tabela periódica e as fases desejadas para gerar o Excel.</p>
+
+  <form method="post" action="{% url 'download_excel_fact' %}">
+    {% csrf_token %}
+    <input type="hidden" name="records_b64" value="{{ records_b64 }}">
+
+    <div class="d-flex justify-content-center flex-wrap flex-md-nowrap">
+      <!-- Tabela Periódica -->
+      <div class="periodic-grid mb-4 me-md-5">
+        {% for elemento in elementos %}
+          {% with simbolo=elemento.simbolo %}
+            {% if simbolo in elementos_presentes %}
+              <label class="element ativo" style="grid-column: {{ elemento.col }}; grid-row: {{ elemento.row }};">
+            {% else %}
+              <label class="element inativo" style="grid-column: {{ elemento.col }}; grid-row: {{ elemento.row }};">
+            {% endif %}
+                <input type="checkbox" name="elementos" value="{{ simbolo }}" {% if simbolo not in elementos_presentes %}disabled{% endif %}>
+                <span class="simbolo">{{ simbolo }}</span>
+                <span class="numero">{{ elemento.numero }}</span>
+              </label>
+          {% endwith %}
+        {% endfor %}
+      </div>
+      <!-- Selecionar Fases -->
+      <div class="fases-box ms-md-4 mb-4">
+        <h5>Fases disponíveis:</h5>
+        {% for fase in fases %}
+          <label class="fase-item">
+            <input type="checkbox" name="fases" value="{{ fase }}" checked> {{ fase }}
+          </label><br>
+        {% endfor %}
+        <div class="text-center">
+          <button type="submit" class="btn btn-success">Gerar Excel</button>
+        </div>
+      </div>
+    </div>
+
+    
+  </form>
+</div>
+
+<style>
+.periodic-grid {
+  display: grid;
+  grid-template-columns: repeat(18, 36px);
+  grid-auto-rows: 40px;
+  gap: 2px;
+  justify-content: center;
+}
+
+.element {
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  padding: 2px;
+  transition: 0.2s;
+  font-size: 10px;
+  width: 36px;
+  height: 40px;
+}
+
+.element input {
+  display: none;
+}
+
+.element .simbolo {
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.element .numero {
+  font-size: 8px;
+  position: absolute;
+  top: 1px;
+  left: 2px;
+}
+
+.element.ativo {
+  background-color: #b2ebf2;
+}
+
+.element.inativo {
+  background-color: #f0f0f0;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.element input:checked + .simbolo {
+  background-color: #ef9a9a; /* vermelho claro */
+  color: #000;
+  padding: 1px 3px;
+  border-radius: 3px;
+}
+
+.fases-box {
+  min-width: 160px;
+  font-size: 11px;
+}
+
+.fases-box h5 {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.fase-item {
+  font-size: 11px;
+}
+</style>
+{% endblock %}

@@ -8,6 +8,10 @@ import boxplot.csv_intemperismo_converter, boxplot.moinho_piloto_converter
 from django.http import FileResponse
 from django.shortcuts import render
 import json
+from boxplot.tabela_periodica import elementos as ELEMENTOS_TABELA
+from boxplot.fact_utils import extrair_dados_generico, get_options, gerar_excel
+import base64
+import json
 
 
 # Funçõres de geração de tela para entrada de dados
@@ -238,5 +242,46 @@ def calcula_energia_ruptura(request):
         energia=boxplot.integral_trapezios.calcula_energia(dados)
         return render(request, "calcula_energia_ruptura.html",{"lista":energia,"erro":"1"})
 
+def upload_fact(request):
+    if request.method == "POST":
+        arquivo = request.FILES.get("arquivo")
+        if not arquivo:
+            return render(request, "upload_fact.html", {"erro": "Nenhum arquivo enviado."})
+
+        try:
+            text = arquivo.read().decode("utf-8")
+        except Exception as e:
+            return render(request, "upload_fact.html", {"erro": f"Erro ao ler o arquivo: {e}"})
+
+        records = extrair_dados_generico(text)
+        options, elementos_presentes = get_options(records)
+
+        records_json = json.dumps(records)
+        records_b64 = base64.b64encode(records_json.encode("utf-8")).decode("utf-8")
+
+        return render(request, "seleciona_elementos.html", {
+            "elementos": ELEMENTOS_TABELA,
+            "elementos_presentes": elementos_presentes,
+            "fases": list(options.keys()),
+            "records_b64": records_b64
+        })
+
+    return render(request, "upload_fact.html")
+
+
+def download_excel_fact(request):
+    if request.method == "POST":
+        records_b64 = request.POST.get("records_b64")
+        elementos_selecionados = request.POST.getlist("elementos")
+        fases_selecionadas = request.POST.getlist("fases")
+
+        try:
+            records = json.loads(base64.b64decode(records_b64).decode("utf-8"))
+        except Exception as e:
+            return HttpResponse(f"Erro ao decodificar os dados: {e}")
+
+        return gerar_excel(records, elementos_selecionados, fases_selecionadas)
+
+    return HttpResponse("Requisição inválida.")
 
 

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block 'titulo' %} Upload de Arquivo FACT {% endblock %}
+{% block 'menu' %} {% include 'menuferramentas.html' %} {% endblock %}
+{% block 'conteudo' %}
+<br /><br />
+<div class="container mt-4">
+  <h2 class="text-center">Enviar Arquivo de Simulação</h2>
+  <p class="text-center">Selecione o arquivo .txt gerado pela simulação para análise.</p>
+
+  {% if erro %}
+    <div class="alert alert-danger text-center">{{ erro }}</div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" action="" class="text-center">
+    {% csrf_token %}
+    <div class="mb-3">
+      <input type="file" name="arquivo" class="form-control w-50 d-inline" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Enviar</button>
+  </form>
+</div>
+{% endblock %}
+{% block 'footer_name' %} e Rafael Vidal Eleuterio {% endblock %}
