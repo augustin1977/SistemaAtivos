@@ -119,10 +119,10 @@ def decodifica_MEC_ROCHAS(arquivo:StringIO) -> list[list[float]]:
 
 def calcula_energia(dados:list[list[float]])->float:
     """Calcula a energia de ruptura
-    A energia de ruptura é calculada pela área sob a curva do gráfico de energia x tamanho de partícula
+    A energia de ruptura é calculada pela área sob a curva do gráfico de energia x deslocamento
     A área é calculada pela soma dos trapézios formados pelos pontos do gráfico
     A área do trapézio é calculada pela média das alturas dos dois pontos adjacentes multiplicada pela base
-    A base é a diferença entre os tamanhos de partícula dos dois pontos adjacentes
+    A base é o deslocamento de dois pontos adjacentes
     A energia é a soma das áreas dos trapézios
     Args:
         list[list[float | str]]: Recebe uma lista de listas com os dados do gráfico de força x deslocamento

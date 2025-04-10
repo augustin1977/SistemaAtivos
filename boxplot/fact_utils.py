@@ -105,7 +105,7 @@ def gerar_excel(records, elementos_selecionados, fases_selecionadas):
     ]
 
     if not filtered:
-        return HttpResponse("Nenhum registro corresponde à seleção.")
+        return HttpResponse("Nenhum registro corresponde à seleção.<br>Selecione pelo menos um elemento e uma fase.")
 
     df = pd.DataFrame(filtered)
     df = df[["temperature", "phase", "element", "amount_gram", "mass_fraction", "total_mass"]]
