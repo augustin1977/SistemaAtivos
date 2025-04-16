@@ -19,6 +19,7 @@ from equipamentos.calcula_dados_sistema import *
 from django.db.models import Q
 import json
 from datetime import datetime, timedelta
+import dados_ambiente
 
 
 def home(request):
@@ -1120,9 +1121,9 @@ def excluirLocal(request):
 def consulta_dados_sistema(request):
     linhas, letras = acessaPastaRecursiva(BASE_DIR)
     agora = datetime.now()
-
+    versao=dados_ambiente.versao
     contagem_tempo = (agora.year - 2023) * 12 + (agora.month - 6) + (agora.day) / 31
-    retorno = f"<h1>Estatisticas do Sistema de Gestão de ativos</h1>Versão 1.5.1<br>Foram digitados {converteBR(letras)} caracteres em {converteBR(linhas)} linhas de codigo."
+    retorno = f"<h1>Estatisticas do Sistema de Gestão de ativos</h1>Versão {versao}<br>Foram digitados {converteBR(letras)} caracteres em {converteBR(linhas)} linhas de codigo."
     retorno += f"<br>Dada da consulta - {agora:%d/%m/%Y - %H:%M:%S}"
     if contagem_tempo <= 12:
         retorno += f"<br>Tempo desde o Go Live {converteBR(contagem_tempo,1)} meses"
