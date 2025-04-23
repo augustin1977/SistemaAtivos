@@ -11,6 +11,7 @@ import string
 import random
 from django.http import Http404
 from django.db.models import Q
+import time
 
 import json
 from django.db.models import Count
@@ -235,6 +236,7 @@ def esqueci_senha(request):
                          body=conteudo_html,
                          recipients=[email,'gestaoativosma@gmail.com'])
             # print(lista_admim)
+            time.sleep(5)
             enviar_email_background(
                 subject='Notificação automática de recuperação de senha',
                 body=conteudo_admin,
