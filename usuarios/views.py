@@ -236,7 +236,7 @@ def esqueci_senha(request):
                          body=conteudo_html,
                          recipients=[email,'gestaoativosma@gmail.com'])
             # print(lista_admim)
-            time.sleep(5)
+            time.sleep(2)
             enviar_email_background(
                 subject='Notificação automática de recuperação de senha',
                 body=conteudo_admin,
