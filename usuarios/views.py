@@ -204,6 +204,11 @@ def esqueci_senha(request):
         usuario[0].primeiro_acesso=True
         email=usuario[0].email
         nome=usuario[0].nome
+        tipo=Tipo.objects.get(tipo="admin")
+        administradores= Usuario.objects.filter(tipo=tipo)
+        lista_admim=[]
+        for administrador in administradores:
+                lista_admim.append(administrador.email)
         conteudo_admin = f"""<html>
                             <head></head>
                             <body>
@@ -211,21 +216,7 @@ def esqueci_senha(request):
                                 <p>O usuário {nome} ({email}) solicitou uma nova senha.</p>
                             </body>
                             </html>"""
-        tipo=Tipo.objects.get(tipo="admin")
-        administradores= Usuario.objects.filter(tipo=tipo)
-        lista_admim=[]
-        
-        for administrador in administradores:
-            lista_admim.append(administrador.email)
-        # print(lista_admim)
-        enviar_email_background(
-            subject='Notificação automática de recuperação de senha',
-            body=conteudo_admin,
-            recipients=lista_admim  # Lista de e-mails dos administradores
-        )
-        
-        try:
-            conteudo_html = f"""<html>
+        conteudo_html = f"""<html>
                                 <head></head>
                                 <body>
                                     <h2>Olá {nome}!</h2>
@@ -238,9 +229,17 @@ def esqueci_senha(request):
                                     <p> Administrador do Sistema</p>
                                 </body>
                                 </html>"""
+        try:
+            
             enviar_email(subject='Senha Sistema de gestão de ativos',
                          body=conteudo_html,
                          recipients=[email,'gestaoativosma@gmail.com'])
+            # print(lista_admim)
+            enviar_email_background(
+                subject='Notificação automática de recuperação de senha',
+                body=conteudo_admin,
+                recipients=lista_admim  # Lista de e-mails dos administradores
+            )
         except:
             return redirect('/auth/esqueci_senha/?status=2') # Falha no envio
         
