@@ -12,7 +12,6 @@ import random
 from django.http import Http404
 from django.db.models import Q
 import time
-
 import json
 from django.db.models import Count
 from django.http import JsonResponse
@@ -22,9 +21,9 @@ def login(request):
     # cria a view do login do usuário
     status=str(request.GET.get('status'))
     tipo=Tipo.objects.get(tipo="admin")
-    administradores= Usuario.objects.filter(tipo=tipo).exclude(nome="System").order_by("nome")
-    print(administradores)
-    return render(request, "login.html", {'status':status,'administradores':administradores})
+    #administradores= Usuario.objects.filter(tipo=tipo).exclude(nome="System").order_by("nome")
+
+    return render(request, "login.html", {'status':status})
 
 def cadastrar(request):
     # cria a view do cadastro de usuaário
@@ -225,7 +224,7 @@ def esqueci_senha(request):
                                     <p>Os dados para login são:</p>
                                     <p>Seu nome de usuário: {email}</p>
                                     <p>Sua senha provisória: {novasenha}</p>
-                                    <p>O link para acesso ao sistema é: <a href="http://gestaoativosma.ad.ipt.br/">gestaoativosma.ad.ipt.br </p>
+                                    <p>O link para acesso ao sistema é: <a href="http://gestaoativosma.ad.ipt.br/">gestaoativosma.ad.ipt.br </a></p>
                                     <p>Obrigado!</p>
                                     <p> Administrador do Sistema</p>
                                 </body>
@@ -409,7 +408,7 @@ def maioresUsuarios(request):
         return render(request, "maioresusuarios.html", {'usuarios':registros_por_usuario})
     
     # JsonResponse(lista_usuarios,safe=False)
-    return redirect(f'/equipamentos/?status=0')
+    return redirect(f'/equipamentos/?status=50')
 def envia_mensagem_usuarios(request):
     if not request.session.get("usuario"):
         return redirect("/auth/login/?status=2")

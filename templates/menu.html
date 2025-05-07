@@ -1,0 +1,89 @@
+<li class="navbar navbar-dark bg-dark nav-item dropdown ">
+    <a class="navbar-link text-light dropdown-toggle "  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Ocorrencias
+    </a>
+    <div class="dropdown-menu text-light bg-dark" aria-labelledby="navbarDropdown">
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %} {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'exibirNotas' %}">Exibir Ocorrências</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %} {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'cadastrarNota' %}">Cadastrar Ocorrências</a>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'exibirDisciplinas' %}">Exibir Disciplina</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'cadastrarDisciplina' %}">Cadastrar Disciplina</a>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'exibirModoFalha' %}">Exibir Modo Falha</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'cadastrarModo_Falha' %}">Cadastrar Modo Falha</a>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'exibirModoFalhaEquipamento' %}">Exibir Modo Falha Equipamento</a>     
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'cadastrarModo_FalhaEquipamento' %}">Cadastrar Modo Falha Equipamento</a>
+    </div>
+  </li>
+
+
+  <li class="navbar navbar-dark bg-dark nav-item dropdown ">
+    <a class="navbar-link text-light dropdown-toggle "  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Equipamentos
+    </a>
+    <div class="dropdown-menu text-light bg-dark" aria-labelledby="navbarDropdown">
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'listar_equipamentos' %}">Exibir Equipamentos</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'cadastrarEquipamento' %}">Cadastrar Equipamento</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'cadastrarArquivo' %}">Cadastrar Arquivos nos Equipamentos</a>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'listarTipo' %}">Exibir Tipo Equipamento</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'cadastrarTipo' %}">Cadastrar Tipo Equipamento</a>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'listarLocais' %}">Exibir Locais Instalação</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'cadastrarLocal' %}">Cadastrar Local Instalação</a>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'listarFornecedores' %}">Exibir Fornecedores</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'cadastrarFornecedor' %}">Cadastrar Fornecedor</a>
+    </div>
+  </li>
+
+  <li class="navbar navbar-dark bg-dark nav-item dropdown ">
+    <a class="navbar-link text-light dropdown-toggle "  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Relatórios
+    </a>
+    <div class="dropdown-menu text-light bg-dark" aria-labelledby="navbarDropdown">
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'relatorioNotasData' %}"> Relatório de Ocorrências por Data</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}"href="{% url 'relatorioNotasEquipamento' %}">Relatório de Ocorrências por equipamento</a>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'relatorioLogData' %}">Relatório de LOG por Data</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'relatorioLogEquipamento' %}">Relatório de LOG por equipamento</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'relatorioLog' %}?tempo=60"> Relatório de LOG dos ultimos 60 dias</a>
+    </div>
+  </li>
+
+  <li class="navbar navbar-dark bg-dark nav-item dropdown ">
+    <a class="navbar-link text-light dropdown-toggle "  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Administração
+    </a>
+    <div class="dropdown-menu text-light bg-dark" aria-labelledby="navbarDropdown">
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'editar' %}">Alterar Senha</a>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'listarUsuarios' %}">Listar Usuarios</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'cadastrar' %}">Cadastrar Usuários</a>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'maioresUsuarios' %}">Estatistica Usuários</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'estatisticas' %}">Estatistica Sistema</a> 
+    </div>
+  </li>
+  
+  <li class="navbar navbar-dark bg-dark nav-item dropdown ">
+    <a class="navbar-link text-light dropdown-toggle "  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Ferramentas
+    </a>
+    <div class="dropdown-menu text-light bg-dark" aria-labelledby="navbarDropdown">
+        <a class="navbar-link bg-dark dropdown-item text-light" href="{% url 'boxplotinicial2' %}">Boxplot</a>
+        <a class="navbar-link bg-dark dropdown-item text-light" href="{% url 'boxplotinicial3' %}">Boxplot c/ Colunas</a>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light" href="{% url 'converte_intemperismo' %}">Arquivos Inovtec </a>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light" href="{% url 'converte_OCR' %}">Arquivos OCR </a>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light" href="{% url 'converte_moinho_piloto' %}">Arquivos Moinho Piloto </a>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light" href="{% url 'calcula_energia_ruptura' %}">Energia Ruptura </a>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light" href="{% url 'upload_fact' %}">Analisa Fact </a>
+    </div>
+  </li>
+

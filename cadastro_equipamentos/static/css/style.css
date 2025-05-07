@@ -1,0 +1,8 @@
+.link-bloqueado {
+    color: #6c757d !important;  /* cinza padrão do Bootstrap */
+    pointer-events: none;      /* desabilita clique */
+    opacity: 0.6;              /* deixa o link meio apagado */
+  }
+  .menu-bloqueado {
+    display: none !important;
+  }

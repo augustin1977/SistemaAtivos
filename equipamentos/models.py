@@ -132,3 +132,13 @@ class Media(models.Model):
     def __str__(self):
         return self.nome
    
+class Autorizacao_equipamento(models.Model):
+    """Criação do banco de dade de treinamento do equipamento"""
+    usuario=models.ForeignKey(Usuario,on_delete=models.DO_NOTHING, null=True, blank=True)
+    equipamento=models.ForeignKey(Equipamento,on_delete=models.DO_NOTHING, null=False, blank=False)
+    data_cadastro=models.DateTimeField(auto_now=True, auto_now_add=False,null=False, blank=False)
+    class Meta:
+        unique_together = ('usuario', 'equipamento')
+
+    def __str__(self):
+        return f"{self.usuario} - {self.equipamento}"
