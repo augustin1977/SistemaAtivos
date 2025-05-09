@@ -35,7 +35,10 @@
         <hr class="dropdown-divider">
         <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'listarFornecedores' %}">Exibir Fornecedores</a>
         <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'cadastrarFornecedor' %}">Cadastrar Fornecedor</a>
-    </div>
+        <hr class="dropdown-divider">
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'listar_permissoes' %}">Exibir Permissões</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'cadastrar_permissoes' %}">Cadastrar Permissões</a>
+      </div>
   </li>
 
   <li class="navbar navbar-dark bg-dark nav-item dropdown ">

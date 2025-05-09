@@ -1,0 +1,64 @@
+{% extends 'base.html'%}
+{% block 'titulo'%} Lista de Permissões por Equipamento {% endblock %}
+{% block 'menu' %} 
+  {% include 'menu.html' %} 
+{% endblock %}
+
+{% block 'conteudo'%} 
+<div class="text-center">
+  <br><br>
+  <h1>Lista de Permissões por Equipamento</h1>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md">
+
+      {% for equipamento in equipamentos %}
+        <div class="mt-">
+          <!-- Cabeçalho do equipamento com fundo cinza claro -->
+          <div class="p-2 mb-2 bg-light text-dark rounded">
+            <strong>{{ equipamento.nome_equipamento }}</strong> 
+            (Código: {{ equipamento.codigo }})
+          </div>
+
+          <div class="table-responsive" style="max-height: 60vh;">
+            <table class="table table-hover">
+              <thead class="thead-light sticky-top">
+                <tr>
+                  <th scope="col">Usuário Autorizado</th>
+                  <th scope="col">Data de Autorização</th>
+                  <th scope="col">Excluir</th>
+                </tr>
+              </thead>
+              <tbody style="overflow-y: scroll;">
+                {% for permissao in equipamento.autorizacao_equipamento_set.all %}
+                  <tr>
+                    <td>{{ permissao.usuario.nome }}</td>
+                    <td>{{ permissao.data_cadastro|date:"d/m/Y" }}</td>
+
+                    <td>
+                      <a href="{% url 'excluir_permissoes' permissao.id %}" class="text-danger">
+                        <i class="bi bi-trash"></i>
+                      </a>
+                    </td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="4" class="text-center">Todos os usuarios estão permitidos para esse equipamento.</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      {% empty %}
+        <p class="text-center">Nenhum equipamento cadastrado.</p>
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

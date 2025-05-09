@@ -26,6 +26,11 @@
         Nova senha enviada por e-mail com sucesso
       </div>
     {% endif %}
+    {% if status == '50' %}
+    <div class="alert alert-success" role="alert">
+        Acesso não autorizados, favor consultar o administrador do sistema
+      </div>
+    {% endif %}
     <form method ="POST" action="{% url 'validar_login'%}"> {% csrf_token %}  
         <label> Email</label>
         <input name="email" class="form-control" type="text" placeholder="nome@servidor.com">

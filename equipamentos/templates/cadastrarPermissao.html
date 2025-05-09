@@ -1,20 +1,24 @@
 {% extends 'base.html'%}
-{% block 'titulo'%} Gestão Ativos MA  {% endblock %}
+{% block 'titulo'%} Cadastrar Permissão {% endblock %}
 {% block 'menu' %} 
-{% include 'menu.html' %} 
+  {% include 'menu.html' %} 
 {% endblock %}
+
 {% block 'conteudo'%} 
+<div class="text-center">
+  <br><br>
+  <h1>Cadastrar Permissão</h1>
+</div>
 <div class ='container'>
     <div class='row'>
         <div class='col-md-3'></div>
         <div class="col-md">
-            <br><br>
-            <h1>  Cadastro Disciplina</h1><hr>
+            <hr>
             
             {% if status == 1 %}
-                <div class="alert alert-success" role="alert">Fomulario cadatrados com sucesso</div>    
+                <div class="alert alert-success" role="alert">Permissão cadatrado com sucesso.</div>    
             {% endif %}
-            <form method ="POST" action="{% url 'cadastrarDisciplina' %}"> {% csrf_token %}
+            <form method ="POST" action="{% url 'cadastrar_permissoes' %}"> {% csrf_token %}
                 {{ form }}
         <button class="btn btn-primary">Enviar</button>
             </form>
@@ -23,4 +27,5 @@
 <div class='col-md-3'></div>
 </div>   
 </div>
+
 {% endblock %}

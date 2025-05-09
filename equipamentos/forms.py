@@ -32,8 +32,6 @@ class localFormCadastro(ModelForm):
 
         }
 
-        
-
 class localFormEditar(ModelForm):
     """Cria formaulario de edição do local de instalação"""
     id=CharField(label="",widget=HiddenInput())
@@ -108,7 +106,6 @@ class equipamentoEditarForm(Form):
         cd['data_ultima_atualizacao']=utc.localize( datetime.datetime.now())
         return cd
         
-
 class equipamentoCadastrarForm(Form):
     """formulário de cadastro de novas equipamentos"""
     nome_equipamento=CharField(widget= TextInput(attrs={'class': "form-control",'placeholder':'Nome do Equipamentos'}))
@@ -230,3 +227,13 @@ class mediaForm(ModelForm):
             'nome': 'Nome do arquivo','equipamento':'Equipamento','documentos':'Documento - Tamanho máximo do arquivo - 40MB'
         }  
     
+class cadastrarPermissaoForm (ModelForm):
+    equipamento = ModelChoiceField(queryset=Equipamento.objects.filter(ativo=True),widget=Select(attrs={'class': "form-control"}))
+    class Meta:
+        model = Autorizacao_equipamento
+        
+        fields = ['equipamento','usuario']
+        widgets = {
+            'usuario': Select (attrs={'class': "form-control"}),
+            
+            }

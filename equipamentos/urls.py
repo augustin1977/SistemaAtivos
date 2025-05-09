@@ -29,6 +29,9 @@ urlpatterns = [path("",views.home, name="home"),
                path('excluirLocal/',views.excluirLocal,name="excluirLocal"),
                path('get_equipamentos/', views.get_equipamentos, name='get_equipamentos'),
                path('consulta_dados_sistema/', views.consulta_dados_sistema, name='consulta_dados_sistema'),
+               path('listar_permissoes/', views.listar_permissoes, name='listar_permissoes'),
+               path('cadastrar_permissoes/', views.cadastrar_permissoes, name='cadastrar_permissoes'),
+               path('excluir_permissoes/<int:id>/', views.excluir_permissoes, name='excluir_permissoes'),
 ]
 
 

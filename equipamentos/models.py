@@ -103,15 +103,23 @@ class Equipamento(models.Model):
     especificacao=models.TextField(null=True, blank=True)
     outros_dados=models.TextField(null=True, blank=True)
     ativo=models.BooleanField(default=True)
+    usuarios_treinados = models.ManyToManyField(
+        Usuario,
+        through='Autorizacao_equipamento',
+        related_name='equipamentos_treinados'
+    )
+    
 
     def dados_para_form(self):
+        usuarios_treinados=self.usuarios_treinados.all()
+        
         return {"id":self.id,"nome_equipamento":self.nome_equipamento,"modelo":self.modelo,"fabricante":self.fabricante,
         "local":self.local,"tipo_equipamento":self.tipo_equipamento,"data_compra":self.data_compra,
         "data_ultima_calibracao":self.data_ultima_calibracao,"usuario":self.usuario,"patrimonio":self.patrimonio,"codigo":self.codigo,
         "material_consumo":Material_consumo.objects.filter(equipamento__id=self.id),'custo_aquisição':self.custo_aquisição,
         'responsavel':self.responsavel,'potencia_eletrica':self.potencia_eletrica,'nacionalidade':self.nacionalidade,
         'tensao_eletrica':self.tensao_eletrica,'data_ultima_atualizacao':self.data_ultima_atualizacao,'projeto_compra':self.projeto_compra,
-        'especificacao':self.especificacao,'outros_dados':self.outros_dados}
+        'especificacao':self.especificacao,'outros_dados':self.outros_dados, 'usuarios_treinados':usuarios_treinados}
     def to_dic(self):
         return {"id":self.id,"nome_equipamento":self.nome_equipamento,"modelo":self.modelo,"local":str(self.local),
             "tipo_equipamento":str(self.tipo_equipamento),"codigo":self.codigo}

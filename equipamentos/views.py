@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.contrib.staticfiles.views import serve
 from django.http import HttpResponse, JsonResponse
-from .models import Usuario, Tipo, Equipamento, Material_consumo, Media, Fabricante
+from .models import *
 from notas.models import *
 from django.shortcuts import redirect
 from cadastro_equipamentos import settings
@@ -20,7 +20,7 @@ from django.db.models import Q
 import json
 from datetime import datetime, timedelta
 import dados_ambiente
-
+from usuarios.autentica_usuario import *
 
 def home(request):
     """verify if has already a user logged in, if yes render home.html else redirect to login page
@@ -37,7 +37,7 @@ def home(request):
     status = str(request.GET.get("status"))
     return render(request, "home.html", {"status": status})
 
-
+@is_user
 def menuEquipoamento(request):
     """Render initial page of system
 
@@ -47,17 +47,13 @@ def menuEquipoamento(request):
     Returns:
         _type_: render equipamento.html
     """
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
+
     # cria a view do login do usuário
     status = str(request.GET.get("status"))
     return render(request, "equipamentos.html", {"status": status})
 
-
+@is_user
 def lista_equipamentos(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
-    usu = Usuario.objects.get(id=request.session.get("usuario"))
     # print(f"{usu.nome} acessou Lista Equipamentos")
     equipamentos = Equipamento.objects.filter(ativo=True)
     return render(request, "exibirEquipamentos.html", {"equipamentos": equipamentos})
@@ -87,35 +83,32 @@ def get_equipamentos(request):
     # equipamentos_json = serializers.serialize('json', equipamentos, fields=('id','nome_equipamento', 'modelo','tipo_equipamento','local'))
     return HttpResponse(equipamentos_json, content_type="application/json")
 
-
+@is_user
 def exibirDetalheEquipamento(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
-    # print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Detalhe Equipamentos")
+    """Renderizar pagiina com detalhes do equipamento"""
     id = str(request.GET.get("id"))
+    usuario = Usuario.objects.get(id=request.session.get("usuario"))
     equipamento = Equipamento.objects.get(id=id, ativo=True)
     equipamento.data_compra= funcoesAuxiliares.formatar_data_por_extenso(equipamento.data_compra)
     equipamento.data_ultima_calibracao= funcoesAuxiliares.formatar_data_por_extenso(equipamento.data_ultima_calibracao)
     materiais = Material_consumo.objects.filter(equipamento__id=id)
     arquivos = Media.objects.filter(equipamento__id=id)
-    usuario = Usuario.objects.get(id=request.session.get("usuario"))
+    permissoes = Autorizacao_equipamento.objects.filter(equipamento=equipamento)
     # log=Log(transacao='eq',movimento='lt',usuario=usuario,equipamento=equipamento,alteracao=f'{usuario} listou detalhe equipamento: {equipamento}')
     # log.save()
-    return render(
-        request,
+    return render(request,
         "exibirDetalheEquipamento.html",
         {
             "equipamento": equipamento,
             "materiais": materiais,
             "media": arquivos,
             "confirmarexluir": "0",
+            "permissoes":permissoes
         },
     )
 
-
+@is_user
 def editarEquipamento(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
     usuario = Usuario.objects.get(id=request.session.get("usuario"))
     if request.method == "GET":
         equipamento = request.GET.get("equipamento")
@@ -211,25 +204,13 @@ def editarEquipamento(request):
             equipamento = Equipamento.objects.get(id=equipamento_id, ativo=True)
             return render(request, "editarEquipamento.html", {"form": form, "equipamento": equipamento})
 
-
+@is_superuser
 def cadastrarEquipamento(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
-    usuario = Usuario.objects.get(id=request.session.get("usuario"))
-    agora = datetime.now()
-    contagem_tempo = (agora.year - 2023) * 12 + (agora.month - 6)
 
-    if contagem_tempo > 7:
-        ### Bloco de bloqueio de usuario para acesso ###
-        tipo1 = Q(tipo="superuser")
-        tipo2 = Q(tipo="especialuser")
-        tipo3 = Q(tipo="admin")
-        tipo = Tipo.objects.filter(tipo1 | tipo2 | tipo3)
-        
-        if usuario.tipo not in tipo:  # verifica se o usuário é tipo selecionado
-            return redirect(
-                f"/equipamentos/?status=50"
-            )  # se não for redireciona para pagina de acesso recusado
+    usuario = Usuario.objects.get(id=request.session.get("usuario"))
+
+
+   
 
     if request.method == "GET":
         form = equipamentoCadastrarForm(
@@ -341,10 +322,9 @@ def cadastrarEquipamento(request):
         else:
             return render(request, "cadastrarEquipamento.html", {"form": details})
 
-
+@is_superuser
 def excluirEquipamento(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
+
     id = str(request.GET.get("id"))
     equipamento = Equipamento.objects.get(id=id, ativo=True)
     usuario = Usuario.objects.get(id=request.session.get("usuario"))
@@ -372,19 +352,14 @@ def excluirEquipamento(request):
         },
     )
 
-
+@is_user
 def listarFornecedores(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
     # print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Lista Fornecedores")
     fornecedores = Fabricante.objects.all()
     return render(request, "listarFornecedores.html", {"fornecedores": fornecedores})
 
-
+@is_user
 def exibirDetalheFornecedor(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
-    # print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Detalhe Fornecedores")
     id = str(request.GET.get("id"))
     fornecedor = Fabricante.objects.get(id=id)
     if fornecedor.endereco_fabricante == None:
@@ -404,13 +379,9 @@ def exibirDetalheFornecedor(request):
         fornecedor.dados_adicionais = ""
     return render(request, "exibirDetalhefornecedor.html", {"fornecedor": fornecedor})
 
-
+@is_user
 def cadastrarFornecedor(request):
     usuario = Usuario.objects.get(id=request.session.get("usuario"))
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
-    # print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Cadastro Fornecedores")
-    status = str(request.GET.get("status"))
     if request.method == "GET":
         return render(request, "cadastrarFornecedor.html")
     else:
@@ -469,13 +440,9 @@ def cadastrarFornecedor(request):
         Log.cadastramento(usuario=usuario, transacao="fn", objeto=fabricante)
         return render(request, "cadastrarFornecedor.html", {"status": 0})
 
-
+@is_user
 def editarFornecedor(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
-    # print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Edição Fornecedores")
     id = request.GET.get("id")
-
     if id:
         if request.method == "GET":
             fornecedor = Fabricante.objects.get(id=id)
@@ -594,10 +561,8 @@ def editarFornecedor(request):
 
     return redirect("/equipamentos/listarFornecedores/")
 
-
+@is_user
 def cadastrarLocal(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
     # print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro local")
     if request.method == "GET":
         form = localFormCadastro
@@ -625,21 +590,15 @@ def cadastrarLocal(request):
             # print('invalido')
             return render(request, "cadastrarLocal.html", {"form": details})
 
-
+@is_user
 def listarLocais(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
-    # print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Listar local")
     if request.method == "GET":
         form = Local_instalacao.objects.all()
         return render(request, "listarLocais.html", {"form": form, "status": 0})
 
-
+@is_user
 def editarLocal(request):
     usuario = Usuario.objects.get(id=request.session.get("usuario"))
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
-    # print(f"{usuario.nome} acessou Editar local")
     if request.method == "GET":
         dados = Local_instalacao.objects.get(id=request.GET.get("id")).dados_para_form()
         form = localFormEditar(initial=dados)
@@ -680,20 +639,9 @@ def editarLocal(request):
         else:
             return render(request, "listarLocais.html", {"form": form, "status": 2})
 
-
+@is_admin
 def cadastrarTipo(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
     usuario = Usuario.objects.get(id=request.session.get("usuario"))
-    # Controle de acesso, usuario comum não pode acessar essa funç~~ao
-    tipo1 = Q(tipo="superuser")
-    tipo2 = Q(tipo="especialuser")
-    tipo3 = Q(tipo="admin")
-
-    tipo = Tipo.objects.filter(tipo1 | tipo2 | tipo3)
-    if usuario.tipo not in tipo:
-        return redirect(f"/equipamentos/?status=50")
-
     if request.method == "GET":
         form = cadastraTipo_equipamento
         return render(request, "cadastrarTipo.html", {"form": form, "status": 0})
@@ -716,20 +664,9 @@ def cadastrarTipo(request):
             # print('invalido')
             return render(request, "cadastrarTipo.html", {"form": details})
 
-
+@is_admin
 def editarTipo(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
     usuario = Usuario.objects.get(id=request.session.get("usuario"))
-    # Controle de acesso, usuario comum não pode acessar essa função
-    tipo1 = Q(tipo="superuser")
-    tipo2 = Q(tipo="especialuser")
-    tipo3 = Q(tipo="admin")
-
-    tipo = Tipo.objects.filter(tipo1 | tipo2 | tipo3)
-    if usuario.tipo not in tipo:
-        return redirect(f"/equipamentos/?status=50")
-
     if request.method == "GET":
         dados = Tipo_equipamento.objects.get(id=request.GET.get("id")).dados_para_form()
         # print(dados)
@@ -768,19 +705,15 @@ def editarTipo(request):
             # print('invalido')
             return render(request, "editarTipo.html", {"form": details})
 
-
+@is_user
 def listarTipo(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
-    # print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou cadastro Tipo Equipamento")
     status = request.GET.get("status")
     form = Tipo_equipamento.objects.all()
     return render(request, "listarTipo.html", {"form": form, "status": status})
 
-
+@is_user
 def baixarRelatorioEquipamentos(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
+
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename="relatorio.csv"'
 
@@ -856,10 +789,8 @@ def baixarRelatorioEquipamentos(request):
 
     return response
 
-
+@is_user
 def cadastrarMaterial(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
     usu = Usuario.objects.get(id=request.session.get("usuario"))
     # print(f"{usu.nome} acessou cadastro Cadastro Material")
 
@@ -889,10 +820,8 @@ def cadastrarMaterial(request):
                 request, "cadastrarMaterial.html", {"form": details, "status": 2}
             )
 
-
+@is_user
 def editarMaterial(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
     # print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Editar Material")
     if request.method == "GET":
         dados = Material_consumo.objects.get(id=request.GET.get("id")).dados_para_form()
@@ -934,19 +863,15 @@ def editarMaterial(request):
         else:
             return render(request, "listarMateriais.html", {"form": form, "status": 2})
 
-
+@is_user
 def listarMaterial(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
-    # print(f"{Usuario.objects.get(id=request.session.get('usuario')).nome} acessou Listar materiais")
     if request.method == "GET":
         form = Material_consumo.objects.all()
         return render(request, "listarMateriais.html", {"form": form, "status": 0})
 
-
+@is_user
 def cadastrarArquivo(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
+
     if request.method == "POST":
         form = mediaForm(request.POST, request.FILES)
         if form.is_valid():
@@ -992,10 +917,9 @@ def cadastrarArquivo(request):
             form = mediaForm()
     return render(request, "cadastrarArquivo.html", {"form": form})
 
-
+@is_user
 def excluiArquivo(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=2")
+
     if request.method == "GET":
         usuario = Usuario.objects.get(id=request.session.get("usuario"))
         media = Media.objects.get(id=request.GET.get("id"))
@@ -1017,7 +941,7 @@ def excluiArquivo(request):
 
     return HttpResponse("formulario de excluir arquivos")
 
-
+@is_user
 def download_arquivo(request):
     nome_arquivo = request.GET.get("filename") or request.POST.get("filename")
     fullpath = os.path.normpath(os.path.join(MEDIA_ROOT, nome_arquivo))
@@ -1040,59 +964,52 @@ def download_arquivo(request):
 
     return response
 
-
+@is_admin
 def excluirTipo(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=1")
+
     usuario = Usuario.objects.get(id=request.session.get("usuario"))
-    tipo1 = Q(tipo="especialuser")
-    tipo2 = Q(tipo="superuser")
-    tipo3 = Q(tipo="admin")
-    tipo = Tipo.objects.filter(tipo1 | tipo2 | tipo3)
-    if usuario.tipo in tipo:
-        if request.method == "GET":
-            tipo_eq = request.GET.get("id")
-            tipo_equipamento = Tipo_equipamento.objects.get(id=tipo_eq)
-            equipamentos = Equipamento.objects.filter(tipo_equipamento=tipo_equipamento)
-            return render(
-                request,
-                "excluirTipo.html",
-                {
-                    "n": len(equipamentos),
-                    "equipamentos": equipamentos,
-                    "tipo": tipo_equipamento,
-                },
+    if request.method == "GET":
+        tipo_eq = request.GET.get("id")
+        tipo_equipamento = Tipo_equipamento.objects.get(id=tipo_eq)
+        equipamentos = Equipamento.objects.filter(tipo_equipamento=tipo_equipamento)
+        return render(
+            request,
+            "excluirTipo.html",
+            {
+                "n": len(equipamentos),
+                "equipamentos": equipamentos,
+                "tipo": tipo_equipamento,
+            },
+        )
+    elif request.method == "POST":
+        tipo_eq = request.POST.get("id")
+        tipo_equipamento = Tipo_equipamento.objects.get(id=tipo_eq)
+        equipamentos = Equipamento.objects.filter(tipo_equipamento=tipo_equipamento)
+        outros = Tipo_equipamento.objects.get(nome_tipo="Outros")
+        if tipo_equipamento == outros:
+            return redirect("/equipamentos/listarTipo/?status=50")
+
+        for equipamento in equipamentos:
+            # print(equipamento)
+            Log.foiAlterado(
+                transacao="eq",
+                objeto=equipamento,
+                atributo="tipo_equipamento",
+                equipamento=equipamento,
+                valor=outros,
+                usuario=usuario,
             )
-        elif request.method == "POST":
-            tipo_eq = request.POST.get("id")
-            tipo_equipamento = Tipo_equipamento.objects.get(id=tipo_eq)
-            equipamentos = Equipamento.objects.filter(tipo_equipamento=tipo_equipamento)
-            outros = Tipo_equipamento.objects.get(nome_tipo="Outros")
-            if tipo_equipamento == outros:
-                return redirect("/equipamentos/listarTipo/?status=50")
+            equipamento.tipo_equipamento = outros
+            equipamento.save()
+        Log.exclusao(usuario=usuario, transacao="te", objeto=tipo_equipamento)
+        tipo_equipamento.delete()
 
-            for equipamento in equipamentos:
-                # print(equipamento)
-                Log.foiAlterado(
-                    transacao="eq",
-                    objeto=equipamento,
-                    atributo="tipo_equipamento",
-                    equipamento=equipamento,
-                    valor=outros,
-                    usuario=usuario,
-                )
-                equipamento.tipo_equipamento = outros
-                equipamento.save()
-            Log.exclusao(usuario=usuario, transacao="te", objeto=tipo_equipamento)
-            tipo_equipamento.delete()
-
-            return redirect("/equipamentos/listarTipo")
+        return redirect("/equipamentos/listarTipo")
     return redirect(f"/equipamentos/?status=50")
 
-
+@is_user
 def excluirLocal(request):
-    if not request.session.get("usuario"):
-        return redirect("/auth/login/?status=1")
+    
     usuario = Usuario.objects.get(id=request.session.get("usuario"))
     tipo1 = Q(tipo="especialuser")
     tipo2 = Q(tipo="superuser")
@@ -1117,7 +1034,7 @@ def excluirLocal(request):
             return redirect("/equipamentos/listarLocais")
         return redirect(f"/equipamentos/?status=50")
 
-
+@is_user
 def consulta_dados_sistema(request):
     linhas, letras = acessaPastaRecursiva(BASE_DIR)
     agora = datetime.now()
@@ -1131,3 +1048,45 @@ def consulta_dados_sistema(request):
         retorno += f"<br>Tempo desde o Go Live {converteBR(contagem_tempo/12,2)} anos"
     retorno +='<br><a href="http://gestaoativosma.ad.ipt.br/listarUsuarios/">voltar'
     return HttpResponse(retorno)
+
+@is_superuser
+def listar_permissoes(request):
+    equipamentos = Equipamento.objects.prefetch_related('autorizacao_equipamento_set__usuario').all()
+    return render(request, 'listarPermissoes.html', {'equipamentos': equipamentos})
+
+@is_superuser
+def cadastrar_permissoes(request):
+    usuario = Usuario.objects.get(id=request.session.get("usuario"))
+    
+    if request.method == "POST":
+        details = cadastrarPermissaoForm(request.POST)
+
+        if details.is_valid():
+            usuario = details.cleaned_data["usuario"]
+            equipamento = details.cleaned_data["equipamento"]
+            
+            e = Autorizacao_equipamento(
+                equipamento=equipamento,
+                usuario=usuario)
+            e.save()
+
+            Log.cadastramento(objeto=e, transacao="eq", usuario=usuario, equipamento=equipamento)
+
+            form = cadastrarPermissaoForm() 
+            return render(request, "cadastrarPermissao.html", {"form": form, "status": 1})
+            
+        
+    form = cadastrarPermissaoForm()        
+    return render(request, "cadastrarPermissao.html", {"form": form, "status": 0})
+    
+
+@is_superuser
+def excluir_permissoes(request, id):
+    permissao = get_object_or_404(Autorizacao_equipamento, id=id)
+    permissao.delete()
+    usuario = Usuario.objects.get(id=request.session.get("usuario"))
+    
+    Log.exclusao(objeto=permissao, transacao="eq", usuario=usuario, equipamento=permissao.equipamento
+    )
+    return redirect('listar_permissoes')  # Redireciona para a lista após exclusão
+ 

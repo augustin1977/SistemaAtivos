@@ -1,115 +1,120 @@
-
 {% extends 'base.html'%}
 {% block 'titulo'%} Gestão Ativos MA  {% endblock %}
 {% block 'menu' %} 
 {% include 'menu.html' %} 
 {% endblock %}
 
-          
-
 {% block 'conteudo'%} 
 <div class="text-center">
   <br><br>
   <h1>  Exibir Detalhe de Equipamento </h1>
-  </div>
-<div class ='container'>
-  <br>
-  <br>  
+</div>
+
+<div class='container'>
+  <br><br>  
   <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">Item </th>
-            <th scope="col">Valor </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr> 
-            <th scope="row">Codigo Equipamento</th>
-            <td> {{equipamento.codigo}}</td></tr>      
-            <th scope="row">Nome Equipamento</th>
-            <td> {{equipamento.nome_equipamento}}</td></tr>
-            <th scope="row">Modelo</th>
-            <td>{{equipamento.modelo}}</td></tr>
-            <th scope="row">Fabricante</th>
-            <td>{{equipamento.fabricante}}</td></tr>
-            <th scope="row">Tipo</th>
-            <td>{{equipamento.tipo_equipamento}}</td></tr>
-            <th scope="row">Local Instalação</th>
-            <td>{{equipamento.local}}</td></tr>
-            <th scope="row">Data Cadastro</th>
-            <td>{{equipamento.data_cadastro}}</td></tr>
-            <th scope="row">Data Compra</th>
-            <td>{{equipamento.data_compra}}</td></tr>
-            <th scope="row">Data Ultima calibração</th>
-            <td>{{equipamento.data_ultima_calibracao}} </td> </tr>
-            <th scope="row">Data Atualização</th>
-            <td>{{equipamento.data_ultima_atualizacao}} </td> </tr>
-            <th scope="row">Numero Patrimonio</th>
-            <td>{{equipamento.patrimonio}} </td> </tr>
-            <th scope="row">Responsavel</th>
-            <td>{{equipamento.responsavel}} </td> </tr>
-            <th scope="row">Projeto</th>
-            <td>{{equipamento.projeto_compra}} </td> </tr>
-            <th scope="row">Custo Aquisição</th>
-            <td>{{equipamento.custo_aquisição}} </td> </tr>
-            
-            <th scope="row">Tensão Elétrica</th>
-            <td>{{equipamento.tensao_eletrica}} </td> </tr>
-            <th scope="row">Especificação / Outros dados</th>
-            <td>{{equipamento.especificacao}} <br>
-              {{equipamento.outros_dados}}</td> </tr>
+    <thead>
+      <tr>
+        <th scope="col">Item </th>
+        <th scope="col">Valor </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">Codigo Equipamento</th><td>{{equipamento.codigo}}</td></tr>      
+      <tr><th scope="row">Nome Equipamento</th><td>{{equipamento.nome_equipamento}}</td></tr>
+      <tr><th scope="row">Modelo</th><td>{{equipamento.modelo}}</td></tr>
+      <tr><th scope="row">Fabricante</th><td>{{equipamento.fabricante}}</td></tr>
+      <tr><th scope="row">Tipo</th><td>{{equipamento.tipo_equipamento}}</td></tr>
+      <tr><th scope="row">Local Instalação</th><td>{{equipamento.local}}</td></tr>
+      <tr><th scope="row">Data Cadastro</th><td>{{equipamento.data_cadastro}}</td></tr>
+      <tr><th scope="row">Data Compra</th><td>{{equipamento.data_compra}}</td></tr>
+      <tr><th scope="row">Data Ultima calibração</th><td>{{equipamento.data_ultima_calibracao}}</td></tr>
+      <tr><th scope="row">Data Atualização</th><td>{{equipamento.data_ultima_atualizacao}}</td></tr>
+      <tr><th scope="row">Numero Patrimonio</th><td>{{equipamento.patrimonio}}</td></tr>
+      <tr><th scope="row">Responsavel</th><td>{{equipamento.responsavel}}</td></tr>
+      <tr><th scope="row">Projeto</th><td>{{equipamento.projeto_compra}}</td></tr>
+      <tr><th scope="row">Custo Aquisição</th><td>{{equipamento.custo_aquisição}}</td></tr>
+      <tr><th scope="row">Tensão Elétrica</th><td>{{equipamento.tensao_eletrica}}</td></tr>
+      <tr><th scope="row">Especificação / Outros dados</th>
+          <td>{{equipamento.especificacao}} <br>{{equipamento.outros_dados}}</td></tr>
 
-            <!-- Quando implementar a funcionalidade de materiais -->
-            <!-- <th scope="row">Material Consumo</th>
-            <td>
-            {% for material in materiais %}   
-                {{material}} <br>
-            {% endfor %}
-            </td> </tr> -->
-            <tr>
-              <th scope="row">Arquivos</th>
-              <td></td>
-            </tr>
-            <tr>
-              <th scope="row">Incluir Arquivos</th>
-              <td>
-                <a href="{% url 'cadastrarArquivo' %}?equipamento_id={{ equipamento.id }}" class="new-link">
-                  <i class="bi bi-cloud-arrow-up bi-lg" style="font-size: 2rem;"></i>
-              </a>
-              </td>
-            </tr>
+      <tr>
+        <th scope="row">Arquivos</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th scope="row">Incluir Arquivos</th>
+        <td>
+          <a href="{% url 'cadastrarArquivo' %}?equipamento_id={{ equipamento.id }}" class="new-link">
+            <i class="bi bi-cloud-arrow-up bi-lg" style="font-size: 2rem;"></i>
+          </a>
+        </td>
+      </tr>
 
-              <table class="table table-hover">
-              <thead>
-                <th> Nome Arquivo</th>
-                <th> Excluir Arquivo</th>
-              </thead>
-            {% for arquivo in media %}   
+      <!-- Listagem dos Arquivos -->
+      <tr>
+        <th scope="row">Lista de Arquivos</th>
+        <td>
+          <table class="table table-hover table-sm">
+            <thead>
+              <tr>
+                <th>Nome Arquivo</th>
+                <th>Excluir Arquivo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for arquivo in media %}
                 {% if arquivo.documentos %}
-                <tr><th scope="row"> <a href="{% url 'download_arquivo' %}?filename={{ arquivo.documentos }}" target="_blank">{{ arquivo.nome }}</a>
-                <td> <a href="{% url 'excluiArquivo' %}?id={{ arquivo.id }}"><i class="bi bi-trash"></i></a></td></tr>
-                              
+                  <tr>
+                    <td><a href="{% url 'download_arquivo' %}?filename={{ arquivo.documentos }}" target="_blank">{{ arquivo.nome }}</a></td>
+                    <td><a href="{% url 'excluiArquivo' %}?id={{ arquivo.id }}"><i class="bi bi-trash"></i></a></td>
+                  </tr>
                 {% endif %}
-            {% endfor %}
-              </table>
-            </td> 
-          </tr>
-          <div class="text-center">
-          {% if confirmarexluir == '1' %}
-          <th scope="row"> </th>
-          <td>
-            <a href="{% url 'excluirEquipamento' %}?id={{ equipamento.id }}&excluir=2" class="btn btn-danger">Excluir Equipamento <i class="bi bi-trash"></i></a>
-          </td>
-          <br>
-          <br>
-        </tr>
-          {% endif %}
-      </div>
-        </tbody>
-      </table>
+              {% endfor %}
+            </tbody>
+          </table>
+        </td>
+      </tr>
 
-      
-        
+      {% if confirmarexluir == '1' %}
+      <tr>
+        <th scope="row"> </th>
+        <td>
+          <a href="{% url 'excluirEquipamento' %}?id={{ equipamento.id }}&excluir=2" class="btn btn-danger">Excluir Equipamento <i class="bi bi-trash"></i></a>
+        </td>
+      </tr>
+      {% endif %}
+
+      <!-- PERMISSÕES -->
+      <tr> 
+        <th scope="row">Permissões</th>
+        <td>
+          <table class="table table-hover table-sm">
+            <thead>
+              <tr>
+                <th>Usuário Permitido</th>
+                <th>Data de Cadastro da Permissão</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for permissao in permissoes %}
+                <tr>
+                  <td>{{ permissao.usuario.nome }}</td>
+                  <td>{{ permissao.data_cadastro|date:"d/m/Y" }}</td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="2">Todos os usuarios estão permitidos para esse equipamento</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+  <br>
 </div>
 
 {% endblock %}
