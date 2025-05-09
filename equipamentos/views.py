@@ -1060,12 +1060,12 @@ def cadastrar_permissoes(request):
         details = cadastrarPermissaoForm(request.POST)
 
         if details.is_valid():
-            usuario = details.cleaned_data["usuario"]
+            usuario_cadastro = details.cleaned_data["usuario"]
             equipamento = details.cleaned_data["equipamento"]
             
             e = Autorizacao_equipamento(
                 equipamento=equipamento,
-                usuario=usuario)
+                usuario=usuario_cadastro)
             e.save()
 
             Log.cadastramento(objeto=e, transacao="eq", usuario=usuario, equipamento=equipamento)
