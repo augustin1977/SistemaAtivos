@@ -1081,10 +1081,8 @@ def cadastrar_permissoes(request):
 @is_superuser
 def excluir_permissoes(request, id):
     permissao = get_object_or_404(Autorizacao_equipamento, id=id)
-    permissao.delete()
     usuario = Usuario.objects.get(id=request.session.get("usuario"))
-    
-    Log.exclusao(objeto=permissao, transacao="eq", usuario=usuario, equipamento=permissao.equipamento
-    )
+    Log.exclusao(objeto=permissao, transacao="eq", usuario=usuario, equipamento=permissao.equipamento)
+    permissao.delete()
     return redirect('listar_permissoes')  # Redireciona para a lista após exclusão
  
