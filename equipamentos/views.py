@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render,get_object_or_404
 from django.contrib.staticfiles.views import serve
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from .models import *
 from notas.models import *
 from django.shortcuts import redirect
 from cadastro_equipamentos import settings
 from django.http import HttpResponse, Http404
 from os import path
-from django.core import serializers
-import urllib.request
 from cadastro_equipamentos.settings import BASE_DIR, MEDIA_ROOT, TIME_ZONE
 import os, csv
 from log.models import Log
@@ -18,7 +16,7 @@ import equipamentos.funcoesAuxiliares as funcoesAuxiliares
 from equipamentos.calcula_dados_sistema import *
 from django.db.models import Q
 import json
-from datetime import datetime, timedelta
+from datetime import datetime
 import dados_ambiente
 from usuarios.autentica_usuario import *
 

@@ -12,7 +12,7 @@ from django.http import HttpResponse, Http404
 from django.utils import timezone
 from cadastro_equipamentos.settings import TIME_ZONE
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from usuarios.autentica_usuario import *
 #Bibliotecas Gerais
 from os import path
 import csv
@@ -95,11 +95,9 @@ lista_transacoes={'eq':'Equipamento','te':'Tipo Equipamento','fn':'Fornecedor','
                   'me':'media','dc':'Disciplina de Manutenção','mf':'Modo de Falha','mq':'Modo de falha Equipamento',
                         'nm':'Ocorrência Material','ne':'Ocorrência Equipamento','us':'usuario','tu':'Tipo de Usuario','rt':"Relatório"}
 lista_movimentos={'cd':'Cadastro','lt':'Listagem','ed':'Edição','dl':'Delete','lo':'logon','lf':'logoff'}
-
+@is_user
 def relatorioLog(request):
     """Cria relatório de log generico"""
-    if not request.session.get('usuario'):
-        return redirect('/auth/login/?status=2')
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
     #print(f"{Usuario.objects.get(id=usuario.id)} acessou Relatório de Logs")
     #log=Log(transacao='rt',movimento='lt',usuario=Usuario.objects.get(id=usuario.id),alteracao=f'{usuario.nome} visualisou relatório de logs')
@@ -123,11 +121,9 @@ def relatorioLog(request):
     
     
     return render(request, "relatorioLog.html", {'lista_log':lognovo}) 
-
+@is_user
 def baixarRelatorioLog(request):
     """ Cria arquivo e Baixa relatório de LOG no formato CSV"""
-    if not request.session.get('usuario'):
-        return redirect('/auth/login/?status=2')
     try :
         tempo=int(request.GET.get("tempo"))
     except:
@@ -165,12 +161,10 @@ def baixarRelatorioLog(request):
             writer.writerow([obj.data_cadastro.strftime("%d-%m-%Y %H:%M:%S"), obj.transacao, obj.movimento,obj.equipamento,obj.nota_equipamento,
                 obj.usuario,obj.alteracao])
         return response
-
+@is_user
 def relatorioNotasData(request):
     """Cria relatório de notas entre duas datas recebidas via requisição POST
     As variaveis são data_inicio e data_fim """
-    if not request.session.get('usuario'):
-        return redirect('/auth/login/?status=2')
     if request.method=="GET":
         utc=pytz.timezone(TIME_ZONE)
         hoje=utc.localize(datetime.combine((datetime.today()), datetime.min.time()))
@@ -188,10 +182,9 @@ def relatorioNotasData(request):
         # print(notas)
 
         return render(request,'relatorioNotasData.html',{'form':notas,'data_inicio':str(datainicio.date()), 'data_fim':str(datafim.date()),'selected':0})
-
+@is_user
 def relatorioLogEquipamento(request):
-    if not request.session.get('usuario'):
-        return redirect('/auth/login/?status=2')
+
     if request.method=="GET":
         equipamento=Equipamento.objects.filter(ativo=True)
         return render(request,'relatorioLogEquipamento.html',{'form':equipamento, 'lista_log':[],'selected':0})
@@ -211,10 +204,9 @@ def relatorioLogEquipamento(request):
                 'ocorrencia_equipamento':"Erro",'alteracao':item.alteracao})
         return render(request,'relatorioLogEquipamento.html',{'form':equipamento, 'lista_log':lognovo,'selected':int(equipamentoid)})
     return HttpResponse("Parcialmente implementado")
-
+@is_user
 def baixarRelatorioLogEquipamento(request):
-    if not request.session.get('usuario'):
-        return redirect('/auth/login/?status=2')
+    """ Cria arquivo e Baixa relatório de LOG por equipamento no formato CSV"""
     try :
         teste=int(request.GET.get("equipamentoid"))
     except:
@@ -232,17 +224,13 @@ def baixarRelatorioLogEquipamento(request):
         writer.writerow([obj.data_cadastro, obj.transacao, obj.movimento,obj.equipamento,obj.nota_equipamento,
             obj.usuario,obj.alteracao])
     return response
-
+@is_user
 def menuRelatorios(request):
-    if not request.session.get('usuario'):
-        return redirect('/auth/login/?status=2')
     # cria a view do login do usuário
     status=str(request.GET.get('status'))
     return render(request, "homeRelatorio.html", {'status':status})
-
+@is_user
 def relatorioNotasEquipamento(request):
-    if not request.session.get('usuario'):
-        return redirect('/auth/login/?status=2')
     if request.method=="GET":
         equipamento=Equipamento.objects.filter(ativo=True)
         return render(request,'relatorioNotasEquipamento.html',{'form':equipamento, 'lista_notas':[],'selected':0})
@@ -252,10 +240,8 @@ def relatorioNotasEquipamento(request):
         equipamento=Equipamento.objects.filter(ativo=True)
         return render(request,'relatorioNotasEquipamento.html',{'form':equipamento, 'lista_notas':notas,'selected':int(equipamentoid)})
     return HttpResponse("Parcialmente implementado")
-
+@is_user
 def baixarRelatorioNotaEquipamento(request):
-    if not request.session.get('usuario'):
-        return redirect('/auth/login/?status=2')
     try :
         busca=int(request.GET.get("equipamentoid"))
     except:
@@ -274,10 +260,8 @@ def baixarRelatorioNotaEquipamento(request):
         writer.writerow([obj.data_ocorrencia, obj.data_cadastro, obj.titulo,obj.descricao,obj.equipamento,
                          obj.melhoria,obj.calibracao,obj.falha,obj.lubrificao, obj.usuario])
     return response
-
+@is_user
 def relatorioLogData(request):
-    if not request.session.get('usuario'):
-        return redirect('/auth/login/?status=2')
     if request.method=="GET":
         utc=pytz.timezone(TIME_ZONE)
         hoje=utc.localize(datetime.combine((datetime.today()), datetime.min.time()))
@@ -307,11 +291,8 @@ def relatorioLogData(request):
                 'data_cadastro':item.data_cadastro,'usuario':item.usuario,'equipamento':"Erro",
                 'ocorrencia_equipamento':"Erro",'alteracao':item.alteracao})
         return render(request,'relatorioLogData.html',{'lista_log':lognovo,'data_inicio':str(datainicio.date()), 'data_fim':str(datafim.date()),'selected':0})
-    
+@is_user    
 def baixarRelatorionotasEquipamentodata(request):
-
-    if not request.session.get('usuario'):
-        return redirect('/auth/login/?status=2')
     try :
         datai=(request.GET.get("data_inicio"))
         dataf=(request.GET.get("data_fim"))
@@ -333,10 +314,8 @@ def baixarRelatorionotasEquipamentodata(request):
         writer.writerow([obj.data_ocorrencia, obj.data_cadastro, obj.titulo,obj.descricao,obj.equipamento,
             obj.melhoria,obj.calibracao,obj.falha, obj.lubrificao,  obj.usuario])
     return response
-
+@is_user
 def baixarRelatorioLogPDF(request):
-    if not request.session.get('usuario'):
-        return redirect('/auth/login/?status=2')
     try:
         tempo = int(request.GET.get("tempo"))
     except:
@@ -439,10 +418,8 @@ def baixarRelatorioLogPDF(request):
         canvasmaker=PageNumCanvas
     )
     return response
-
+@is_user
 def baixarRelatorioLogEquipamentoPDF(request):
-    if not request.session.get('usuario'):
-        return redirect('/auth/login/?status=2')
     try :
         teste=int(request.GET.get("equipamentoid"))
     except:
