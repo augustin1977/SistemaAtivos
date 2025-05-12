@@ -227,8 +227,8 @@ class mediaForm(ModelForm):
             'nome': 'Nome do arquivo','equipamento':'Equipamento','documentos':'Documento - Tamanho máximo do arquivo - 40MB'
         }  
 class cadastrarPermissaoForm (ModelForm):
-    equipamento = ModelChoiceField(queryset=Equipamento.objects.filter(ativo=True),widget=Select(attrs={'class': "form-control"}))
-    usuario = ModelChoiceField(queryset=Usuario.objects.filter(ativo=True),widget=Select(attrs={'class': "form-control"}))
+    equipamento = ModelChoiceField(queryset=Equipamento.objects.filter(ativo=True).order_by("nome_equipamento"),widget=Select(attrs={'class': "form-control"}))
+    usuario = ModelChoiceField(queryset=Usuario.objects.filter(ativo=True).order_by("nome"),widget=Select(attrs={'class': "form-control"}))
     class Meta:
         model = Autorizacao_equipamento
         fields = ['equipamento','usuario']
