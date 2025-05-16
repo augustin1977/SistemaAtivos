@@ -3,6 +3,18 @@
     pointer-events: none;      /* desabilita clique */
     opacity: 0.6;              /* deixa o link meio apagado */
   }
-  .menu-bloqueado {
+.menu-bloqueado {
     display: none !important;
+  }
+.tabela-scroll {
+    height: calc(100vh - 250px); /* Altura dinâmica da tabela */
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+  }
+
+.sticky-header th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa;
+    z-index: 2;
   }

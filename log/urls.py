@@ -13,4 +13,6 @@ urlpatterns = [path("menuRelatorios/",views.menuRelatorios, name="menuRelatorios
     path("baixarRelatorionotasEquipamentodata/",views.baixarRelatorionotasEquipamentodata, name="baixarRelatorionotasEquipamentodata"),
     path("baixarRelatorioLogPDF/",views.baixarRelatorioLogPDF, name="baixarRelatorioLogPDF"),
     path("baixarRelatorioLogEquipamentoPDF/",views.baixarRelatorioLogEquipamentoPDF, name="baixarRelatorioLogEquipamentoPDF"),
+    path("gerar_relatorio_permissoes/", views.gerar_relatorio_permissoes, name='gerar_relatorio_permissoes'),
+    path("relatorioPermissoesPDF/<list>", views.baixarRelatorioPermissoesPDF, name='relatorioPermissoesPDF'),
 ]

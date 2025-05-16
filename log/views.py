@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from django.contrib.staticfiles.views import serve
 from django.http import HttpResponse
-from equipamentos.models import Usuario,Tipo,Equipamento,Material_consumo,Media,Fabricante
+from equipamentos.models import *
 from .models import *
 from django.db.models import Q
 from log.models import Log
@@ -29,7 +29,8 @@ from reportlab.lib.pagesizes import A4 # type: ignore
 from reportlab.lib import colors # type: ignore
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle # type: ignore
 from reportlab.lib.units import inch,mm # type: ignore
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer # type: ignore
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer,PageBreak,KeepTogether  # type: ignore
+from reportlab.platypus.flowables import HRFlowable # type: ignore
  
 #### Criando Classe para colocar o numero de paginas#####
 class PageNumCanvas(canvas.Canvas):
@@ -503,6 +504,102 @@ def baixarRelatorioLogEquipamentoPDF(request):
 
     
     # Associar a função de rodapé ao documento
+    doc.build(
+        elements,
+        canvasmaker=PageNumCanvas
+    )
+    return response
+@is_user
+def gerar_relatorio_permissoes(request):
+    usuario=request.session.get('usuario')
+    usuario=Usuario.objects.get(id=usuario)
+    todos_equipamentos = equipamentos = Equipamento.objects.filter(ativo=True,autorizacao_equipamento__isnull=False).distinct()
+    if request.method == "POST":
+        equipamentos= request.POST.getlist('equipamento_ids')
+        if not equipamentos:
+            equipamentos = todos_equipamentos
+        return baixarRelatorioPermissoesPDF(equipamentos,usuario)
+    
+    return render(request, "relatorio_permissoes.html", {'equipamentos': todos_equipamentos})
+
+
+def baixarRelatorioPermissoesPDF(equipamentos,usuario):
+    print(f"Equipamentos: {equipamentos}")  
+    # equipamento_ids = request.GET.get('equipamentos')
+    equipamentos = Equipamento.objects.filter(id__in=equipamentos).distinct().order_by('nome_equipamento')
+    equipamentos_com_permissoes = [eq for eq in equipamentos if eq.autorizacao_equipamento_set.exists()]
+    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="relatorio_permissoes.pdf"'
+
+    doc = SimpleDocTemplate(response, pagesize=A4)
+    styles = getSampleStyleSheet()
+    elements = []
+
+    # Cabeçalho geral do documento
+    header_style = ParagraphStyle('Header', parent=styles['Heading1'], alignment=1, fontSize=14)
+    subheader_style = ParagraphStyle('SubHeader', parent=styles['Heading2'], alignment=1, fontSize=12)
+
+    elements.append(Paragraph('Sistema de Gestão de Ativos - LPM', header_style))
+    elements.append(Paragraph('Relatório de Permissões de Uso de Equipamentos', subheader_style))
+
+    date_style = ParagraphStyle('Date', parent=styles['Normal'], spaceAfter=12)
+    usuario_relatorio = usuario.email if usuario.email else usuario.nome
+    date_info = f'Relatório emitido por {usuario_relatorio} em {datetime.now().strftime("%d/%m/%Y %H:%M")}'
+    elements.append(Paragraph(date_info, date_style))
+    elements.append(Spacer(1, 12))
+
+    # Loop dos equipamentos com permissões
+    equipamento_por_pagina = 0
+    for equipamento in equipamentos_com_permissoes:
+        bloco = []
+
+        # Linha preta separadora 
+        bloco.append(HRFlowable(width="100%", thickness=1, color=colors.black))
+        bloco.append(Spacer(1, 6))
+
+        # Cabeçalho do equipamento
+        dados_equipamento = f"""
+        <b>Nome:</b> {equipamento.nome_equipamento}<br/>
+        <b>Modelo:</b> {equipamento.modelo}<br/>
+        <b>Fabricante:</b> {equipamento.fabricante}<br/>
+        <b>Código:</b> {equipamento.codigo}<br/>
+        <b>Local:</b> {equipamento.local}<br/>
+        <b>Patrimônio:</b> {equipamento.patrimonio}<br/>
+        <b>Responsável:</b> {equipamento.responsavel}
+        """
+        bloco.append(Paragraph(dados_equipamento, styles['Normal']))
+        bloco.append(Spacer(1, 6))
+
+        # Tabela de permissões
+        table_data = [['Nome do Usuário', 'Data da Permissão']]
+        for perm in equipamento.autorizacao_equipamento_set.all():
+            table_data.append([
+                perm.usuario.nome,
+                perm.data_cadastro.strftime("%d/%m/%Y")
+            ])
+
+        table = Table(table_data, colWidths=[110 * mm, 45 * mm])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 6),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+            ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 1), (-1, -1), 9),
+        ]))
+        bloco.append(table)
+        bloco.append(Spacer(1, 20))
+
+        # Agrupa o bloco e adiciona aos elementos com quebra controlada
+        elements.append(KeepTogether(bloco))
+        # equipamento_por_pagina += 1
+        # if equipamento_por_pagina == 3:
+        #     elements.append(PageBreak())
+        #     equipamento_por_pagina = 0
+
     doc.build(
         elements,
         canvasmaker=PageNumCanvas
