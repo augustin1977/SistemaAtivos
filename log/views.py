@@ -524,7 +524,7 @@ def gerar_relatorio_permissoes(request):
 
 
 def baixarRelatorioPermissoesPDF(equipamentos,usuario):
-    print(f"Equipamentos: {equipamentos}")  
+  
     # equipamento_ids = request.GET.get('equipamentos')
     equipamentos = Equipamento.objects.filter(id__in=equipamentos).distinct().order_by('nome_equipamento')
     equipamentos_com_permissoes = [eq for eq in equipamentos if eq.autorizacao_equipamento_set.exists()]
@@ -544,8 +544,9 @@ def baixarRelatorioPermissoesPDF(equipamentos,usuario):
     elements.append(Paragraph('Relatório de Permissões de Uso de Equipamentos', subheader_style))
 
     date_style = ParagraphStyle('Date', parent=styles['Normal'], spaceAfter=12)
-    usuario_relatorio = usuario.email if usuario.email else usuario.nome
-    date_info = f'Relatório emitido por {usuario_relatorio} em {datetime.now().strftime("%d/%m/%Y %H:%M")}'
+    usuario_relatorio = usuario.nome 
+    usuario_email=usuario.email
+    date_info = f'Relatório emitido por {usuario_relatorio}&lt;{usuario.email}&gt; em {datetime.now().strftime("%d/%m/%Y as %H:%M")}'
     elements.append(Paragraph(date_info, date_style))
     elements.append(Spacer(1, 12))
 
@@ -591,11 +592,12 @@ def baixarRelatorioPermissoesPDF(equipamentos,usuario):
             ('FONTSIZE', (0, 1), (-1, -1), 9),
         ]))
         bloco.append(table)
-        bloco.append(Spacer(1, 20))
+        bloco.append(Spacer(1, 10))
 
         # Agrupa o bloco e adiciona aos elementos com quebra controlada
         elements.append(KeepTogether(bloco))
-        # equipamento_por_pagina += 1
+        equipamento_por_pagina += 1
+        
         # if equipamento_por_pagina == 3:
         #     elements.append(PageBreak())
         #     equipamento_por_pagina = 0
