@@ -58,27 +58,24 @@ def lista_equipamentos(request):
 
 
 def get_equipamentos(request):
-    nome_equipamento = request.GET.get("nome_equipamento", "")
+    termo_busca = request.GET.get("nome_equipamento", "")
     equipamentos = []
 
-    if len(nome_equipamento) > 2:
-        q1 = Q(nome_equipamento__icontains=nome_equipamento)
-        q2 = Q(codigo__icontains=nome_equipamento)
-        q3 = Q(fabricante__nome_fabricante__icontains=nome_equipamento)
-        q4 = Q(patrimonio=nome_equipamento)
-        q5 = Q(modelo__icontains=nome_equipamento)
+    if len(termo_busca) > 2:
+        q1 = Q(nome_equipamento__icontains=termo_busca)
+        q2 = Q(codigo__icontains=termo_busca)
+        q3 = Q(fabricante__nome_fabricante__icontains=termo_busca)
+        q4 = Q(patrimonio=termo_busca)
+        q5 = Q(modelo__icontains=termo_busca)
         q9 = Q(ativo=True)
 
         filtro = (q1 | q2 | q3 | q4 | q5) & q9
         equipamentos = Equipamento.objects.filter(filtro)
     else:
         equipamentos = Equipamento.objects.filter(ativo=True)
-    # equipamentos_json = list(equipamentos.values('id','nome_equipamento', 'modelo','tipo_equipamento__nome_tipo','local'))
     equipamentos_json = json.dumps(
         [equipamento.to_dic() for equipamento in equipamentos], ensure_ascii=False
     )
-    # equipamentos_json = json.dumps(equipamentos_json,ensure_ascii=False)
-    # equipamentos_json = serializers.serialize('json', equipamentos, fields=('id','nome_equipamento', 'modelo','tipo_equipamento','local'))
     return HttpResponse(equipamentos_json, content_type="application/json")
 
 @is_user
