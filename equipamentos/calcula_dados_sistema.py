@@ -23,7 +23,7 @@ class Pasta:
 
 
 def converteBR(numero, casas=3):
-    """Converte numero padão americano em numero padrão BR"""
+    """Converte numero padrão americano em numero padrão BR"""
     tipo = type(numero)
     if not (tipo == int or tipo == float):
         return "erro - Valor não numerico -> " + str(numero)

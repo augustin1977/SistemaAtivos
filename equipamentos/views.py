@@ -1032,20 +1032,23 @@ def excluirLocal(request):
             return redirect("/equipamentos/listarLocais")
         return redirect(f"/equipamentos/?status=50")
 
-@is_user
+@is_superuser
 def consulta_dados_sistema(request):
     linhas, letras = acessaPastaRecursiva(BASE_DIR)
     agora = datetime.now()
     versao=dados_ambiente.versao
+    data_consulta=f"{agora:%d/%m/%Y - %H:%M:%S}"
     contagem_tempo = (agora.year - 2023) * 12 + (agora.month - 6) + (agora.day) / 31
-    retorno = f"<h1>Estatisticas do Sistema de Gestão de ativos</h1>Versão {versao}<br>Foram digitados {converteBR(letras)} caracteres em {converteBR(linhas)} linhas de codigo."
-    retorno += f"<br>Dada da consulta - {agora:%d/%m/%Y - %H:%M:%S}"
     if contagem_tempo <= 12:
-        retorno += f"<br>Tempo desde o Go Live {converteBR(contagem_tempo,1)} meses"
+        tempo = f"{converteBR(contagem_tempo,1)} meses"
     else:
-        retorno += f"<br>Tempo desde o Go Live {converteBR(contagem_tempo/12,2)} anos"
-    retorno +='<br><a href="http://gestaoativosma.ad.ipt.br/listarUsuarios/">voltar'
-    return HttpResponse(retorno)
+        tempo = f"{converteBR(contagem_tempo/12,2)} anos"
+    dic={'numero_caracteres': converteBR(letras),
+         'numero_linhas': converteBR(linhas),
+         'versao': versao,
+         'data': data_consulta,
+         'tempo': tempo,}
+    return render(request,"exibirdadosSistema.html",dic)
 
 @is_superuser
 def listar_permissoes(request):
