@@ -1032,7 +1032,7 @@ def excluirLocal(request):
             return redirect("/equipamentos/listarLocais")
         return redirect(f"/equipamentos/?status=50")
 
-@is_superuser
+@is_user
 def consulta_dados_sistema(request):
     linhas, letras = acessaPastaRecursiva(BASE_DIR)
     agora = datetime.now()

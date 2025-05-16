@@ -1,2 +1,2 @@
 ########### Versão do sistema ##############
-versao="1.5.2"
+versao="1.5.3"
