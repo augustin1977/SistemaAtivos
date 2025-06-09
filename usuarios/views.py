@@ -21,9 +21,9 @@ def login(request):
     # cria a view do login do usuário
     status=str(request.GET.get('status'))
     tipo=Tipo.objects.get(tipo="admin")
-    #administradores= Usuario.objects.filter(tipo=tipo).exclude(nome="System").order_by("nome")
+    administradores= Usuario.objects.filter(tipo=tipo).exclude(nome="System").order_by("nome")
 
-    return render(request, "login.html", {'status':status})
+    return render(request, "login.html", {'status':status,'administradores':administradores})
 
 def cadastrar(request):
     # cria a view do cadastro de usuaário
