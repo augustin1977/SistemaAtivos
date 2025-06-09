@@ -15,6 +15,7 @@ import time
 import json
 from django.db.models import Count
 from django.http import JsonResponse
+from usuarios.autentica_usuario import *
 def vazio(request):
     return redirect('/auth/login/') 
 def login(request):
@@ -264,19 +265,41 @@ def gera_senha(tamanho):
     senha = ''.join(random.choice(caracteres) for i in range(tamanho-1))
     senha=random.choice(string.ascii_uppercase)+senha
     return senha
-
+@is_admin
 def listarUsuarios(request):
-    
-    if not request.session.get('usuario'):
-        return redirect('/auth/login/?status=1')
+    usuarios=Usuario.objects.filter(ativo=True).order_by('nome')
+    return render(request, "listaUsuarios.html", {'usuarios':usuarios})
+@is_admin
+def listaUsuariosInativos(request):
+    usuarios=Usuario.objects.filter(ativo=False).order_by('nome')
+    return render(request, "listaUsuariosInativos.html", {'usuarios':usuarios})
+@is_admin
+def ativarUsuario(request):
     usuario=Usuario.objects.get(id=request.session.get('usuario'))
-    tipo=Tipo.objects.get(tipo="admin")
-    if(usuario.tipo==tipo):
-        usuarios=Usuario.objects.filter(ativo=True).order_by('nome')
-        return render(request, "listaUsuarios.html", {'usuarios':usuarios})
-    else:
-        return redirect(f'/equipamentos/?status=50')
-
+    user=Usuario.objects.get(id=request.GET.get('usuario'))
+    user.ativo=True
+    user.primeiro_acesso=True
+    user.senha=gera_senha(12)
+    log =Log(alteracao=f"O {usuario} reativou o usuario: {user} e criou uma nova senha para acesso ",usuario=usuario,transacao='us',movimento='ed')
+    log.save() 
+    conteudo_html = f"""<html>
+                            <head></head>
+                            <body>
+                                <h2>Olá {user}!</h2>
+                                <p>Foi solicitada uma nova senha para seu usuário pelo usuario administrador do sistema.</p>
+                                <p>Os dados para login são:</p>
+                                <p>Seu nome de usuário: {user.email}</p>
+                                <p>Sua nova senha provisória: {user.senha}</p>
+                                <p>O link do sistema é: <a href="http://gestaoativosma.ad.ipt.br/">gestaoativosma.ad.ipt.br </a> </p>
+                                <p>Obrigado!</p>
+                            </body>
+                        </html>"""
+    enviar_email_background(subject='Recuperação de senha Sistema de gestão de ativos',
+                            body=conteudo_html,
+                            recipients=[user.email,'gestaoativosma@gmail.com']) 
+    user.save()
+    return redirect('/listaUsuariosInativos/')
+      
 def exibirUsuario(request):
     if not request.session.get("usuario"):
         return redirect("/auth/login/?status=2")

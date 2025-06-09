@@ -65,6 +65,7 @@
         <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'editar' %}">Alterar Senha</a>
         <hr class="dropdown-divider">
         <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'listarUsuarios' %}">Listar Usuarios</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'listaUsuariosInativos' %}">Listar Usuarios Inativos</a>
         <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'cadastrar' %}">Cadastrar Usuários</a>
         <hr class="dropdown-divider">
         <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'maioresUsuarios' %}">Estatistica Usuários</a>
