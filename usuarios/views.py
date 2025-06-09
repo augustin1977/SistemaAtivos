@@ -375,13 +375,10 @@ def trocasenha(request):
                                     <p>Obrigado!</p>
                                 </body>
                                 </html>"""
-                enviar_email(subject='Senha Sistema de gestão de ativos',
+                enviar_email_background(subject='Recuperação de senha Sistema de gestão de ativos',
                          body=conteudo_html,
                          recipients=[usuario_troca_senha.email,'gestaoativosma@gmail.com'])              
-                # send_mail(subject='Recuperação de Senha Sistema de gestão de ativos',message=f"{usuario_troca_senha} foi solicitado uma nova senha pelo usuario {usuario_adm} sua nova senha é {novasenha}",
-                #     from_email="gestaodeativos@outlook.com.br",recipient_list=[usuario_troca_senha.email,'gestaodeativos@outlook.com.br'],
-                #     html_message=conteudo_html,)
-                
+       
                 log=Log(transacao='us',movimento='ed',usuario=usuario_adm,
                         alteracao=f'O usuario {usuario_adm} recuperou a senha do {usuario_troca_senha} via sistema e eviou email para {usuario_troca_senha.email}')
                 log.save()
