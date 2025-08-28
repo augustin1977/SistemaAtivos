@@ -174,7 +174,7 @@ class Boxplot():
             self.erro=2 # Erro - numero de nomes diferentes do numero de coluna de dados
         
         
-    def gera_grafico(self,linha_media,valor_media,cv,labelcores,posicao_legenda):
+    def gera_grafico(self,linha_media,valor_media,cv,labelcores,posicao_legenda,escala_fixa=False,x_minimo=0,x_maximo=100):
         if self.erro==0:
             matplotlib.use("Agg")  # Modo não interativo
             maxnomes = len(max(self.nomes, key=lambda x: len(x))) # tamanho do maior nome de categoria
@@ -227,7 +227,8 @@ class Boxplot():
                 patch_artist=True,
             )
             # Coloca label vermelho na familia referencia
-
+            if(escala_fixa):
+                ax1.set_xlim(x_minimo, x_maximo)
             if labelcores:
                 for label, familia in zip(ax1.get_yticklabels(), self.familias):
                     if (
@@ -392,7 +393,7 @@ class Boxplot():
 
 
 # Função que cria o objeto e chama as funções 
-def gera_boxplot(arquivo, linha_media,valor_media,cv, labelcores,legenda):
+def gera_boxplot(arquivo, linha_media,valor_media,cv, labelcores,legenda,escala_fixa=False,x_minimo=0,x_maximo=100):
     boxplot=Boxplot(arquivo)
     boxplot.le_dados() # faz a leitura dos dados do arquivo
     if boxplot.status: # Se não ocorrer nenum erro
@@ -403,7 +404,10 @@ def gera_boxplot(arquivo, linha_media,valor_media,cv, labelcores,legenda):
         boxplot.organiza_dados() # organiza os dados
         # print(boxplot.dados_verificados)
     if boxplot.status: # Se não ocorrer nenum erro
-        grafico=boxplot.gera_grafico(linha_media,valor_media,cv,labelcores,legenda) # gera o gráfico
+        if escala_fixa:
+            grafico=boxplot.gera_grafico(linha_media,valor_media,cv,labelcores,legenda,escala_fixa=True,x_minimo=x_minimo,x_maximo=x_maximo)
+        else:
+            grafico=boxplot.gera_grafico(linha_media,valor_media,cv,labelcores,legenda) # gera o gráfico
     else: #caso contraria retorne False
         grafico=boxplot.erro # Reporta os erros cometidos
     return grafico

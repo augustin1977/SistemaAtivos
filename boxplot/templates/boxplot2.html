@@ -1,7 +1,25 @@
 {% extends 'base.html'%} {% block 'titulo'%} Gestão Ativos MA {% endblock %} 
 {%block 'menu' %} {% include 'menu.html' %} {% endblock %} 
 {% block 'conteudo'%}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const checkbox = document.getElementById("escala_fixa");
+    const escalaMin = document.getElementById("escala_minima");
+    const escalaMax = document.getElementById("escala_maxima");
 
+    function toggleEscala() {
+      const habilitar = checkbox.checked;
+      escalaMin.disabled = !habilitar;
+      escalaMax.disabled = !habilitar;
+    }
+
+    // inicializa no carregamento
+    toggleEscala();
+
+    // escuta mudanças
+    checkbox.addEventListener("change", toggleEscala);
+  });
+</script>
 <div class="text-center">
   <br /><br />
   <h1>Criar Boxplot simples a partir de Excel padrão</h1>
@@ -47,6 +65,11 @@
         <div class="alert alert-danger" role="alert">
           O arquivo não foi decodificado corretamento, verifique o documento e
           tente novamente.
+        </div>
+        {% endif %}
+        {% if erro == '4'%}
+        <div class="alert alert-danger" role="alert">
+          Verifique os campos de escala, pode ter havido um erro de digitação. Tente novamente.
         </div>
         {% endif %}
       </div>
@@ -105,6 +128,42 @@
           <option value="NA">Sem legenda</option>
         </select>
       </div>
+      <div class="col-12">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="escala_fixa"
+          name="escala_fixa"
+        />
+        <label class="form-check-label" for="escala_fixa">
+          Usar escala fixa
+        </label>
+      </div>
+
+      <div class="col-6">
+        <label for="escala_minima">Escala Mínima:</label>
+        <input
+          type="number"
+          class="form-control"
+          id="escala_minima"
+          name="escala_minima"
+          step="any"
+          disabled
+        />
+      </div>
+
+      <div class="col-6">
+        <label for="escala_maxima">Escala Máxima:</label>
+        <input
+          type="number"
+          class="form-control"
+          id="escala_maxima"
+          name="escala_maxima"
+          step="any"
+          disabled
+        />
+      </div>
+
 
       <!-- Botão para executar a função desejada -->
       <div class="col-12">

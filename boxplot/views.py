@@ -33,13 +33,27 @@ def gerar_grafico2(request):
     if name[-3:] != "csv":
         # print(name[-3:])
         return render(request, "boxplot2.html", {"erro": "2"})
+    escala_fixa=(request.POST.get("escala_fixa")=="on")
+    minimo=0
+    maximo=10
+    if escala_fixa:
+        try:
+            minimo=float(request.POST.get("escala_minima"))
+            maximo=float(request.POST.get("escala_maxima"))
+        except:
+            escala_fixa=False
+            return render(request, "boxplot2.html", {"erro": "4"})
+                        
     imagem = boxplot.boxplot2.gera_boxplot(
         file,
         request.POST.get("linha_media") == "on",
         request.POST.get("valor_media") == "on",
         request.POST.get("CV")=="on",
         request.POST.get("labelcores") == "on",
-        request.POST.get("legenda")  
+        request.POST.get("legenda"),
+        escala_fixa,
+        minimo,
+        maximo
     )
 
     if imagem:
