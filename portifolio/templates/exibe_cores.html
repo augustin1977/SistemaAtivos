@@ -28,8 +28,8 @@
             <tr>
                 <td>{{ cor.nome }}</td>
                 <td>
-                    <span style="background-color: {{ cor.tonalidade }}; padding: 0 20px; border: 1px solid #000;">&nbsp;</span>
-                    {{ cor.tonalidade }}
+                    <span style="background-color: {{ cor.css_color }}; display:inline-block; width:40px; height:20px; border:1px solid #000; border-radius:3px;"></span>
+                    <small>{{ cor.css_color }}</small>
                 </td>
                 <td>{{ cor.ativa|yesno:"Sim,Não" }}</td>
                 <td>

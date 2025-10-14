@@ -4,7 +4,7 @@ from .models import Cor
 class CorForm(Form):
     id = CharField(label="", required=False, widget=HiddenInput())
     nome = CharField(widget=TextInput(attrs={'class': "form-control"}))
-    tonalidade = CharField(widget=TextInput(attrs={'class': "form-control", 'placeholder': "#RRGGBBAA"}))
+    tonalidade = CharField(widget=TextInput(attrs={'class': "form-control", 'placeholder': "#RRGGBB"}))
     ativa = BooleanField(required=False, label="Ativa")
 
     def clean(self):

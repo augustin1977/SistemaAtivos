@@ -16,15 +16,18 @@ def cadastra_cores(request):
                 ativa=form.cleaned_data.get('ativa', False),
             )
             status = 1
-            form = CorForm()  # limpa o formulário após sucesso
+            form = CorForm() 
+            return exibe_cores(request)
     else:
         form = CorForm()
     return render(request, 'cadastra_cores.html', {'form': form, 'status': status})
 
 @is_user
-def exibe_cores(request):
-    cores = Cor.objects.all().order_by('nome')
-    return render(request, 'exibe_cores.html', {'cores': cores})
+def exibe_cores(request,status=None):
+    if not status:
+        cores = Cor.objects.all().order_by('nome')
+        return render(request, 'exibe_cores.html', {'cores': cores})
+    return render(request, 'exibe_cores.html', {'cores': cores,'status': status})
 @is_superuser
 def edita_cores(request,id):
     cor = get_object_or_404(Cor, id=id)
@@ -38,6 +41,7 @@ def edita_cores(request,id):
             cor.ativa = form.cleaned_data.get('ativa', False)
             cor.save()
             status = 1
+            return exibe_cores(request)
     else:
         form = CorForm(initial={
             'id': cor.id,
