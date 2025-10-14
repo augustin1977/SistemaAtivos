@@ -80,3 +80,5 @@ class Etiqueta(models.Model):
     def __str__(self):
         cor_nome = self.amostra.projeto.cor.nome
         return f"{self.codigo_humano} - {self.amostra.nome} - {self.codigo_numerico} - {cor_nome}"
+
+

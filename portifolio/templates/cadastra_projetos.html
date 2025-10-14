@@ -1,0 +1,29 @@
+{% extends 'base.html'%}
+{% block 'titulo'%} Gestão Ativos MA {% endblock %}
+{% block 'menu' %} 
+{% include 'menu.html' %} 
+{% endblock %}
+{% block 'conteudo'%} 
+<div class="text-center">
+    <br><br>
+    <h1>Cadastro de Projetos</h1>
+</div>
+<div class ='container'>
+    <div class='row'>
+        <div class='col-md-3'></div>
+        <div class="col-md">
+            <hr>           
+            {% if status == 1 %}
+                <div class="alert alert-success" role="alert">Projeto cadastrado com sucesso!</div>    
+            {% endif %}
+            <form method ="POST" action="{% url 'cadastra_projetos' %}"> {% csrf_token %}
+                {{ form }}
+                <br>
+                <button class="btn btn-primary mt-3">Salvar</button>
+            </form>
+            </hr>
+        </div>
+        <div class='col-md-3'></div>
+    </div>   
+</div>
+{% endblock %}

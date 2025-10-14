@@ -13,6 +13,13 @@
 </div>
 
 <div class="container">
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
     <a href="{% url 'cadastra_cores' %}" class="btn btn-success mb-3">+ Cadastrar Nova Cor</a>
     <table class="table table-bordered table-striped text-center">
         <thead>
