@@ -17,7 +17,6 @@
     </div>
   </li>
 
-
   <li class="navbar navbar-dark bg-dark nav-item dropdown ">
     <a class="navbar-link text-light dropdown-toggle "  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Equipamentos
@@ -40,6 +39,45 @@
         <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'cadastrar_permissoes' %}">Cadastrar Permissões</a>
       </div>
   </li>
+  <li class="navbar navbar-dark bg-dark nav-item dropdown">
+  <a class="navbar-link text-light dropdown-toggle" href="#" id="navbarDropdownPortifolio" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Portifólio
+  </a>
+  <div class="dropdown-menu text-light bg-dark" aria-labelledby="navbarDropdownPortifolio">
+      <!-- CORES -->
+      <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}"
+         href="{% url 'exibe_cores' %}">Exibir Cores</a>
+      <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}"
+         href="{% url 'cadastra_cores' %}">Cadastrar Cor</a>
+
+      <hr class="dropdown-divider">
+
+      <!-- PROJETOS -->
+      <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}"
+         href="{% url 'exibe_projetos' %}">Exibir Projetos</a>
+      <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}"
+         href="{% url 'cadastra_projetos' %}">Cadastrar Projeto</a>
+
+      <hr class="dropdown-divider">
+
+      <!-- AMOSTRAS -->
+      <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}"
+         href="{% url 'exibe_amostras' %}">Exibir Amostras</a>
+      <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}"
+         href="{% url 'cadastra_amostras' %}">Cadastrar Amostra</a>
+
+      <hr class="dropdown-divider">
+
+      <!-- ETIQUETAS -->
+      <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}"
+         href="{% url 'exibe_etiquetas' %}">Exibir Etiquetas</a>
+      <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}"
+         href="{% url 'cadastra_etiquetas' %}">Cadastrar Etiqueta</a>
+
+      <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}"
+         href="{% url 'imprime_etiquetas' id=1 %}">Imprimir Etiqueta</a>
+  </div>
+</li>
 
   <li class="navbar navbar-dark bg-dark nav-item dropdown ">
     <a class="navbar-link text-light dropdown-toggle "  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

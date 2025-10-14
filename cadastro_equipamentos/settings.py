@@ -55,10 +55,7 @@ INSTALLED_APPS = [
     "log",
     "boxplot",
     'django_extensions',
-    "amostras"
-
-
-
+    'portifolio',
 ]
 
 MIDDLEWARE = [

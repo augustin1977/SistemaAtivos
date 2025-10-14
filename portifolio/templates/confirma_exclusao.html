@@ -1,0 +1,19 @@
+{% extends 'base.html'%}
+
+{% block 'titulo'%} Gestão Ativos MA {% endblock %}
+
+{% block 'menu'%}
+{% include 'menu.html' %}
+{% endblock %}
+
+{% block 'conteudo'%}
+<div class="container text-center mt-5">
+    <h2>Excluir Cor</h2>
+    <p>Tem certeza que deseja excluir a cor <strong>{{ cor.nome }}</strong>?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sim, excluir</button>
+        <a href="{% url 'exibe_cores' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

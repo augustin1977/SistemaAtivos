@@ -34,6 +34,7 @@ urlpatterns = [
     path('consulta_dados_sistema/', views.consulta_dados_sistema, name='consulta_dados_sistema'),
     path('estatisticas/', views.consulta_dados_sistema, name='estatisticas'),
     path('estatistica/', views.consulta_dados_sistema, name='estatistica'),
+    path('portifolio/', include('portifolio.urls')),
     
 
 ]

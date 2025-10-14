@@ -203,10 +203,6 @@ def editarEquipamento(request):
 def cadastrarEquipamento(request):
 
     usuario = Usuario.objects.get(id=request.session.get("usuario"))
-
-
-   
-
     if request.method == "GET":
         form = equipamentoCadastrarForm(
             initial={"usuario": request.session.get("usuario")}
