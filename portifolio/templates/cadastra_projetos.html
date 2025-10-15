@@ -16,9 +16,9 @@
             {% if status == 1 %}
                 <div class="alert alert-success" role="alert">Projeto cadastrado com sucesso!</div>    
             {% endif %}
-            <form method ="POST" action="{% url 'cadastra_projetos' %}"> {% csrf_token %}
+            <form method="post" action="{% if editing %}{% url 'edita_projetos' id=projeto.id %}{% else %}{% url 'cadastra_projetos' %}{% endif %}">
+                {% csrf_token %}
                 {{ form }}
-                <br>
                 <button class="btn btn-primary mt-3">Salvar</button>
             </form>
             </hr>

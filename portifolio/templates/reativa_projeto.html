@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block 'titulo' %} Reativar Projeto {% endblock %}
+{% block 'menu' %} {% include 'menu.html' %} {% endblock %}
+{% block 'conteudo' %}
+<br>
+<div class="container mt-5">
+    <h3 class="text-center">A cor "{{ projeto.cor.nome }}" já está sendo usada</h3>
+    <p class="text-center">Escolha uma nova cor para reativar o projeto <strong>{{ projeto.nome }}</strong>.</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="cor_id">Nova Cor:</label>
+            <select class="form-control" id="cor_id" name="cor_id" required>
+                {% for cor in cores_disponiveis %}
+                <option value="{{ cor.id }}">{{ cor.nome }} ({{ cor.tonalidade }})</option>
+                {% empty %}
+                <option disabled>Nenhuma cor disponível</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success mt-3">Reativar Projeto</button>
+        <a href="{% url 'exibe_projetos_inativos' %}" class="btn btn-secondary mt-3">Cancelar</a>
+    </form>
+</div>
+
+{% endblock %}

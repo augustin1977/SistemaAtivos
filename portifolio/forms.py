@@ -1,12 +1,13 @@
 from django.forms import *
 from .models import *
 from usuarios.models import *
+from django.db.models import Q
 
 class CorForm(Form):
     id = CharField(label="", required=False, widget=HiddenInput())
     nome = CharField(widget=TextInput(attrs={'class': "form-control"}))
     tonalidade = CharField(widget=TextInput(attrs={'class': "form-control", 'placeholder': "#RRGGBB"}))
-    ativa = BooleanField(required=False, label="Ativa")
+    #ativa = BooleanField(required=False, label="Ativa")
 
     def clean(self):
         super().clean()
@@ -53,18 +54,26 @@ class ProjetoForm(forms.Form):
         required=True
     )
 
-    ativo = BooleanField(required=False, label="Ativo", initial=True)
+    #ativo = BooleanField(required=False, label="Ativo", initial=True)
+    def __init__(self, *args, **kwargs):
+        cor_atual = kwargs.pop("cor_atual", None)  # passe a cor do projeto ao editar
+        super().__init__(*args, **kwargs)
+        if cor_atual is not None:
+            self.fields["cor"].queryset = Cor.objects.filter(Q(ativa=False) | Q(pk=cor_atual.pk))
+        else:
+            self.fields["cor"].queryset = Cor.objects.filter(ativa=False)
 
     def clean(self):
-        super().clean()
-        cd = self.cleaned_data
-        nome = cd.get("nome")
-        id_atual = cd.get("id") or None
+        cleaned_data = super().clean()
+        nome = cleaned_data.get("nome")
+        id_atual = cleaned_data.get("id")
 
         if nome:
-            qs = Projeto.objects.filter(nome__iexact=nome)
+            # 🔍 Ignora o próprio registro ao editar
+            projetos = Projeto.objects.filter(nome__iexact=nome)
             if id_atual:
-                qs = qs.exclude(id=id_atual)
-            if qs.exists():
-                self.add_error("nome", "Já existe um projeto com esse nome.")
-        return cd
+                projetos = projetos.exclude(id=id_atual)
+            if projetos.exists():
+                raise forms.ValidationError("Já existe um projeto com este nome.")
+
+        return cleaned_data

@@ -6,11 +6,30 @@
 {% block 'conteudo'%}
 <div class="text-center">
     <br><br>
-    <h1>Lista de Projetos</h1>
+    {% if mostrando_inativos %}
+        <h1>Lista de Projetos Inativos</h1>
+    {% else %}
+        <h1>Lista de Projetos Ativos</h1>
+    {% endif %}
 </div>
-
 <div class="container">
-    <a href="{% url 'cadastra_projetos' %}" class="btn btn-success mb-3">+ Cadastrar Novo Projeto</a>
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="{% url 'cadastra_projetos' %}" class="btn btn-success">+ Cadastrar Novo Projeto</a>
+
+    {% if mostrando_inativos %}
+        <a href="{% url 'exibe_projetos' %}" class="btn btn-primary">Ver Ativos</a>
+    {% else %}
+        <a href="{% url 'exibe_projetos_inativos' %}" class="btn btn-secondary">Ver Inativos</a>
+    {% endif %}
+</div>
     <table class="table table-bordered table-striped text-center">
         <thead>
             <tr>
@@ -35,7 +54,20 @@
                 <td>{{ projeto.ativo|yesno:"Sim,Não" }}</td>
                 <td>
                     <a href="{% url 'edita_projetos' projeto.id %}" class="btn btn-warning btn-sm">Editar</a>
-                    <a href="{% url 'deleta_projetos' projeto.id %}" class="btn btn-danger btn-sm">Excluir</a>
+
+                    {% if mostrando_inativos %}
+                        <a href="{% url 'ativa_projetos' projeto.id %}"
+                        class="btn btn-success btn-sm"
+                        onclick="return confirm('Deseja reativar este projeto?');">
+                        Ativar
+                        </a>
+                    {% else %}
+                        <a href="{% url 'desativa_projetos' projeto.id %}"
+                        class="btn btn-danger btn-sm"
+                        onclick="return confirm('Deseja realmente desativar este projeto?');">
+                        Desativar
+                        </a>
+                    {% endif %}
                 </td>
             </tr>
             {% empty %}
