@@ -57,7 +57,7 @@ class Projeto(models.Model):
     cor=models.ForeignKey(Cor, on_delete=models.PROTECT, null=False, blank=False)
     responsavel=models.ForeignKey(Usuario, on_delete=models.PROTECT, null=False, blank=False)
     def __str__(self):
-        return f"{self.nome} - {self.cliente} - {self.cor.nome} - {self.Responsavel.nome}"
+        return f"{self.nome} - {self.cliente} - {self.cor.nome} - {self.responsavel.nome}"
 class Amostra(models.Model):
     nome=models.CharField(max_length=255)
     projeto=models.ForeignKey(Projeto, on_delete=models.CASCADE, null=False, blank=False)

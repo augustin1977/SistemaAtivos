@@ -58,14 +58,14 @@
                     {% if mostrando_inativos %}
                         <a href="{% url 'ativa_projetos' projeto.id %}"
                         class="btn btn-success btn-sm"
-                        onclick="return confirm('Deseja reativar este projeto?');">
-                        Ativar
+                        onclick="return confirm('Deseja reabrir este projeto?');">
+                        Reabrir
                         </a>
                     {% else %}
                         <a href="{% url 'desativa_projetos' projeto.id %}"
                         class="btn btn-danger btn-sm"
-                        onclick="return confirm('Deseja realmente desativar este projeto?');">
-                        Desativar
+                        onclick="return confirm('Deseja realmente encerrar este projeto?');">
+                        Finalizar
                         </a>
                     {% endif %}
                 </td>

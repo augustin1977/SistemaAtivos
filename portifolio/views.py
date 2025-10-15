@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import IntegrityError
 from django.contrib import messages
+from django.utils import timezone
+from datetime import timedelta
 from usuarios.autentica_usuario import *
 from .models import *
 from .forms import *
@@ -148,7 +150,9 @@ def desativa_projetos(request, id):
     projeto.cor.ativa = False
     projeto.cor.save(update_fields=["ativa"])
     projeto.save(update_fields=["ativo"])
-    messages.success(request, f"O projeto '{projeto.nome}' foi desativado com sucesso.")
+    hoje = timezone.now().date()
+    Amostra.objects.filter(projeto=projeto, data_fim__isnull=True).update(data_fim=hoje)
+    messages.success(request, f"Projeto '{projeto.nome}' foi encerrado com sucesso e suas amostras foram finalizadas.")
     return redirect("exibe_projetos")
 
 @is_user
@@ -168,7 +172,7 @@ def ativa_projetos(request, id):
         projeto.cor.ativa = True
         projeto.cor.save(update_fields=["ativa"])
         projeto.save(update_fields=["ativo", "cor"])
-        messages.success(request, f"O projeto '{projeto.nome}' foi reativado com sucesso.")
+        messages.success(request, f"O projeto '{projeto.nome}' foi reaberto com sucesso.")
         return redirect("exibe_projetos_inativos")
     
     if cor_em_uso:
@@ -194,16 +198,105 @@ def deleta_projetos(request, id):
 
 @is_user
 def cadastra_amostras(request):
-    return render(request, "em_construcao.html")
+    status = 0
+    if request.method == "POST":
+        form = AmostraForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            Amostra.objects.create(
+                nome=cd["nome"],
+                projeto=cd["projeto"],
+                data_recebimento=cd["data_recebimento"],
+                prazo_dias=cd["prazo_dias"]
+            )
+            messages.success(request, "Amostra cadastrada com sucesso!")
+            return redirect("exibe_amostras")
+    else:
+        form = AmostraForm()
+    return render(request, "cadastra_amostras.html", {"form": form, "status": status})
 @is_user
 def exibe_amostras(request):
-    return render(request, "em_construcao.html")
+    amostras = Amostra.objects.filter(
+        projeto__ativo=True,
+        data_fim__isnull=True
+    ).select_related("projeto").order_by("-data_recebimento")
+
+    return render(request, "exibe_amostras.html", {
+        "amostras": amostras,
+        "mostrando_finalizadas": False
+    })
 @is_user
-def edita_amostras(request):
-    return render(request, "em_construcao.html")
+def exibe_amostras_finalizadas(request):
+    amostras = Amostra.objects.filter(
+        models.Q(data_fim__isnull=False) | models.Q(projeto__ativo=False)
+    ).select_related("projeto").order_by("-data_fim", "-data_recebimento")
+
+    return render(request, "exibe_amostras.html", {
+        "amostras": amostras,
+        "mostrando_finalizadas": True
+    })
+    
 @is_user
-def deleta_amostras(request):
-    return render(request, "em_construcao.html")
+def edita_amostras(request, id):
+    amostra = get_object_or_404(Amostra, id=id)
+    if request.method == "POST":
+        form = AmostraForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            amostra.nome = cd["nome"]
+            amostra.projeto = cd["projeto"]
+            amostra.data_recebimento = cd["data_recebimento"]
+            amostra.prazo_dias = cd["prazo_dias"]
+            amostra.save()
+            messages.success(request, "Amostra atualizada com sucesso!")
+            return redirect("exibe_amostras")
+    else:
+        form = AmostraForm(initial={
+            "id": amostra.id,
+            "nome": amostra.nome,
+            "projeto": amostra.projeto,
+            "data_recebimento": amostra.data_recebimento,
+            "data_fim": amostra.data_fim,
+            "prazo_dias": amostra.prazo_dias
+        })
+    return render(request, "cadastra_amostras.html", {"form": form})
+@is_user
+def deleta_amostras(request, id):
+    amostra = get_object_or_404(Amostra, id=id)
+    amostra.delete()
+    messages.warning(request, f"Amostra '{amostra.nome}' foi removida.")
+    return redirect("exibe_amostras")
+@is_user
+def finaliza_amostra(request, id):
+    amostra = get_object_or_404(Amostra, id=id)
+
+    if amostra.data_fim:
+        messages.warning(request, f"A amostra '{amostra.nome}' já foi finalizada em {amostra.data_fim}.")
+    else:
+        amostra.data_fim = timezone.now().date()
+        amostra.save(update_fields=["data_fim"])
+
+        # Calcula prazo
+        fim_previsto = amostra.data_recebimento + timedelta(days=amostra.prazo_dias)
+        if amostra.data_fim <= fim_previsto:
+            messages.success(request, f"A amostra '{amostra.nome}' foi finalizada dentro do prazo.")
+        else:
+            atraso = (amostra.data_fim - fim_previsto).days
+            messages.warning(request, f"A amostra '{amostra.nome}' foi finalizada com {atraso} dia(s) de atraso.")
+
+    return redirect("exibe_amostras")
+@is_user
+def reabre_amostra(request, id):
+    amostra = get_object_or_404(Amostra, id=id)
+    if not amostra.data_fim:
+        messages.info(request, f"A amostra '{amostra.nome}' já está ativa.")
+    else:
+        amostra.data_fim = None
+        amostra.save(update_fields=["data_fim"])
+        messages.success(request, f"A amostra '{amostra.nome}' foi reaberta com sucesso.")
+    return redirect("exibe_amostras_finalizadas")
+
+
 @is_user
 def cadastra_etiquetas(request):
     return render(request, "em_construcao.html")

@@ -77,3 +77,33 @@ class ProjetoForm(forms.Form):
                 raise forms.ValidationError("Já existe um projeto com este nome.")
 
         return cleaned_data
+    
+
+class AmostraForm(forms.Form):
+    id = CharField(label="", widget=HiddenInput(), required=False)
+    nome = CharField(label="Nome da Amostra", widget=TextInput(attrs={'class': 'form-control'}))
+    projeto = ModelChoiceField(
+        queryset=Projeto.objects.filter(ativo=True).order_by('nome'),
+        label="Projeto",
+        widget=Select(attrs={'class': 'form-control'})
+    )
+    data_recebimento = DateField(
+        label="Data de Recebimento",
+        widget=DateInput(attrs={'class': 'form-control', 'type': 'date'},format='%Y-%m-%d'),input_formats=['%Y-%m-%d']
+    )
+    prazo_dias = IntegerField(
+        label="Prazo (dias)",
+        widget=NumberInput(attrs={'class': 'form-control'})
+    )
+
+    def clean(self):
+        cd = super().clean()
+        nome = cd.get("nome")
+        projeto = cd.get("projeto")
+        if nome and projeto:
+            amostras = Amostra.objects.filter(nome__iexact=nome, projeto=projeto)
+            if cd.get("id"):
+                amostras = amostras.exclude(id=cd.get("id"))
+            if amostras.exists():
+                raise forms.ValidationError("Já existe uma amostra com este nome neste projeto.")
+        return cd

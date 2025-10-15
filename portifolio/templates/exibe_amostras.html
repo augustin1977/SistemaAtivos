@@ -1,0 +1,99 @@
+{% extends 'base.html'%}
+{% block 'titulo'%} Gestão Ativos MA {% endblock %}
+{% block 'menu'%}
+{% include 'menu.html' %}
+{% endblock %}
+{% block 'conteudo'%}
+<div class="text-center">
+    <br><br>
+    {% if mostrando_finalizadas %}
+        <h1>Lista de Amostras Finalizadas</h1>
+    {% else %}
+        <h1>Lista de Amostras Ativas</h1>
+    {% endif %}
+</div>
+
+<div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{% url 'cadastra_amostras' %}" class="btn btn-success">+ Cadastrar Nova Amostra</a>
+
+        {% if mostrando_finalizadas %}
+            <a href="{% url 'exibe_amostras' %}" class="btn btn-primary">Ver Ativas</a>
+        {% else %}
+            <a href="{% url 'exibe_amostras_finalizadas' %}" class="btn btn-secondary">Ver Finalizadas</a>
+        {% endif %}
+    </div>
+
+    <table class="table table-bordered table-striped text-center">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Projeto</th>
+                <th>Data Recebimento</th>
+                <th>Data Fim</th>
+                <th>Prazo (dias)</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for amostra in amostras %}
+            <tr>
+                <td>{{ amostra.nome }}</td>
+                <td>
+                    {{ amostra.projeto.nome }}
+                    {% if not amostra.projeto.ativo %}
+                        <span class="badge bg-secondary">Projeto Inativo</span>
+                    {% endif %}
+                </td>
+                <td>{{ amostra.data_recebimento|date:"d/m/Y" }}</td>
+                <td>
+                    {% if amostra.data_fim %}
+                        {{ amostra.data_fim|date:"d/m/Y" }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td>{{ amostra.prazo_dias }}</td>
+
+                <td>
+
+
+                    {% if mostrando_finalizadas %}
+                        {% if amostra.projeto.ativo %}
+                            <a href="{% url 'reabre_amostra' amostra.id %}"
+                               class="btn btn-success btn-sm"
+                               onclick="return confirm('Deseja reabrir esta amostra?');">
+                               Reabrir
+                            </a>
+                        {% else %}
+                            <span class="text-muted">Projeto inativo</span>
+                        {% endif %}
+                    {% else %}
+                            <a href="{% url 'edita_amostras' amostra.id %}" class="btn btn-warning btn-sm">Editar</a>
+                        {% if amostra.projeto.ativo %}
+                            <a href="{% url 'finaliza_amostra' amostra.id %}"
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Deseja finalizar esta amostra?');">
+                               Finalizar
+                            </a>
+                        {% else %}
+                            <span class="text-muted">Projeto inativo</span>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6">Nenhuma amostra encontrada.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

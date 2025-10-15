@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block 'titulo' %}Cadastro de Amostras{% endblock %}
+{% block 'menu' %}{% include 'menu.html' %}{% endblock %}
+
+{% block 'conteudo' %}
+<br><br>
+
+<div class="container mt-5">
+    <h2 class="text-center">Cadastro de Amostras</h2>
+    <hr>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary mt-3">Salvar</button>
+            <a href="{% url 'exibe_amostras' %}" class="btn btn-secondary mt-3">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
