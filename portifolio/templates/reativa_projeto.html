@@ -4,6 +4,13 @@
 {% block 'conteudo' %}
 <br>
 <div class="container mt-5">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     <h3 class="text-center">A cor "{{ projeto.cor.nome }}" já está sendo usada</h3>
     <p class="text-center">Escolha uma nova cor para reativar o projeto <strong>{{ projeto.nome }}</strong>.</p>
 

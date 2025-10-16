@@ -8,6 +8,13 @@
 
 {% block 'conteudo'%}
 <div class="container text-center mt-5">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     <h2>Excluir Cor</h2>
     <p>Tem certeza que deseja excluir a cor <strong>{{ cor.nome }}</strong>?</p>
     <form method="POST">

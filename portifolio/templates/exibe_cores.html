@@ -40,8 +40,8 @@
                 </td>
                 <td>{{ cor.ativa|yesno:"Sim,Não" }}</td>
                 <td>
-                    <a href="{% url 'edita_cores' cor.id %}" class="btn btn-warning btn-sm">Editar</a>
-                    <a href="{% url 'deleta_cores' cor.id %}" class="btn btn-danger btn-sm">Excluir</a>
+                    <a href="{% url 'edita_cores' cor.id %}" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i>Editar</a>
+                    <a href="{% url 'deleta_cores' cor.id %}" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i>Excluir</a>
                 </td>
             </tr>
             {% empty %}

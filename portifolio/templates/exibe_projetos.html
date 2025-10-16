@@ -53,7 +53,7 @@
                 <td>{{ projeto.responsavel.nome }}</td>
                 <td>{{ projeto.ativo|yesno:"Sim,Não" }}</td>
                 <td>
-                    <a href="{% url 'edita_projetos' projeto.id %}" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="{% url 'edita_projetos' projeto.id %}" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i>Editar</a>
 
                     {% if mostrando_inativos %}
                         <a href="{% url 'ativa_projetos' projeto.id %}"
@@ -65,7 +65,7 @@
                         <a href="{% url 'desativa_projetos' projeto.id %}"
                         class="btn btn-danger btn-sm"
                         onclick="return confirm('Deseja realmente encerrar este projeto?');">
-                        Finalizar
+                        <i class="bi bi-trash"></i>Finalizar
                         </a>
                     {% endif %}
                 </td>

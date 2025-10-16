@@ -54,10 +54,14 @@ def edita_cores(request,id):
     return render(request, 'cadastra_cores.html', {'form': form, 'status': status})
 
 @is_admin
-def deleta_cores(request):
+def deleta_cores(request,id):
     cor = get_object_or_404(Cor, id=id)
     if request.method == 'POST':
+        if Projeto.objects.filter(cor=cor).exists():
+            messages.error(request,f"A cor '{cor.nome}' não pode ser excluída, pois está associada a um ou mais projetos.")
+            return redirect('exibe_cores')
         cor.delete()
+        messages.success(request, f"A cor '{cor.nome}' foi excluída com sucesso!")
         return redirect('exibe_cores')
     return render(request, 'confirma_exclusao.html', {'cor': cor})
 

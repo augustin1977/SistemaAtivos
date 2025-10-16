@@ -3,8 +3,16 @@
 {% block 'menu' %} {% include 'menu.html' %} {% endblock %}
 
 {% block 'conteudo' %}
+<br>
 <div class="container text-center mt-5">
-    <br>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
     <h1>🚧 Função em Construção 🚧</h1>
     <p class="lead mt-4">Esta funcionalidade ainda está sendo desenvolvida.</p>
     <p>Em breve estará disponível. Agradecemos sua paciência!</p>

@@ -9,6 +9,13 @@
     <h1>Cadastro de Projetos</h1>
 </div>
 <div class ='container'>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     <div class='row'>
         <div class='col-md-3'></div>
         <div class="col-md">
