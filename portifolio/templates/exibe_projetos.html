@@ -38,7 +38,12 @@
                 <th>Cor</th>
                 <th>Responsável</th>
                 <th>Ativo</th>
-                <th>Ações</th>
+                <th>Editar</th>
+                 {% if mostrando_inativos %}
+                <th> Reabrir </th>
+                {% else %}  
+                <th>Encerrar</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -53,19 +58,20 @@
                 <td>{{ projeto.responsavel.nome }}</td>
                 <td>{{ projeto.ativo|yesno:"Sim,Não" }}</td>
                 <td>
-                    <a href="{% url 'edita_projetos' projeto.id %}" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i>Editar</a>
-
+                    <a href="{% url 'edita_projetos' projeto.id %}" <i class="bi bi-pencil-square"></i></a>
+                </td>
+                <td>
                     {% if mostrando_inativos %}
                         <a href="{% url 'ativa_projetos' projeto.id %}"
-                        class="btn btn-success btn-sm"
+                        
                         onclick="return confirm('Deseja reabrir este projeto?');">
-                        Reabrir
-                        </a>
+                        <i class="bi bi-arrow-repeat"></i>
+                        </a> 
                     {% else %}
                         <a href="{% url 'desativa_projetos' projeto.id %}"
-                        class="btn btn-danger btn-sm"
+                        
                         onclick="return confirm('Deseja realmente encerrar este projeto?');">
-                        <i class="bi bi-trash"></i>Finalizar
+                        <i class="bi bi-trash text-danger"></i>
                         </a>
                     {% endif %}
                 </td>

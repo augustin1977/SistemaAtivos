@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block 'titulo' %}Gestão de Etiquetas{% endblock %}
+{% block 'menu' %}{% include 'menu.html' %}{% endblock %}
+
+{% block 'conteudo' %}
+<br><br>
+<div class="text-center my-4">
+    <h1>Lista de Etiquetas</h1>
+</div>
+
+<div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{% url 'cadastra_etiquetas' %}" class="btn btn-success">+ Cadastrar Nova Etiqueta</a>
+    </div>
+
+    <table class="table table-bordered table-striped text-center align-middle">
+        <thead>
+            <tr>
+                <th>Código Humano</th>
+                <th>Código Numérico</th>
+                <th>Projeto</th>
+                <th>Amostra</th>
+                <th>Local Instalação</th>
+                <th>Massa (kg)</th>
+                <th>Data Criação</th>
+                <th>Editar</th>
+                <th>Excluir</th>
+                <th>Imprimir</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for etiqueta in etiquetas %}
+            <tr>
+                <td>{{ etiqueta.codigo_humano }}</td>
+                <td>{{ etiqueta.codigo_numerico }}</td>
+                <td>{{ etiqueta.amostra.projeto.nome }}</td>
+                <td>{{ etiqueta.amostra.nome }}</td>
+                <td>{{ etiqueta.local_instalacao }}</td>
+                {% if etiqueta.massa|floatformat:"3" >= "0,001" %}
+                    <td>{{etiqueta.massa}}</td>
+                {% else %}
+                    <td>--</td>
+                {% endif %}
+                <td>{{ etiqueta.data_criacao|date:"d/m/Y" }}</td>
+                <td><a href="{% url 'edita_etiquetas' etiqueta.id %}" ><i class="bi bi-pencil-square"></i></a></td>
+                <td><a href="{% url 'deleta_etiquetas' etiqueta.id %}"><i class="bi bi-trash text-danger"></i></a></td>
+                <td><a href="{% url 'solicita_impressao_etiqueta' etiqueta.id %}"><i class="bi bi-printer"></i></a></td>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="8">Nenhuma etiqueta cadastrada.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

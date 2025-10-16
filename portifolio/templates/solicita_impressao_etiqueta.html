@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block 'titulo' %}Imprimir Etiqueta{% endblock %}
+{% block 'menu' %}{% include 'menu.html' %}{% endblock %}
+{% block 'conteudo' %}
+<br><br>
+<div class="container mt-5 text-center">
+    <h2>Imprimir Etiqueta</h2>
+    <p><strong>Código:</strong> {{ etiqueta.codigo_humano }}</p>
+    <form method="POST">{% csrf_token %}
+        <div class="form-group mt-3">
+            <label for="quantidade">Número de cópias:</label>
+            <input type="number" name="quantidade" id="quantidade" class="form-control w-25 mx-auto"
+                   value="1" min="1" max="1000" required>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Gerar PDF</button>
+        <a href="{% url 'exibe_etiquetas' %}" class="btn btn-secondary mt-3">Voltar</a>
+    </form>
+</div>
+
+{% endblock %}

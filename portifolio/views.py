@@ -3,10 +3,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db import IntegrityError
 from django.contrib import messages
 from django.utils import timezone
+from django.urls import reverse
+from django.http import FileResponse
 from datetime import timedelta
 from usuarios.autentica_usuario import *
 from .models import *
 from .forms import *
+from .codigo_barras import *
+
 
 @is_superuser
 def cadastra_cores(request):
@@ -301,19 +305,118 @@ def reabre_amostra(request, id):
     return redirect("exibe_amostras_finalizadas")
 
 
+
 @is_user
 def cadastra_etiquetas(request):
-    return render(request, "em_construcao.html")
+    if request.method == "POST":
+        form = EtiquetaForm(request.POST)
+
+        if form.is_valid():
+            cd = form.cleaned_data
+            amostra = cd["amostra"]
+            local_instalacao = cd["local_instalacao"]
+            massa = cd["massa"]
+            observacao = cd["observacao"]
+            etiquetas_criadas = []
+
+            codigo_humano = gerar_codigo_humano(amostra)
+            codigo_numerico = gerar_codigo_numerico()
+
+            etiqueta = Etiqueta.objects.create(
+                amostra=amostra,
+                local_instalacao=local_instalacao,
+                massa=massa,
+                codigo_humano=codigo_humano,
+                codigo_numerico=codigo_numerico,
+                observacao=observacao,
+            )
+
+            # gerar imagem do código de barras (se quiser guardar depois)
+            barcode_img = gerar_codigo_barras(codigo_numerico)
+            # exemplo: salvar num diretório de mídia se quiser
+            # etiqueta.imagem.save(barcode_img.name, barcode_img)
+
+            etiquetas_criadas.append(etiqueta)
+
+        messages.success(
+            request,
+            f"{len(etiquetas_criadas)} etiqueta(s) criadas com sucesso!"
+        )
+        return redirect("exibe_etiquetas")
+
+    else:
+        form = EtiquetaForm()
+
+    return render(request, "cadastra_etiquetas.html", {"form": form})
 @is_user
 def exibe_etiquetas(request):
-    return render(request, "em_construcao.html")
+    etiquetas = Etiqueta.objects.filter(amostra__data_fim__isnull=True).filter(amostra__projeto__ativo=True).select_related("amostra", "amostra__projeto", "amostra__projeto__cor").order_by("-codigo_numerico")
+    return render(request, "exibe_etiquetas.html", {"etiquetas": etiquetas})
 @is_user
-def edita_etiquetas(request):
-    return render(request, "em_construcao.html")
-@is_user
-def deleta_etiquetas(request):
-    return render(request, "em_construcao.html")
-@is_user
-def imprime_etiquetas(request):
-    return render(request, "em_construcao.html")
+def edita_etiquetas(request, id):
+    etiqueta = get_object_or_404(Etiqueta, id=id)
 
+    if request.method == "POST":
+        form = EtiquetaForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            etiqueta.amostra = cd["amostra"]
+            etiqueta.local_instalacao = cd["local_instalacao"]
+            etiqueta.massa = cd["massa"]
+            etiqueta.observacao = cd["observacao"]
+            etiqueta.codigo_humano = gerar_codigo_humano(cd["amostra"])
+            etiqueta.save()
+            messages.success(request, "Etiqueta atualizada com sucesso!")
+            return redirect("exibe_etiquetas")
+    else:
+        form = EtiquetaForm(initial={
+            "amostra": etiqueta.amostra,
+            "local_instalacao": etiqueta.local_instalacao,
+            "massa": etiqueta.massa,
+            "observacao": etiqueta.observacao,
+        })
+
+    return render(request, "cadastra_etiquetas.html", {"form": form, "editando": True})
+
+@is_user
+def deleta_etiquetas(request, id):
+    etiqueta = get_object_or_404(Etiqueta, id=id)
+    etiqueta.delete()
+    messages.success(request, "Etiqueta excluída com sucesso!")
+    return redirect("exibe_etiquetas")
+@is_user
+def solicita_impressao_etiqueta(request, id):
+    etiqueta = get_object_or_404(Etiqueta, id=id)
+    
+    if request.method == "POST":
+        try:
+            quantidade = int(request.POST.get("quantidade", 1))
+        except ValueError:
+            quantidade = 1
+
+        if quantidade < 1:
+            messages.error(request, "A quantidade deve ser pelo menos 1.")
+            return redirect("solicita_impressao_etiqueta", id=id)
+
+        # Redireciona para a view que gera o PDF
+        return redirect(f"{reverse('imprime_etiquetas', args=[id])}?qtd={quantidade}")
+
+    return render(request, "solicita_impressao_etiqueta.html", {"etiqueta": etiqueta})
+
+@is_user
+def imprime_etiquetas(request, id):
+    etiqueta = get_object_or_404(Etiqueta, id=id)
+
+    try:
+        quantidade = int(request.GET.get("qtd", 1))
+    except ValueError:
+        quantidade = 1
+
+    etiquetas = [etiqueta] * quantidade
+    usuario_id=request.session.get('usuario')
+    usuario=Usuario.objects.get(id=usuario_id)
+     # Gera o PDF
+    buffer = gerar_pdf_etiquetas(etiquetas, usuario)
+    nome_pdf = f"etiqueta_{etiqueta.codigo_humano}_{quantidade}x.pdf"
+
+    return FileResponse(buffer, as_attachment=True, filename=nome_pdf)

@@ -40,7 +40,12 @@
                 <th>Data Recebimento</th>
                 <th>Data Fim</th>
                 <th>Prazo (dias)</th>
-                <th>Ações</th>
+                <th>Editar</th>
+                 {% if mostrando_finalizadas %}
+                 <th> Reabrir </th>
+                 {% else %}
+                 <th>Encerrar</th>
+                 {% endif %}    
             </tr>
         </thead>
         <tbody>
@@ -64,25 +69,24 @@
                 <td>{{ amostra.prazo_dias }}</td>
 
                 <td>
-
-
                     {% if mostrando_finalizadas %}
                         {% if amostra.projeto.ativo %}
+                        </td><td> 
                             <a href="{% url 'reabre_amostra' amostra.id %}"
-                               class="btn btn-success btn-sm"
+                               
                                onclick="return confirm('Deseja reabrir esta amostra?');">
-                               Reabrir
+                               <i class="bi bi-arrow-repeat"></i>
                             </a>
                         {% else %}
                             <span class="text-muted">Projeto inativo</span>
                         {% endif %}
                     {% else %}
-                            <a href="{% url 'edita_amostras' amostra.id %}" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i>Editar</a>
+                            <a href="{% url 'edita_amostras' amostra.id %}" <i class="bi bi-pencil-square"></i></a></td>
                         {% if amostra.projeto.ativo %}
-                            <a href="{% url 'finaliza_amostra' amostra.id %}"
-                               class="btn btn-danger btn-sm"
+                            <td><a href="{% url 'finaliza_amostra' amostra.id %}"
+                               
                                onclick="return confirm('Deseja finalizar esta amostra?');">
-                               <i class="bi bi-trash"></i>Finalizar
+                               <i class="bi bi-trash text-danger"></i>
                             </a>
                         {% else %}
                             <span class="text-muted">Projeto inativo</span>

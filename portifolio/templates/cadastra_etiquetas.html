@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block 'titulo' %}Cadastro de Etiquetas{% endblock %}
+{% block 'menu' %}{% include 'menu.html' %}{% endblock %}
+{% block 'conteudo' %}
+<div class="text-center my-4">
+    <br><br>
+    <h1>Cadastro de Etiquetas</h1>
+</div>
+
+<div class="container">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">{% csrf_token %}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+
+
+        <button type="submit" class="btn btn-primary mt-3">Gerar Etiquetas</button>
+    </form>
+</div>
+{% endblock %}

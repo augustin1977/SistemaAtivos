@@ -2,7 +2,7 @@ from django.forms import *
 from .models import *
 from usuarios.models import *
 from django.db.models import Q
-from django.utils.text import slugify
+from .codigo_barras import gerar_codigo_limpo
 
 class CorForm(Form):
     id = CharField(label="", required=False, widget=HiddenInput())
@@ -111,7 +111,7 @@ class AmostraForm(Form):
     
 
 
-class EtiquetaForm(forms.Form):
+class EtiquetaForm(Form):
     id = CharField(widget=HiddenInput(), required=False)
     amostra = ModelChoiceField(
         queryset=Amostra.objects.filter(projeto__ativo=True, data_fim__isnull=True),
@@ -124,15 +124,11 @@ class EtiquetaForm(forms.Form):
     massa = DecimalField(
         max_digits=10,
         decimal_places=3,
+        required=False,
+        label="Massa (kg):",
         widget=NumberInput(attrs={'class': 'form-control'})
     )
-    quantidade = IntegerField(
-        min_value=1,
-        max_value=1000,
-        initial=1,
-        label="Número de etiquetas a gerar",
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
-    )
+
     observacao = CharField(
         required=False,
         widget=Textarea(attrs={'class': 'form-control'})
@@ -145,14 +141,14 @@ class EtiquetaForm(forms.Form):
         # Geração automática do código humano e numérico
         if amostra:
             projeto = amostra.projeto
-            prefixo_projeto = slugify(projeto.nome)[:4].upper()
-            prefixo_amostra = slugify(amostra.nome)[:3].upper()
+
 
             ultimo = Etiqueta.objects.filter(amostra__projeto=projeto).order_by('-id').first()
             sequencia = 1 if not ultimo else int(ultimo.codigo_humano.split('-')[-1]) + 1
-            cd['codigo_humano'] = f"{prefixo_projeto}-{prefixo_amostra}-{sequencia:05d}"
+            cd['codigo_humano'] = f"{gerar_codigo_limpo(projeto.nome)}-{gerar_codigo_limpo(amostra.nome)}-{sequencia:04d}"
 
             ultimo_num = Etiqueta.objects.order_by('-id').first()
             cd['codigo_numerico'] = f"{(ultimo_num.id + 1) if ultimo_num else 1:09d}"
+            cd['massa'] = cd.get('massa') or 0  # Define massa como - se não fornecida
 
         return cd
