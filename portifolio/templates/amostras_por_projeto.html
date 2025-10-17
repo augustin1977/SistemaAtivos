@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block 'titulo' %}Amostras por Projeto{% endblock %}
+{% block 'menu' %}{% include 'menu.html' %}{% endblock %}
+
+{% block 'conteudo' %}
+<br><br>
+<div class="container my-4">
+    <h2 class="text-center mb-4">Amostras por Projeto</h2>
+
+    <!--  Formulário de seleção de projeto -->
+    <form method="post" class="d-flex justify-content-center mb-4">
+    {% csrf_token %}
+        <select name="projeto" class="form-select w-50" onchange="this.form.submit()">
+            <option value="">Selecione um projeto...</option>
+            {% for p in projetos %}
+                <option value="{{ p.id }}" {% if projeto_selecionado and p.id == projeto_selecionado.id %}selected{% endif %}>
+                    {{ p.nome }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% if projeto_selecionado %}
+        <h4 class="text-center mb-3">
+            Projeto: {{ projeto_selecionado.nome }}
+            </span>
+        </h4>
+            <div class="table-responsive" style="max-height: 70vh">
+                <table class="table table-hover text-center" style="table-layout: fixed;">
+                    <thead class="thead-light sticky-top">
+                <tr>
+                    <th>Nome da Amostra</th>
+                    <th>Data Recebimento</th>
+                    <th>Data Prevista</th>
+                    <th>Data Fim</th>
+                    <th>Prazo (dias)</th>
+                    <th>Status</th>
+                    <th>Etiquetas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for amostra in amostras %}
+                <tr>
+                    <td>{{ amostra.nome }}</td>
+                    <td>{% if amostra.data_recebimento %}{{ amostra.data_recebimento|date:"d/m/Y" }}{% else %}—{% endif %}</td>
+                    <td>{% if amostra.data_prevista %}{{ amostra.data_prevista|date:"d/m/Y" }}{% else %}—{% endif %}</td>
+                    <td>{% if amostra.data_fim %}{{ amostra.data_fim|date:"d/m/Y" }}{% else %}—{% endif %}</td>
+                    <td>{{ amostra.prazo_dias }}</td>
+
+                    <td>
+                        {% if amostra.data_fim %}
+                            {% if amostra.data_fim <= amostra.data_prevista %}
+                                <span class="badge bg-success">Finalizada no prazo</span>
+                            {% else %}
+                                <span class="badge bg-danger">Atrasada</span>
+                            {% endif %}
+                        {% else %}
+                            {% if amostra.data_prevista and amostra.data_prevista >= today %}
+                                <span class="badge bg-info text-dark">Em andamento (no prazo)</span>
+                            {% else %}
+                                <span class="badge bg-warning">Em andamento (em atraso)</span>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if amostra.projeto.ativo and not amostra.data_fim %}
+                            <a href="{% url 'etiquetas_por_amostra' amostra.id %}" >
+                                <i class="bi bi-tags"></i>
+                            </a>
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-muted">Nenhuma amostra encontrada para este projeto.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-center mt-3">
+            <a href="{% url 'relatorio_prazo' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Ir para Relatório de Prazo
+            </a>
+        </div>
+
+    {% else %}
+        <p class="text-center text-muted">Selecione um projeto acima para visualizar as amostras.</p>
+    {% endif %}
+</div>
+{% endblock %}

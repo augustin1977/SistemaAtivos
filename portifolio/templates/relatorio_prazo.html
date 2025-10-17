@@ -7,8 +7,9 @@
 <div class="container my-4">
     <h2 class="text-center mb-4">Relatório de Atendimentos no Prazo por Projeto</h2>
 
-    <table class="table table-bordered table-striped text-center align-middle">
-        <thead class="table-primary">
+    <div class="table-responsive" style="max-height: 70vh">
+     <table class="table table-hover text-center" style="font-size: 0.9rem;table-layout: fixed;">
+        <thead class="thead-light sticky-top">
             <tr>
                 <th>Projeto</th>
                 <th>Total de Amostras</th>
@@ -20,7 +21,11 @@
         <tbody>
             {% for d in dados %}
             <tr>
-                <td style="border-left: 6px solid {{ d.cor }};">{{ d.projeto }}</td>
+                <td style="border-left: 6px solid {{ d.cor }};">
+                    <a href="{% url 'amostras_por_projeto_id' projeto_id=d.projeto_id %}" class="text-decoration-none fw-bold">
+                        {{ d.projeto }}
+                    </a>
+                </td>
                 <td>{{ d.total }}</td>
                 <td class="text-success fw-bold">{{ d.no_prazo }}</td>
                 <td class="text-danger fw-bold">{{ d.fora_prazo }}</td>

@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.urls import reverse
 from django.http import FileResponse
-from datetime import timedelta
+from datetime import timedelta,date
 from usuarios.autentica_usuario import *
 from .models import *
 from .forms import *
@@ -480,6 +480,7 @@ def relatorio_prazo(request):
         if total == 0:
             dados.append({
                 "projeto": projeto.nome,
+                "projeto_id": projeto.id,
                 "cor": getattr(projeto.cor, "css_color", "#ccc"),
                 "total": 0,
                 "no_prazo": 0,
@@ -492,6 +493,11 @@ def relatorio_prazo(request):
         fora_prazo = 0
 
         for amostra in amostras:
+            if amostra.data_recebimento:
+                amostra.data_prevista = amostra.data_recebimento + timedelta(days=amostra.prazo_dias)
+            else:
+                amostra.data_prevista = None
+            
             prazo_limite = amostra.data_recebimento + timedelta(days=amostra.prazo_dias)
             data_avaliacao = (amostra.data_fim) or datetime.today().date()
 
@@ -504,11 +510,47 @@ def relatorio_prazo(request):
 
         dados.append({
             "projeto": projeto.nome,
+            "projeto_id": projeto.id,
             "cor": getattr(projeto.cor, "css_color", "#ccc"),
             "total": total,
             "no_prazo": no_prazo,
             "fora_prazo": fora_prazo,
             "percentual": percentual,
         })
-
+    dados.sort(key=lambda d: d["percentual"], reverse=True)
     return render(request, "relatorio_prazo.html", {"dados": dados})
+
+@is_user
+def amostras_por_projeto(request, projeto_id=None):
+    projetos = Projeto.objects.filter(ativo=True).order_by("nome")
+    projeto_selecionado = None
+    amostras = []
+
+    # Se vier via POST (seleção no formulário)
+    if request.method == "POST":
+        projeto_id = request.POST.get("projeto")
+
+    # Se vier via GET (clicado no link do relatório)
+    if projeto_id:
+        projeto_selecionado = get_object_or_404(Projeto, id=projeto_id)
+        amostras = (
+            Amostra.objects.filter(projeto=projeto_selecionado)
+            .select_related("projeto")
+            .order_by("nome")
+        )
+
+        # Calcula a data prevista de fim para cada amostra
+        for a in amostras:
+            if a.data_recebimento:
+                a.data_prevista = a.data_recebimento + timedelta(days=a.prazo_dias)
+            else:
+                a.data_prevista = None
+
+    contexto = {
+        "projetos": projetos,
+        "projeto_selecionado": projeto_selecionado,
+        "amostras": amostras,
+        "today": date.today(),
+    }
+    
+    return render(request, "amostras_por_projeto.html", contexto)
