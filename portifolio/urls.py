@@ -25,4 +25,6 @@ urlpatterns = [path("cores/cadastrar/",views.cadastra_cores, name="cadastra_core
                path("etiquetas/deletar/<int:id>/",views.deleta_etiquetas, name="deleta_etiquetas"),
                path("etiquetas/imprimir/<int:id>/", views.imprime_etiquetas, name="imprime_etiquetas"),
                path("etiquetas/imprimir/<int:id>/solicita/", views.solicita_impressao_etiqueta, name="solicita_impressao_etiqueta"),
+               path("etiquetas/consulta/", views.consulta_etiqueta, name="consulta_etiqueta"),
+               path("etiquetas/amostras/<int:id_amostra>/", views.etiquetas_por_amostra, name="etiquetas_por_amostra"),
                ]

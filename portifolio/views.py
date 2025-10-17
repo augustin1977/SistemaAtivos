@@ -420,3 +420,28 @@ def imprime_etiquetas(request, id):
     nome_pdf = f"etiqueta_{etiqueta.codigo_humano}_{quantidade}x.pdf"
 
     return FileResponse(buffer, as_attachment=True, filename=nome_pdf)
+
+@is_user
+def consulta_etiqueta(request):
+    etiqueta = None
+    query = request.GET.get("q", "").upper().strip()
+
+    if query:
+        etiqueta = Etiqueta.objects.filter(
+            Q(codigo_humano__icontains=query) | Q(codigo_numerico__icontains=query)
+        ).first()
+        if not etiqueta:
+            messages.error(request, "Etiqueta não encontrada. Verifique o código informado.")
+
+    return render(request, "consulta_etiqueta.html", {"etiqueta": etiqueta, "query": query})
+
+
+@is_user
+def etiquetas_por_amostra(request, id_amostra):
+    amostra = get_object_or_404(Amostra, id=id_amostra)
+    etiquetas = Etiqueta.objects.filter(amostra=amostra)
+
+    return render(request, "etiquetas_por_amostra.html", {
+        "amostra": amostra,
+        "etiquetas": etiquetas
+    })
