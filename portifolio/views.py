@@ -196,7 +196,7 @@ def ativa_projetos(request, id):
         projeto.save(update_fields=["ativo"])
         messages.success(request, f"O projeto '{projeto.nome}' foi reativado com sucesso.")
         return redirect("exibe_projetos_inativos")
-@is_admin
+@is_superuser
 def deleta_projetos(request, id):
     projeto = get_object_or_404(Projeto, id=id)
     projeto.cor.ativa = False
@@ -293,7 +293,7 @@ def finaliza_amostra(request, id):
             messages.warning(request, f"A amostra '{amostra.nome}' foi finalizada com {atraso} dia(s) de atraso.")
 
     return redirect("exibe_amostras")
-@is_user
+@is_superuser
 def reabre_amostra(request, id):
     amostra = get_object_or_404(Amostra, id=id)
     if not amostra.data_fim:
@@ -467,3 +467,48 @@ def busca_etiquetas_por_local(request):
         "etiquetas": etiquetas,
         "local_selecionado": local_selecionado
     })
+
+@is_user
+def relatorio_prazo(request):
+    projetos = Projeto.objects.filter(ativo=True).select_related('cor')
+    dados = []
+
+    for projeto in projetos:
+        amostras = Amostra.objects.filter(projeto=projeto)
+        total = amostras.count()
+
+        if total == 0:
+            dados.append({
+                "projeto": projeto.nome,
+                "cor": getattr(projeto.cor, "css_color", "#ccc"),
+                "total": 0,
+                "no_prazo": 0,
+                "fora_prazo": 0,
+                "percentual": 0,
+            })
+            continue
+
+        no_prazo = 0
+        fora_prazo = 0
+
+        for amostra in amostras:
+            prazo_limite = amostra.data_recebimento + timedelta(days=amostra.prazo_dias)
+            data_avaliacao = (amostra.data_fim) or datetime.today().date()
+
+            if data_avaliacao <= prazo_limite:
+                no_prazo += 1
+            else:
+                fora_prazo += 1
+
+        percentual = round((no_prazo / total) * 100, 2) if total > 0 else 0
+
+        dados.append({
+            "projeto": projeto.nome,
+            "cor": getattr(projeto.cor, "css_color", "#ccc"),
+            "total": total,
+            "no_prazo": no_prazo,
+            "fora_prazo": fora_prazo,
+            "percentual": percentual,
+        })
+
+    return render(request, "relatorio_prazo.html", {"dados": dados})

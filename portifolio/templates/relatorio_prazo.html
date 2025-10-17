@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block 'titulo' %}Relatório de Atendimentos no Prazo{% endblock %}
+{% block 'menu' %}{% include 'menu.html' %}{% endblock %}
+
+{% block 'conteudo' %}
+<br><br>
+<div class="container my-4">
+    <h2 class="text-center mb-4">Relatório de Atendimentos no Prazo por Projeto</h2>
+
+    <table class="table table-bordered table-striped text-center align-middle">
+        <thead class="table-primary">
+            <tr>
+                <th>Projeto</th>
+                <th>Total de Amostras</th>
+                <th>No Prazo</th>
+                <th>Fora do Prazo</th>
+                <th>Percentual no Prazo (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in dados %}
+            <tr>
+                <td style="border-left: 6px solid {{ d.cor }};">{{ d.projeto }}</td>
+                <td>{{ d.total }}</td>
+                <td class="text-success fw-bold">{{ d.no_prazo }}</td>
+                <td class="text-danger fw-bold">{{ d.fora_prazo }}</td>
+                <td>
+                    {% if d.percentual >= 80 %}
+                        <span class="text-success fw-bold">{{ d.percentual }}%</span>
+                    {% elif d.percentual >= 50 %}
+                        <span class="text-warning fw-bold">{{ d.percentual }}%</span>
+                    {% else %}
+                        <span class="text-danger fw-bold">{{ d.percentual }}%</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">Nenhum projeto ativo com amostras registradas.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
