@@ -40,11 +40,11 @@ class Local_instalacao(models.Model):
         if self.piso:
             retorno+="."+str(self.piso)
         if self.sala:
-            retorno+="."+str(self.sala)
+            retorno+=" "+str(self.sala)
         if self.armario:
-            retorno+="."+str(self.armario)
+            retorno+=" "+str(self.armario)
         if self.prateleira:
-            retorno+="."+str(self.prateleira)
+            retorno+=" "+str(self.prateleira)
         return  retorno
     def dados_para_form(self):
         return {'id':self.id, 'laboratorio':self.laboratorio,'predio':self.predio,"piso":self.piso,"sala":self.sala,

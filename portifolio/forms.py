@@ -131,7 +131,11 @@ class EtiquetaForm(Form):
 
     observacao = CharField(
         required=False,
-        widget=Textarea(attrs={'class': 'form-control'})
+        widget=Textarea(attrs={
+        'class': 'form-control',
+        'rows': 3, 
+        'style': 'resize: vertical; min-height: 2.5em;'  
+    })
     )
 
     def clean(self):

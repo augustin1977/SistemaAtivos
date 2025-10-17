@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block 'titulo' %}Busca de Etiquetas por Local{% endblock %}
+{% block 'menu' %}{% include 'menu.html' %}{% endblock %}
+
+{% block 'conteudo' %}
+<br><br>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Buscar Etiquetas por Local</h2>
+
+    <form method="POST" class="text-center mb-4">
+        {% csrf_token %}
+        <div class="input-group justify-content-center">
+            <select name="local_instalacao" class="form-select w-50" required>
+                <option value="">Selecione um local...</option>
+                {% for local in locais %}
+                    <option value="{{ local.id }}" {% if local == local_selecionado %}selected{% endif %}>
+                        {{ local }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary ms-2">
+                <i class="bi bi-search"></i> Buscar
+            </button>
+        </div>
+    </form>
+
+    {% if etiquetas %}
+        <h4 class="mt-4 text-center">Etiquetas encontradas para: <strong>{{ local_selecionado }}</strong></h4>
+
+        <table class="table table-bordered table-striped text-center mt-3">
+            <thead>
+                <tr>
+                    <th>Código Humano</th>
+                    <th>Projeto</th>
+                    <th>Amostra</th>
+                    <th>Massa (kg)</th>
+                    <th>Data Criação</th>
+                    <th>Editar</th>
+                    <th>Imprimir</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for etiqueta in etiquetas %}
+                    <tr>
+                        <td>{{ etiqueta.codigo_humano }}</td>
+                        <td>{{ etiqueta.amostra.projeto.nome }}</td>
+                        <td>{{ etiqueta.amostra.nome }}</td>
+                        <td>{{ etiqueta.massa }}</td>
+                        <td>{{ etiqueta.data_criacao|date:"d/m/Y" }}</td>
+                        <td>
+                            <a href="{% url 'edita_etiquetas' etiqueta.id %}" >
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                        </td>
+                        <td>    
+                            <a href="{% url 'solicita_impressao_etiqueta' etiqueta.id %}" >
+                                <i class="bi bi-printer"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="6">Nenhuma etiqueta encontrada para este local.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% elif local_selecionado %}
+        <div class="alert alert-warning text-center mt-3">Nenhuma etiqueta encontrada para este local.</div>
+    {% endif %}
+</div>
+{% endblock %}

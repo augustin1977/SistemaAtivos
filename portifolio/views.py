@@ -351,6 +351,8 @@ def cadastra_etiquetas(request):
 @is_user
 def exibe_etiquetas(request):
     etiquetas = Etiqueta.objects.filter(amostra__data_fim__isnull=True).filter(amostra__projeto__ativo=True).select_related("amostra", "amostra__projeto", "amostra__projeto__cor").order_by("-codigo_numerico")
+    
+    
     return render(request, "exibe_etiquetas.html", {"etiquetas": etiquetas})
 @is_user
 def edita_etiquetas(request, id):
@@ -444,4 +446,24 @@ def etiquetas_por_amostra(request, id_amostra):
     return render(request, "etiquetas_por_amostra.html", {
         "amostra": amostra,
         "etiquetas": etiquetas
+    })
+
+@is_user
+def busca_etiquetas_por_local(request):
+    locais = Local_instalacao.objects.filter(etiqueta__isnull=False).distinct().order_by('predio','piso','-sala','-armario','prateleira')
+    etiquetas = None
+    local_selecionado = None
+
+    if request.method == "POST":
+        local_id = request.POST.get("local_instalacao")
+        if local_id:
+            local_selecionado = get_object_or_404(Local_instalacao, id=local_id)
+            etiquetas = Etiqueta.objects.filter(local_instalacao=local_selecionado) \
+                                        .select_related("amostra", "amostra__projeto") \
+                                        .order_by("amostra__projeto__nome", "amostra__nome")
+
+    return render(request, "busca_etiquetas_por_local.html", {
+        "locais": locais,
+        "etiquetas": etiquetas,
+        "local_selecionado": local_selecionado
     })

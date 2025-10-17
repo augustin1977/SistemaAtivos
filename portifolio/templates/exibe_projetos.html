@@ -30,8 +30,9 @@
         <a href="{% url 'exibe_projetos_inativos' %}" class="btn btn-secondary">Ver Inativos</a>
     {% endif %}
 </div>
-    <table class="table table-bordered table-striped text-center">
-        <thead>
+    <div class="table-responsive" style="max-height: 65vh">
+     <table class="table table-hover" style="table-layout: fixed">
+        <thead class="thead-light sticky-top">
             <tr>
                 <th>Nome</th>
                 <th>Cliente</th>
@@ -81,5 +82,6 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
 </div>
 {% endblock %}
