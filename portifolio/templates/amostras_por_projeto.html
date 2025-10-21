@@ -81,9 +81,10 @@
         </table>
 
         <div class="text-center mt-3">
-            <a href="{% url 'relatorio_prazo' %}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left"></i> Ir para Relatório de Prazo
-            </a>
+            <button type="button" class="btn btn-secondary"
+                    onclick="if (document.referrer) { window.history.back(); } else { window.location.href='{% url "home" %}'; }">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </button>
         </div>
 
     {% else %}

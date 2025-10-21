@@ -6,8 +6,10 @@ from notas.models import Nota_equipamento
 class Log(models.Model):
     lista_transacoes=[('eq','Equipamento'),('te','Tipo Equipamento'),('fn','Fornecedor'),('li','Local Instalação'),('mc','Material Consumo'),
                         ('me','media'),('dc','Disciplina de Manutenção'),('mf','Modo de Falha'),('mq','Modo de falha Equipamento'),
-                        ('nm','Nota Material'),('ne','Nota Equipamento'),('us','usuario'),('tu','Tipo de Usuario'),("rt","Relatório")]
-    lista_movimentos=[('cd','Cadastro'),('lt','Listagem'),('ed','Edição'),('dl','Delete'),('lo','logOn'),('lf','logOff')]
+                        ('nm','Nota Material'),('ne','Nota Equipamento'),('us','usuario'),('tu','Tipo de Usuario'),("rt","Relatório"),('cr',"Cor"),
+                        ('pj',"Projeto"),('am',"Amostra"),('et',"Etiqueta")]
+    lista_movimentos=[('cd','Cadastro'),('lt','Listagem'),('ed','Edição'),('dl','Delete'),('lo','logOn'),('lf','logOff'),
+                      ('fn',"Finaliza"),('rb',"Reabre"),('at',"Ativa"),('dt',"Desativa")]
    
     transacao=models.CharField(choices=lista_transacoes,max_length=10)
     movimento=models.CharField(choices=lista_movimentos,max_length=10)
@@ -63,3 +65,19 @@ class Log(models.Model):
                         alteracao=alteracao)
         novo.save()
         return True 
+    def finaliza(objeto,usuario,transacao):
+            alteracao=f'O usuario {usuario} finalizou {type(objeto).__name__} {objeto} id={objeto.id} '
+            novo=Log(transacao=transacao,
+                            movimento='fn',
+                            usuario=usuario,
+                            alteracao=alteracao)
+            novo.save()
+            return True    
+    def reabre(objeto,usuario,transacao):
+            alteracao=f'O usuario {usuario} reabriu {type(objeto).__name__} {objeto} id={objeto.id} '
+            novo=Log(transacao=transacao,
+                            movimento='rb',
+                            usuario=usuario,
+                            alteracao=alteracao)
+            novo.save()
+            return True   

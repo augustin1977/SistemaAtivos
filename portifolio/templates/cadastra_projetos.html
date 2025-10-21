@@ -27,6 +27,9 @@
                 {% csrf_token %}
                 {{ form }}
                 <button class="btn btn-primary mt-3">Salvar</button>
+                <button type="button" class="btn btn-secondary mt-3"
+                onclick="if (document.referrer) { window.history.back(); } else { window.location.href='{% url "home" %}'; }"> Voltar
+                </button>
             </form>
             </hr>
         </div>

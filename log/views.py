@@ -92,10 +92,13 @@ class PageNumCanvas(canvas.Canvas):
         self.drawRightString(205*mm, 15*mm, page)
         self.drawRightString(205*mm,10*mm,hash_string)
 
-lista_transacoes={'eq':'Equipamento','te':'Tipo Equipamento','fn':'Fornecedor','li':'Local Instalação','mc':'Material Consumo',
-                  'me':'media','dc':'Disciplina de Manutenção','mf':'Modo de Falha','mq':'Modo de falha Equipamento',
-                        'nm':'Ocorrência Material','ne':'Ocorrência Equipamento','us':'usuario','tu':'Tipo de Usuario','rt':"Relatório"}
-lista_movimentos={'cd':'Cadastro','lt':'Listagem','ed':'Edição','dl':'Delete','lo':'logon','lf':'logoff'}
+lista_transacoes={'eq':'Equipamento','te':'Tipo Equipamento','fn':'Fornecedor','li':'Local Instalação',
+                  'mc':'Material Consumo','me':'media','dc':'Disciplina de Manutenção','mf':'Modo de Falha',
+                  'mq':'Modo de falha Equipamento','nm':'Ocorrência Material','ne':'Ocorrência Equipamento',
+                  'us':'Usuario','tu':'Tipo de Usuario','rt':"Relatório",'cr':"Cor",'pj':"Projeto",
+                  'am':"Amostra",'et':"Etiqueta"}
+lista_movimentos={'cd':'Cadastro','lt':'Listagem','ed':'Edição','dl':'Delete','lo':'Logon','lf':'Logoff'
+                  ,'fn':"Finaliza",'rb':"Reabre",'at':"Ativa",'dt':"Desativa"}
 @is_user
 def relatorioLog(request):
     """Cria relatório de log generico"""

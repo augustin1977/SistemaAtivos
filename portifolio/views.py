@@ -10,6 +10,8 @@ from usuarios.autentica_usuario import *
 from .models import *
 from .forms import *
 from .codigo_barras import *
+from log.models import Log
+
 
 
 @is_superuser
@@ -18,12 +20,13 @@ def cadastra_cores(request):
     if request.method == 'POST':
         form = CorForm(request.POST)
         if form.is_valid():
-            Cor.objects.create(
+            cor=Cor.objects.create(
                 nome=form.cleaned_data['nome'].capitalize(),
                 tonalidade=form.cleaned_data['tonalidade'].upper(),
                 ativa=form.cleaned_data.get('ativa', False),
             )
             status = 1
+            Log.cadastramento(cor,Usuario.objects.get(id=request.session.get("usuario")),'cr')
             form = CorForm()  # limpa o formulário após sucesso
     else:
         form = CorForm()
@@ -65,6 +68,7 @@ def deleta_cores(request,id):
             messages.error(request,f"A cor '{cor.nome}' não pode ser excluída, pois está associada a um ou mais projetos.")
             return redirect('exibe_cores')
         cor.delete()
+        Log.exclusao(cor,Usuario.objects.get(id=request.session.get("usuario")),'cr')
         messages.success(request, f"A cor '{cor.nome}' foi excluída com sucesso!")
         return redirect('exibe_cores')
     return render(request, 'confirma_exclusao.html', {'cor': cor})
@@ -88,6 +92,7 @@ def cadastra_projetos(request):
                 projeto.cor.save(update_fields=["ativa"])
 
                 status = 1
+                Log.cadastramento(projeto,Usuario.objects.get(id=request.session.get("usuario")),'pj')   
                 return redirect("exibe_projetos")
             except IntegrityError:
                 form.add_error("nome", "Já existe um projeto com este nome.")
@@ -159,7 +164,13 @@ def desativa_projetos(request, id):
     projeto.cor.save(update_fields=["ativa"])
     projeto.save(update_fields=["ativo"])
     hoje = timezone.now().date()
-    Amostra.objects.filter(projeto=projeto, data_fim__isnull=True).update(data_fim=hoje)
+    amostras=Amostra.objects.filter(projeto=projeto, data_fim__isnull=True)
+    for amostra in amostras:
+        amostra.data_fim=hoje
+        amostra.save(update_fields=["data_fim"])
+        Log.finaliza(amostra,Usuario.objects.get(id=request.session.get("usuario")),'am')  
+    Log.finaliza(projeto,Usuario.objects.get(id=request.session.get("usuario")),'pj')
+    
     messages.success(request, f"Projeto '{projeto.nome}' foi encerrado com sucesso e suas amostras foram finalizadas.")
     return redirect("exibe_projetos")
 
@@ -181,6 +192,7 @@ def ativa_projetos(request, id):
         projeto.cor.save(update_fields=["ativa"])
         projeto.save(update_fields=["ativo", "cor"])
         messages.success(request, f"O projeto '{projeto.nome}' foi reaberto com sucesso.")
+        Log.reabre(projeto,Usuario.objects.get(id=request.session.get("usuario")),'pj')
         return redirect("exibe_projetos_inativos")
     
     if cor_em_uso:
@@ -194,6 +206,7 @@ def ativa_projetos(request, id):
         projeto.cor.ativa = True
         projeto.cor.save(update_fields=["ativa"])
         projeto.save(update_fields=["ativo"])
+        Log.reabre(projeto,Usuario.objects.get(id=request.session.get("usuario")),'pj')
         messages.success(request, f"O projeto '{projeto.nome}' foi reativado com sucesso.")
         return redirect("exibe_projetos_inativos")
 @is_superuser
@@ -202,6 +215,8 @@ def deleta_projetos(request, id):
     projeto.cor.ativa = False
     projeto.cor.save(update_fields=["ativa"])
     projeto.delete()
+    Log.exclusao(projeto,Usuario.objects.get(id=request.session.get("usuario")),'pj')
+    messages.success(request, f"O projeto '{projeto.nome}' foi excluído com sucesso!")
     return redirect("exibe_projetos")
 
 @is_user
@@ -211,13 +226,14 @@ def cadastra_amostras(request):
         form = AmostraForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            Amostra.objects.create(
+            amostra=Amostra.objects.create(
                 nome=cd["nome"],
                 projeto=cd["projeto"],
                 data_recebimento=cd["data_recebimento"],
                 prazo_dias=cd["prazo_dias"]
             )
             messages.success(request, "Amostra cadastrada com sucesso!")
+            Log.cadastramento(amostra,Usuario.objects.get(id=request.session.get("usuario")),'am')
             return redirect("exibe_amostras")
     else:
         form = AmostraForm()
@@ -272,6 +288,7 @@ def edita_amostras(request, id):
 def deleta_amostras(request, id):
     amostra = get_object_or_404(Amostra, id=id)
     amostra.delete()
+    Log.exclusao(amostra,Usuario.objects.get(id=request.session.get("usuario")),'am')
     messages.warning(request, f"Amostra '{amostra.nome}' foi removida.")
     return redirect("exibe_amostras")
 @is_user
@@ -283,6 +300,7 @@ def finaliza_amostra(request, id):
     else:
         amostra.data_fim = timezone.now().date()
         amostra.save(update_fields=["data_fim"])
+        Log.finaliza(amostra,Usuario.objects.get(id=request.session.get("usuario")),'am') 
 
         # Calcula prazo
         fim_previsto = amostra.data_recebimento + timedelta(days=amostra.prazo_dias)
@@ -301,6 +319,8 @@ def reabre_amostra(request, id):
     else:
         amostra.data_fim = None
         amostra.save(update_fields=["data_fim"])
+        Log.foiAlterado(amostra,"data_fim",None,'am',Usuario.objects.get(id=request.session.get("usuario")))
+        Log.reabre(amostra,Usuario.objects.get(id=request.session.get("usuario")),'pj')
         messages.success(request, f"A amostra '{amostra.nome}' foi reaberta com sucesso.")
     return redirect("exibe_amostras_finalizadas")
 
@@ -331,13 +351,8 @@ def cadastra_etiquetas(request):
                 observacao=observacao,
             )
 
-            # gerar imagem do código de barras (se quiser guardar depois)
-            barcode_img = gerar_codigo_barras(codigo_numerico)
-            # exemplo: salvar num diretório de mídia se quiser
-            # etiqueta.imagem.save(barcode_img.name, barcode_img)
-
             etiquetas_criadas.append(etiqueta)
-
+        Log.cadastramento(etiqueta,Usuario.objects.get(id=request.session.get("usuario")),'et')  
         messages.success(
             request,
             f"{len(etiquetas_criadas)} etiqueta(s) criadas com sucesso!"
@@ -384,6 +399,7 @@ def edita_etiquetas(request, id):
 def deleta_etiquetas(request, id):
     etiqueta = get_object_or_404(Etiqueta, id=id)
     etiqueta.delete()
+    Log.exclusao(etiqueta,Usuario.objects.get(id=request.session.get("usuario")),'et')
     messages.success(request, "Etiqueta excluída com sucesso!")
     return redirect("exibe_etiquetas")
 @is_user

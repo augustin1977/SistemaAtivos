@@ -21,6 +21,10 @@
 
 
         <button type="submit" class="btn btn-primary mt-3">Gerar Etiquetas</button>
+        <button type="button" class="btn btn-secondary mt-3"
+        onclick="if (document.referrer) { window.history.back(); } else { window.location.href='{% url "home" %}'; }"> Voltar
+        </button>
     </form>
+    
 </div>
 {% endblock %}
