@@ -311,6 +311,7 @@ def finaliza_amostra(request, id):
             messages.warning(request, f"A amostra '{amostra.nome}' foi finalizada com {atraso} dia(s) de atraso.")
 
     return redirect("exibe_amostras")
+
 @is_superuser
 def reabre_amostra(request, id):
     amostra = get_object_or_404(Amostra, id=id)
