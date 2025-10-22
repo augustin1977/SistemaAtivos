@@ -10,3 +10,4 @@ gunicorn_conf
 Lista_LPM.txt
 /images/files/
 /images/
+instrucoes_static.txt
