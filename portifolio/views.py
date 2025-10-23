@@ -474,7 +474,6 @@ def imprime_etiquetas(request, id):
 def consulta_etiqueta(request):
     etiqueta = None
     query = request.GET.get("q", "").upper().strip()
-
     if query:
         etiqueta = Etiqueta.objects.filter(
             Q(codigo_humano__icontains=query) |
