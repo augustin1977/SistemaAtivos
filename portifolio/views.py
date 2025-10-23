@@ -477,7 +477,10 @@ def consulta_etiqueta(request):
 
     if query:
         etiqueta = Etiqueta.objects.filter(
-            Q(codigo_humano__icontains=query) | Q(codigo_numerico__icontains=query)
+            Q(codigo_humano__icontains=query) |
+            Q(codigo_numerico__icontains=query) |
+            Q(amostra__nome__icontains=query) |
+            Q(amostra__projeto__nome__icontains=query)
         ).first()
         if not etiqueta:
             messages.error(request, "Etiqueta não encontrada. Verifique o código informado.")

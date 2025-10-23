@@ -5,9 +5,9 @@
 {% block 'conteudo' %}
 <br>
 <div class="container mt-5">
-  <h2 class="text-center mb-4">🔍 Consulta de Etiquetas</h2>
+  <h2 class="text-center mb-2">🔍 Consulta de Etiquetas</h2>
 
-  <form method="get" id="form-consulta" class="text-center mb-4">
+  <form method="get" id="form-consulta" class="text-center mb-1">
       <input type="text" id="campo-busca" name="q" value="{{ query }}"
              placeholder="Digite ou escaneie o código"
              class="form-control form-control-lg text-center" autofocus required>
@@ -20,7 +20,7 @@
   {% endif %}
 
   {% if etiqueta %}
-  <div class="card shadow-lg mt-4">
+  <div class="card shadow-lg mt-0">
     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
       <h5 class="mb-0">Etiqueta: {{ etiqueta.codigo_humano }}</h5>
       <a href="{% url 'solicita_impressao_etiqueta' etiqueta.id %}" class="btn btn-info btn-sm">
@@ -28,16 +28,17 @@
       </a>
     </div>
     <div class="card-body">
-      <p><strong>Código numérico:</strong> {{ etiqueta.codigo_numerico }}</p>
-      <p><strong>Projeto:</strong> {{ etiqueta.amostra.projeto.nome }}</p>
-      <p><strong>Empresa:</strong> {{ etiqueta.amostra.projeto.cliente }}</p>
-      <p><strong>Amostra:</strong> {{ etiqueta.amostra.nome }}</p>
-      <p><strong>Responsável:</strong> {{ etiqueta.amostra.projeto.responsavel }}</p>
-      <p><strong>Local:</strong> {{ etiqueta.local_instalacao }}</p>
-      <p><strong>Massa (kg):</strong> {{ etiqueta.massa }}</p>
-      <p><strong>Observação:</strong> {{ etiqueta.observacao|default:"—" }}</p>
-      <p><strong>Data de Criação:</strong> {{ etiqueta.data_criacao|date:"d/m/Y H:i" }}</p>
-      <p><strong>Última Alteração:</strong> {{ etiqueta.data_alteracao|date:"d/m/Y H:i" }}</p>
+      <strong>Código numérico:</strong> {{ etiqueta.codigo_numerico }}<br>
+      <strong>Código humano:</strong> {{ etiqueta.codigo_humano }}<br>
+      <strong>Projeto:</strong> {{ etiqueta.amostra.projeto.nome }}<br>
+      <strong>Empresa:</strong> {{ etiqueta.amostra.projeto.cliente }}<br>
+      <strong>Amostra:</strong> {{ etiqueta.amostra.nome }}<br>
+      <strong>Responsável:</strong> {{ etiqueta.amostra.projeto.responsavel }}<br>
+      <strong>Local:</strong> {{ etiqueta.local_instalacao }}<br>
+      <strong>Massa (kg):</strong> {{ etiqueta.massa }}<br>
+      <strong>Observação:</strong> {{ etiqueta.observacao|default:"—" }}<br>
+      <strong>Data de Criação:</strong> {{ etiqueta.data_criacao|date:"d/m/Y H:i" }}<br>
+      <strong>Última Alteração:</strong> {{ etiqueta.data_alteracao|date:"d/m/Y H:i" }}<br>
     </div>
   </div>
   {% endif %}
