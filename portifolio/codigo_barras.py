@@ -1,5 +1,5 @@
 from django.utils.text import slugify
-from .models import Etiqueta
+from .models import *
 import barcode
 from barcode.writer import ImageWriter
 from io import BytesIO
@@ -12,6 +12,7 @@ from reportlab.graphics.barcode import code128
 import re
 import unicodedata
 from datetime import datetime
+from django.db import transaction
 
 
 def gerar_codigo_limpo(nome_projeto: str) -> str:
@@ -63,10 +64,13 @@ def gerar_codigo_humano(amostra):
         seq = str(existentes + 1).zfill(4)
 
 def gerar_codigo_numerico():
-    """Gera um código numérico sequencial global."""
-    ultimo = Etiqueta.objects.order_by('-id').first()
-    proximo = (ultimo.id + 1) if ultimo else 1
-    return f"{proximo:09d}"
+    """Gera um código numérico sequencial global e nunca repete."""
+    with transaction.atomic():
+        seq, _ = SequenciaEtiqueta.objects.select_for_update().get_or_create(id=1)
+        codigo = f"{seq.proximo_numero:09d}"
+        seq.proximo_numero += 1
+        seq.save()
+    return codigo
 
 
 def gerar_codigo_barras(codigo_numerico):

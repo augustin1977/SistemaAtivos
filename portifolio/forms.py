@@ -13,11 +13,16 @@ class CorForm(Form):
     def clean(self):
         super().clean()
         cd = self.cleaned_data
-        
         nome = cd.get("nome")
         tonalidade = cd.get("tonalidade")
         id_val = cd.get("id") or None  # evita string vazia
-
+        if nome:
+            nome = nome.strip().capitalize()
+            cd["nome"] = nome
+        if tonalidade:
+            tonalidade = tonalidade.strip().upper()
+            cd["tonalidade"] = tonalidade
+        
         # validação de nome duplicado
         qs = Cor.objects.filter(nome__iexact=nome)
         if id_val:

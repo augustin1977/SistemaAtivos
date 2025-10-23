@@ -44,12 +44,18 @@ def edita_cores(request,id):
     if request.method == 'POST':
         form = CorForm(request.POST)
         if form.is_valid():
-            cor.nome = form.cleaned_data['nome'].capitalize()
-            cor.tonalidade = form.cleaned_data['tonalidade'].upper()
-            #cor.ativa = form.cleaned_data.get('ativa', False)
-            cor.save()
-            status = 1
-            messages.success(request, f"A cor '{cor.nome}' foi atualizada com sucesso!")
+            cd=form.cleaned_data
+            lista_campos=["nome","tonalidade"]
+            alteracao = False
+            for campo in lista_campos:
+                alterado=Log.foiAlterado(cor,campo,cd[campo],'cr',Usuario.objects.get(id=request.session.get("usuario")))
+                if alterado:
+                    setattr(cor, campo, cd[campo])
+                alteracao |= alterado
+            if alteracao:
+                cor.save()
+                messages.success(request, f"A cor '{cor.nome}' foi atualizada com sucesso!")
+                status = 1
             return redirect("exibe_cores")  # volta para a lista
     else:
         form = CorForm(initial={
@@ -118,25 +124,26 @@ def edita_projetos(request, id):
         form = ProjetoForm(request.POST, cor_atual=projeto.cor)
         if form.is_valid():
             cd = form.cleaned_data
-
+            lista_campos=["nome","cliente","cor","responsavel"]
             # se trocou de cor, libera a antiga e ativa a nova
             if projeto.cor != cd["cor"]:
                 projeto.cor.ativa = False
                 projeto.cor.save(update_fields=["ativa"])
                 cd["cor"].ativa = True
                 cd["cor"].save(update_fields=["ativa"])
-
-            projeto.nome = cd["nome"].strip()
-            projeto.cliente = cd["cliente"].strip()
-            projeto.cor = cd["cor"]
-            projeto.responsavel = cd["responsavel"]
-            #projeto.ativo = cd.get("ativo", False)
-
-            try:
-                projeto.save()
-                return redirect("exibe_projetos")
-            except IntegrityError:
-                form.add_error("nome", "Já existe um projeto com este nome.")
+            alteracao = False
+            for campo in lista_campos:
+                alterado=Log.foiAlterado(projeto,campo,cd[campo],'pj',Usuario.objects.get(id=request.session.get("usuario")))
+                if alterado:
+                    setattr(projeto, campo, cd[campo])
+                alteracao |= alterado
+            if alteracao:
+                try:
+                    projeto.save()
+                    messages.success(request, f"O projeto '{projeto.nome}' foi atualizado com sucesso!")
+                    return redirect("exibe_projetos")
+                except IntegrityError:
+                    form.add_error("nome", "Já existe um projeto com este nome.")
     else:
         form = ProjetoForm(
             initial={
@@ -267,12 +274,16 @@ def edita_amostras(request, id):
         form = AmostraForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            amostra.nome = cd["nome"]
-            amostra.projeto = cd["projeto"]
-            amostra.data_recebimento = cd["data_recebimento"]
-            amostra.prazo_dias = cd["prazo_dias"]
-            amostra.save()
-            messages.success(request, "Amostra atualizada com sucesso!")
+            lista_campos=["nome","projeto","data_recebimento","prazo_dias"]
+            alteracao = False
+            for campo in lista_campos:
+                alterado=Log.foiAlterado(amostra,campo,cd[campo],'am',Usuario.objects.get(id=request.session.get("usuario")))
+                if alterado:
+                    setattr(amostra, campo, form.cleaned_data[campo])
+                alteracao |= alterado
+            if alteracao:
+                amostra.save()
+                messages.success(request, "Amostra atualizada com sucesso!")
             return redirect("exibe_amostras")
     else:
         form = AmostraForm(initial={
@@ -378,13 +389,32 @@ def edita_etiquetas(request, id):
         form = EtiquetaForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            etiqueta.amostra = cd["amostra"]
-            etiqueta.local_instalacao = cd["local_instalacao"]
-            etiqueta.massa = cd["massa"]
-            etiqueta.observacao = cd["observacao"]
-            etiqueta.codigo_humano = gerar_codigo_humano(cd["amostra"])
-            etiqueta.save()
-            messages.success(request, "Etiqueta atualizada com sucesso!")
+            lista_campos=["amostra","local_instalacao","massa","observacao"]
+            alteracao = False
+            alterou_amostra = False
+            for campo in lista_campos:
+                alterado=Log.foiAlterado(etiqueta,campo,cd[campo],'et',Usuario.objects.get(id=request.session.get("usuario")))
+                if alterado and campo == "amostra":
+                    alterou_amostra = True
+                if alterado:
+                    setattr(etiqueta, campo, cd[campo])
+                alteracao |= alterado
+            if alterou_amostra:
+                # Regenera os códigos se a amostra foi alterada
+                # Gera novocodigo humano
+                Log.foiAlterado(etiqueta,"codigo_humano",cd['codigo_humano'],'et',Usuario.objects.get(id=request.session.get("usuario")))
+                codigo_humano = gerar_codigo_humano(cd['amostra'])
+                setattr(etiqueta, "codigo_humano", codigo_humano)
+                # Gera Novo codigo numerico
+                codigo_numerico=gerar_codigo_numerico()
+                cd["codigo_numerico"] = codigo_numerico
+                Log.foiAlterado(etiqueta,"codigo_numerico",cd['codigo_numerico'],'et',Usuario.objects.get(id=request.session.get("usuario")))
+                setattr(etiqueta, "codigo_numerico", cd["codigo_numerico"])
+                
+            if alteracao or alterou_amostra:
+                etiqueta.save()
+                messages.success(request, "Etiqueta atualizada com sucesso!")
+
             return redirect("exibe_etiquetas")
     else:
         form = EtiquetaForm(initial={

@@ -81,4 +81,12 @@ class Etiqueta(models.Model):
         cor_nome = self.amostra.projeto.cor.nome
         return f"{self.codigo_humano} - {self.amostra.nome} - {self.codigo_numerico} - {cor_nome}"
 
+class SequenciaEtiqueta(models.Model):
+    proximo_numero = models.PositiveIntegerField(default=1)
 
+    def __str__(self):
+        return f"Sequência atual: {self.proximo_numero}"
+
+    class Meta:
+        verbose_name = "Controle de sequência de etiquetas"
+        verbose_name_plural = "Controle de sequência de etiquetas"
