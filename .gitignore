@@ -11,3 +11,8 @@ Lista_LPM.txt
 /images/files/
 /images/
 instrucoes_static.txt
+# Python exclusions
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
