@@ -423,7 +423,6 @@ def edita_etiquetas(request, id):
             "massa": etiqueta.massa,
             "observacao": etiqueta.observacao,
         })
-
     return render(request, "cadastra_etiquetas.html", {"form": form, "editando": True})
 
 @is_user
