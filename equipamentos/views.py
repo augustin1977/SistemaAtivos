@@ -1030,13 +1030,14 @@ def consulta_dados_sistema(request):
     linhas, letras = acessaPastaRecursiva(BASE_DIR)
     agora = datetime.now()
     versao=dados_ambiente.versao
+    datas=dados_ambiente.data_lancamento.split(r"/")
     data_consulta=f"{agora:%d/%m/%Y - %H:%M:%S}"
-    contagem_tempo = (agora.year - 2025) * 12 + (agora.month - 11) + (agora.day) / 30
+    contagem_tempo = (agora.year - int(datas[2])) * 12 + (agora.month - int(datas[1])) + (agora.day) / int(datas[0])
     if contagem_tempo <= 12:
         tempo = f"{converteBR(contagem_tempo,1)} meses"
     else:
         tempo = f"{converteBR(contagem_tempo/12,2)} anos"
-    dic={'data_versao':"30/11/2025",
+    dic={'data_versao':dados_ambiente.data_lancamento,
         'numero_caracteres': converteBR(letras),
          'numero_linhas': converteBR(linhas),
          'versao': versao,
