@@ -1031,12 +1031,13 @@ def consulta_dados_sistema(request):
     agora = datetime.now()
     versao=dados_ambiente.versao
     data_consulta=f"{agora:%d/%m/%Y - %H:%M:%S}"
-    contagem_tempo = (agora.year - 2023) * 12 + (agora.month - 6) + (agora.day) / 31
+    contagem_tempo = (agora.year - 2025) * 12 + (agora.month - 11) + (agora.day) / 30
     if contagem_tempo <= 12:
         tempo = f"{converteBR(contagem_tempo,1)} meses"
     else:
         tempo = f"{converteBR(contagem_tempo/12,2)} anos"
-    dic={'numero_caracteres': converteBR(letras),
+    dic={'data_versao':"30/11/2025",
+        'numero_caracteres': converteBR(letras),
          'numero_linhas': converteBR(linhas),
          'versao': versao,
          'data': data_consulta,
