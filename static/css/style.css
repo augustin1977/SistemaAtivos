@@ -1,3 +1,7 @@
+html {
+  font-size: clamp(6px, 1.08vw, 18px);
+}
+
 .link-bloqueado {
     color: #6c757d !important;  /* cinza padrão do Bootstrap */
     pointer-events: none;      /* desabilita clique */
