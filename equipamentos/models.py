@@ -36,9 +36,9 @@ class Local_instalacao(models.Model):
         ordering = ['predio','piso','-sala','-armario','prateleira']
         unique_together=['laboratorio','predio','piso','sala','armario','prateleira']
     def __str__(self):
-        retorno= self.laboratorio+"."+str(self.predio)
+        retorno= self.laboratorio+" "+str(self.predio)
         if self.piso:
-            retorno+="."+str(self.piso)
+            retorno+=" "+str(self.piso)
         if self.sala:
             retorno+=" "+str(self.sala)
         if self.armario:
