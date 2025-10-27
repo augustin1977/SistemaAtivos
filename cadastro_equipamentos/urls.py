@@ -14,7 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,re_path
+from django.http import HttpResponse
 from django.conf.urls import include
 from django.conf.urls.static import static
 from django.conf import settings
@@ -24,6 +25,7 @@ import boxplot.views
 
 
 urlpatterns = [
+    re_path(r'^\.well-known/appspecific/com\.chrome\.devtools\.json$', lambda r: HttpResponse(status=204)), # não responder ao Chrome para mais informações sobre o servidor
     path("admin/", admin.site.urls),
     path('notas/', include('notas.urls')),
     path('equipamentos/', include('equipamentos.urls')),
