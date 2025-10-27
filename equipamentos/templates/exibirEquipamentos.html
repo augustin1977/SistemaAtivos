@@ -33,6 +33,7 @@
             var nome = $("<th>").attr("scope", "row").text(equipamento.nome_equipamento);
             var codigo = $("<td>").text(equipamento.codigo);
             var modelo = $("<td>").text(equipamento.modelo);
+            var fabricante = $("<td>").text(equipamento.fabricante);
             var tipo = $("<td>").text(equipamento.tipo_equipamento);
             var local = $("<td>").text(equipamento.local);
             var detalhes = $("<td>").html(
@@ -54,6 +55,7 @@
               nome,
               codigo,
               modelo,
+              fabricante,
               tipo,
               local,
               detalhes,

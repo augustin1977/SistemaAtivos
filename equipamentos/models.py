@@ -122,7 +122,7 @@ class Equipamento(models.Model):
         'especificacao':self.especificacao,'outros_dados':self.outros_dados, 'usuarios_treinados':usuarios_treinados}
     def to_dic(self):
         return {"id":self.id,"nome_equipamento":self.nome_equipamento,"modelo":self.modelo,"local":str(self.local),
-            "tipo_equipamento":str(self.tipo_equipamento),"codigo":self.codigo}
+            "tipo_equipamento":str(self.tipo_equipamento),"codigo":self.codigo,"fabricante":str(self.fabricante)}
     class Meta:
         ordering = ['nome_equipamento']
     def __str__(self):
