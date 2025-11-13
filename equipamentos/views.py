@@ -67,9 +67,10 @@ def get_equipamentos(request):
         q3 = Q(fabricante__nome_fabricante__icontains=termo_busca)
         q4 = Q(patrimonio=termo_busca)
         q5 = Q(modelo__icontains=termo_busca)
+        q6 = Q(tipo_equipamento__nome_tipo__icontains=termo_busca)
         q9 = Q(ativo=True)
 
-        filtro = (q1 | q2 | q3 | q4 | q5) & q9
+        filtro = (q1 | q2 | q3 | q4 | q5 | q6) & q9
         equipamentos = Equipamento.objects.filter(filtro)
     else:
         equipamentos = Equipamento.objects.filter(ativo=True)
