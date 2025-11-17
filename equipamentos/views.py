@@ -133,6 +133,9 @@ def editarEquipamento(request):
                 "nacionalidade",
                 "data_ultima_atualizacao",
                 "tensao_eletrica",
+                "altura",
+                "largura",
+                "comprimento",
                 "projeto_compra",
                 "especificacao",
                 "outros_dados",
@@ -223,6 +226,9 @@ def cadastrarEquipamento(request):
             data_ultima_calibracao = details.cleaned_data["data_ultima_calibracao"]
             data_cadastro = details.cleaned_data["data_cadastro"]
             patrimonio = details.cleaned_data["patrimonio"]
+            altura = details.cleaned_data["altura"]
+            largura = details.cleaned_data["largura"]
+            comprimento = details.cleaned_data["comprimento"]
             # material_consumo=details.cleaned_data['material_consumo']
             material_consumo = []
             usuario = details.cleaned_data["usuario"]
@@ -259,6 +265,9 @@ def cadastrarEquipamento(request):
                 outros_dados=outros_dados,
                 custo_aquisição=custo_aquisição,
                 ativo=True,
+                altura=altura,
+                largura=largura,
+                comprimento=comprimento,
             )
             e.save()
             mecanica = Disciplina.objects.get(disciplina="Mecânica")
@@ -733,6 +742,9 @@ def baixarRelatorioEquipamentos(request):
             "responsavel",
             "potencia_eletrica",
             "tensao_eletrica",
+            "altura",
+            "largura",
+            "comprimento",
             "nacionalidade",
             "data_ultima_atualizacao",
             "especificacao",
@@ -771,6 +783,9 @@ def baixarRelatorioEquipamentos(request):
                 obj.responsavel,
                 obj.potencia_eletrica,
                 obj.tensao_eletrica,
+                obj.altura,
+                obj.largura,
+                obj.comprimento,
                 obj.nacionalidade,
                 obj.data_ultima_atualizacao,
                 obj.especificacao,

@@ -7,6 +7,7 @@ from cadastro_equipamentos.settings import TIME_ZONE
 import datetime
 import pytz
 import os
+import re
 
 class CustomMoney(MoneyField):
     """Cria padrão para exibição de valores em dinheiro, subistituindo . por ,"""
@@ -73,13 +74,47 @@ class equipamentoEditarForm(Form):
     usuario=CharField(label="",widget=HiddenInput())
     custo_aquisição=CustomMoney(default_currency='BRL',required=False,widget= MoneyWidget(attrs={'class': "form-control"}))
     responsavel=CharField(widget= TextInput(attrs={'class': "form-control"}))
-    potencia_eletrica=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
     nacionalidade=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
     tensao_eletrica=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
+    potencia_eletrica=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
+    dimensoes = CharField(required=False,widget=TextInput(attrs={'class': "form-control",'placeholder':"Formato: altura x largura x comprimento (em mm)"}))
     projeto_compra=CharField(required=False,widget= TextInput(attrs={'class': "form-control"}))
     especificacao=CharField(required=False,widget= Textarea(attrs={'class': "form-control"}))
     outros_dados=CharField(required=False,widget= Textarea(attrs={'class': "form-control"}))
-
+    def clean_dimensoes(self):
+        """Faz a valiação do campo dimensões"""
+        cd=self.cleaned_data
+        dimensoes_raw = cd.get('dimensoes') or ''
+        dim = dimensoes_raw.strip()
+    # normaliza símbolos e unidades
+        dim = dim.replace(' ', '')
+        dim = dim.replace('CM', '').replace('cm', '')
+        dim = dim.replace('MM', '').replace('mm', '')
+        dim = dim.replace('M', '').replace('m', '')
+        dim = dim.replace(',', '.')
+        dim = dim.replace('×', 'x')  # caso alguém use o x "bonitão"
+        if dim:
+            pattern = r'^\s*(\d+(?:\.\d+)?)\s*x\s*(\d+(?:\.\d+)?)\s*x\s*(\d+(?:\.\d+)?)\s*$'
+            match = re.match(pattern, dim, re.IGNORECASE)
+            if not match:
+                raise ValidationError('Dimensões inválidas. Use o formato: altura x largura x comprimento (em mm)')
+            try:
+                altura = float(match.group(1))
+                largura = float(match.group(2))
+                comprimento= float(match.group(3))   
+            except:
+                raise ValidationError('Dimensões inválidas. Certifique-se de que os valores são numéricos.')
+            if altura <= 0 or largura <= 0 or comprimento <= 0:
+                raise ValidationError('Dimensões inválidas. Os valores devem ser maiores que zero.')
+            cd['altura']=altura
+            cd['largura']=largura
+            cd['comprimento']=comprimento
+            return dimensoes_raw
+        cd['altura']=None
+        cd['largura']=None
+        cd['comprimento']=None
+        return None
+        
     def clean_data_compra(self):
         """Faz a validação da data da compra aplicando regra de negocio: data da compra deve ser anterior a data de cadastro"""
         data_compra = self.cleaned_data.get('data_compra')
@@ -120,13 +155,53 @@ class equipamentoCadastrarForm(Form):
     usuario=CharField(label="",widget=HiddenInput())
     custo_aquisição=CustomMoney(default_currency='BRL',required=True,widget= MoneyWidget(attrs={'class': "form-control",'placeholder':'0,01'}))
     responsavel=CharField(widget= TextInput(attrs={'class': "form-control",'placeholder':'Nome do responsavel pelo equipamento'}))
-    potencia_eletrica=CharField(required=False,widget= TextInput(attrs={'class': "form-control",'placeholder':'Potência em W'}))
     nacionalidade=CharField(required=False,widget= TextInput(attrs={'class': "form-control",'placeholder':'Nacionalidade'}))
     tensao_eletrica=CharField(required=False,widget= TextInput(attrs={'class': "form-control",'placeholder':'tensão eletrica em V'}))
+    potencia_eletrica=CharField(required=False,widget= TextInput(attrs={'class': "form-control",'placeholder':'Potência em W'}))
+    dimensoes = CharField(required=False,widget=TextInput(attrs={'class': "form-control",'placeholder':"Formato: altura x largura x comprimento (em mm)"}))
     projeto_compra=CharField(required=False,widget= TextInput(attrs={'class': "form-control",'placeholder':'Nome do Projeto'}))
     especificacao=CharField(required=False,widget= Textarea(attrs={'class': "form-control",'placeholder':'Especificação completa do equipamento, conforme nota fical ou documento de compra'}))
     outros_dados=CharField(required=False,widget= Textarea(attrs={'class': "form-control",'placeholder':'Dados adicionais'}))
+    def clean_dimensoes(self):
+        """Faz a valiação do campo dimensões"""
+        cd=self.cleaned_data
+        dimensoes_raw = cd.get('dimensoes') or ''
+        dim = dimensoes_raw.strip()
+    # normaliza símbolos e unidades
+        dim = dim.replace(' ', '')
+        dim = dim.replace('CM', '').replace('cm', '')
+        dim = dim.replace('MM', '').replace('mm', '')
+        dim = dim.replace('M', '').replace('m', '')
+        dim = dim.replace(',', '.')
+        dim = dim.replace('×', 'x')  # caso alguém use o x "bonitão"
 
+        # Só pra ter certeza do que está chegando:
+        print("RAW:", repr(dimensoes_raw))
+        print("LIMPO:", repr(dim))
+
+        if dim:
+            pattern = r'^\s*(\d+(?:\.\d+)?)\s*x\s*(\d+(?:\.\d+)?)\s*x\s*(\d+(?:\.\d+)?)\s*$'
+            match = re.match(pattern, dim, re.IGNORECASE)
+            if not match:
+                raise ValidationError('Dimensões inválidas. Use o formato: altura x largura x comprimento (em mm)')
+            try:
+                altura = float(match.group(1))
+                largura = float(match.group(2))
+                comprimento= float(match.group(3))   
+            except:
+                raise ValidationError('Dimensões inválidas. Certifique-se de que os valores são numéricos.')
+            if altura <= 0 or largura <= 0 or comprimento <= 0:
+                raise ValidationError('Dimensões inválidas. Os valores devem ser maiores que zero.')
+            cd['altura']=altura
+            cd['largura']=largura
+            cd['comprimento']=comprimento
+            print(dimensoes_raw,altura,largura,comprimento)
+            return dimensoes_raw
+        cd['altura']=None
+        cd['largura']=None
+        cd['comprimento']=None
+        return None
+        
     
     def clean(self):
         """Faz a valiação dos dados e das regras de negocio :
@@ -134,14 +209,17 @@ class equipamentoCadastrarForm(Form):
         - data de compra deve ser anterior a hoje
         - cria codigo do equipamento considerando a sigla do tipo + numero sequencial com pelo menos 3 digitos ex: AGI001"""
         super().clean()
-        utc=pytz.timezone(TIME_ZONE)# pytz.UTC
+        
         cd=self.cleaned_data
-        # print(cd)
+
+        # Valida os campos de datas
+        utc=pytz.timezone(TIME_ZONE)# pytz.UTC
         cd['data_cadastro']=utc.localize( datetime.datetime.now())
         data_compra=cd["data_compra"]
         data_cadastro=cd["data_cadastro"]
         if data_compra>data_cadastro:
             raise ValidationError('Data Compra invalida: a data de compra deve ser anterior a data de hoje')
+        # Valida tipo de equipamentos e cria código do equipamento
         tipo_equipamento=cd["tipo_equipamento"]
         tipo=Tipo_equipamento.objects.get(id=tipo_equipamento.id)
         equipamentos_tipo = Equipamento.objects.filter(codigo__icontains=tipo.sigla.upper()).order_by('-codigo')
@@ -226,6 +304,7 @@ class mediaForm(ModelForm):
         labels = {
             'nome': 'Nome do arquivo','equipamento':'Equipamento','documentos':'Documento - Tamanho máximo do arquivo - 40MB'
         }  
+
 class cadastrarPermissaoForm (ModelForm):
     equipamento = ModelChoiceField(queryset=Equipamento.objects.filter(ativo=True).order_by("nome_equipamento"),widget=Select(attrs={'class': "form-control"}))
     usuario = ModelChoiceField(queryset=Usuario.objects.filter(ativo=True).order_by("nome"),widget=Select(attrs={'class': "form-control"}))
