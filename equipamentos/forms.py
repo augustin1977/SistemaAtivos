@@ -89,9 +89,12 @@ class equipamentoEditarForm(Form):
     # normaliza símbolos e unidades
         dim = dim.replace(' ', '')
         dim = dim.replace('CM', '').replace('cm', '')
+        dim = dim.replace('Cm', '').replace('cM', '')
+        dim = dim.replace('Mm', '').replace('mM', '')
         dim = dim.replace('MM', '').replace('mm', '')
         dim = dim.replace('M', '').replace('m', '')
         dim = dim.replace(',', '.')
+        dim = dim.replace('X', 'x')
         dim = dim.replace('×', 'x')  # caso alguém use o x "bonitão"
         if dim:
             pattern = r'^\s*(\d+(?:\.\d+)?)\s*x\s*(\d+(?:\.\d+)?)\s*x\s*(\d+(?:\.\d+)?)\s*$'
@@ -170,9 +173,12 @@ class equipamentoCadastrarForm(Form):
     # normaliza símbolos e unidades
         dim = dim.replace(' ', '')
         dim = dim.replace('CM', '').replace('cm', '')
+        dim = dim.replace('Cm', '').replace('cM', '')
+        dim = dim.replace('Mm', '').replace('mM', '')
         dim = dim.replace('MM', '').replace('mm', '')
         dim = dim.replace('M', '').replace('m', '')
         dim = dim.replace(',', '.')
+        dim = dim.replace('X', 'x')
         dim = dim.replace('×', 'x')  # caso alguém use o x "bonitão"
 
         # Só pra ter certeza do que está chegando:
