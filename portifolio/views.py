@@ -618,3 +618,42 @@ def get_amostras_por_projeto(request):
     ).values("id", "nome")
 
     return JsonResponse(list(amostras), safe=False)
+
+@is_user
+def relatorio_amostras_por_responsavel(request):
+    responsavel_id = request.GET.get("responsavel")
+
+    responsaveis = Usuario.objects.all()
+
+    dados = None
+    responsavel = None
+
+    if responsavel_id:
+        responsavel = get_object_or_404(Usuario, id=responsavel_id)
+
+        # Buscar projetos sob responsabilidade dele
+        projetos = Projeto.objects.filter(responsavel=responsavel).order_by("nome")
+
+        dados = []
+
+        for proj in projetos:
+
+            amostras = Amostra.objects.filter(projeto=proj).order_by("nome")
+
+            for am in amostras:
+                etiquetas = (
+                    Etiqueta.objects
+                    .filter(amostra=am)
+                    .select_related("local_instalacao")
+                )
+
+                dados.append({
+                    "projeto": proj,
+                    "amostra": am,
+                    "etiquetas": etiquetas
+                })
+    return render(request, "exibe_amostras_reponsavel.html", {
+        "responsaveis": responsaveis,
+        "responsavel_selecionado": responsavel,
+        "dados": dados,
+    })

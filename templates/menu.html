@@ -95,6 +95,7 @@
         <hr class="dropdown-divider">
         <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'consulta_etiqueta' %}"> Busca de Etiquetas por codigo</a>
         <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'busca_etiquetas_por_local' %}"> Busca de Etiquetas por local</a>
+        <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'relatorio_amostras_responsavel' %}"> Relatório de Amostras por Responsável</a>
         <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'amostras_por_projeto' %}"> Relatório de amostras por projeto<a>       
         <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" href="{% url 'relatorio_prazo' %}"> Relatório de atendimento ao prazo por projeto</a>
         

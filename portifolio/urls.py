@@ -32,4 +32,5 @@ urlpatterns = [path("cores/cadastrar/",views.cadastra_cores, name="cadastra_core
                path("etiquetas/relatorio_prazo/", views.relatorio_prazo, name="relatorio_prazo"),
                path("relatorio/amostras-projeto/", views.amostras_por_projeto, name="amostras_por_projeto"),
                path("relatorio/amostras-projeto/<int:projeto_id>/", views.amostras_por_projeto, name="amostras_por_projeto_id"),
+               path("relatorio/amostras-por-responsavel/",views.relatorio_amostras_por_responsavel,name="relatorio_amostras_responsavel"),
                ]
