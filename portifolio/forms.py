@@ -118,30 +118,61 @@ class AmostraForm(Form):
 
 class EtiquetaForm(Form):
     id = CharField(widget=HiddenInput(), required=False)
-    amostra = ModelChoiceField(
-        queryset=Amostra.objects.filter(projeto__ativo=True, data_fim__isnull=True),
-        widget=Select(attrs={'class': 'form-control'})
+
+    projeto = ModelChoiceField(
+        queryset=Projeto.objects.filter(ativo=True),
+        widget=Select(attrs={"class": "form-control"}),
+        required=True,
+        label="Projeto"
     )
+
+    amostra = ModelChoiceField(
+        queryset=Amostra.objects.none(),
+        widget=Select(attrs={'class': 'form-control'}),
+        required=True,
+        label="Amostra"
+    )
+
     local_instalacao = ModelChoiceField(
         queryset=Local_instalacao.objects.all(),
         widget=Select(attrs={'class': 'form-control'})
     )
+
     massa = DecimalField(
         max_digits=10,
         decimal_places=3,
         required=False,
-        label="Massa (kg):",
+        label="Massa (kg)",
         widget=NumberInput(attrs={'class': 'form-control'})
     )
 
     observacao = CharField(
         required=False,
-        widget=Textarea(attrs={
-        'class': 'form-control',
-        'rows': 3, 
-        'style': 'resize: vertical; min-height: 2.5em;'  
-    })
+        widget=Textarea(attrs={'class': 'form-control', 'rows': 3})
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Quando estamos EDITANDO
+        if "initial" in kwargs:
+            initial = kwargs["initial"]
+
+            amostra = initial.get("amostra")
+
+            if amostra:
+                projeto = amostra.projeto
+
+                # seta o projeto no form
+                self.fields['projeto'].initial = projeto
+
+                # carrega as amostras deste projeto
+                self.fields['amostra'].queryset = Amostra.objects.filter(
+                    projeto=projeto,
+                    projeto__ativo=True,
+                    data_fim__isnull=True
+                )
+
 
     def clean(self):
         cd = super().clean()

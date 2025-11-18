@@ -1,10 +1,10 @@
-from django.shortcuts import render
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_GET
 from django.db import IntegrityError
 from django.contrib import messages
 from django.utils import timezone
 from django.urls import reverse
-from django.http import FileResponse
+from django.http import FileResponse,JsonResponse
 from datetime import timedelta,date
 from usuarios.autentica_usuario import *
 from .models import *
@@ -418,11 +418,13 @@ def edita_etiquetas(request, id):
             return redirect("exibe_etiquetas")
     else:
         form = EtiquetaForm(initial={
-            "amostra": etiqueta.amostra,
-            "local_instalacao": etiqueta.local_instalacao,
-            "massa": etiqueta.massa,
-            "observacao": etiqueta.observacao,
-        })
+                "projeto": etiqueta.amostra.projeto,
+                "amostra": etiqueta.amostra,
+                "local_instalacao": etiqueta.local_instalacao,
+                "massa": etiqueta.massa,
+                "observacao": etiqueta.observacao,
+                "editando": True,
+})
     return render(request, "cadastra_etiquetas.html", {"form": form, "editando": True})
 
 @is_user
@@ -602,3 +604,17 @@ def amostras_por_projeto(request, projeto_id=None):
     }
     
     return render(request, "amostras_por_projeto.html", contexto)
+
+@require_GET
+def get_amostras_por_projeto(request):
+    projeto_id = request.GET.get("projeto_id")
+    if not projeto_id:
+        return JsonResponse({"erro": "Projeto não enviado."}, status=400)
+
+    amostras = Amostra.objects.filter(
+        projeto_id=projeto_id,
+        projeto__ativo=True,
+        data_fim__isnull=True
+    ).values("id", "nome")
+
+    return JsonResponse(list(amostras), safe=False)

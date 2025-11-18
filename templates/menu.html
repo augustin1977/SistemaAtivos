@@ -71,6 +71,10 @@
       <!-- ETIQUETAS -->
       <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}"
          href="{% url 'exibe_etiquetas' %}">Exibir Etiquetas</a>
+      <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}" 
+         href="{% url 'consulta_etiqueta' %}"> Exibir Etiqueta por codigo</a>
+      <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}"
+         href="{% url 'busca_etiquetas_por_local' %}"> Exibir Etiquetas por local</a>
       <a class="navbar-link bg-dark dropdown-item text-light {% if not request.session.usuario %}link-bloqueado{% endif %}"
          href="{% url 'cadastra_etiquetas' %}">Cadastrar Etiqueta</a>
 

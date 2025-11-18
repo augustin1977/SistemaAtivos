@@ -14,6 +14,7 @@ urlpatterns = [path("cores/cadastrar/",views.cadastra_cores, name="cadastra_core
                path("projetos/inativos/", views.exibe_projetos_inativos, name="exibe_projetos_inativos"),
                path("amostras/cadastrar/",views.cadastra_amostras, name="cadastra_amostras"),
                path("amostras/",views.exibe_amostras, name="exibe_amostras"),
+               path("ajax/amostras/", views.get_amostras_por_projeto, name="get_amostras_por_projeto"),
                path("amostras/editar/<int:id>/",views.edita_amostras, name="edita_amostras"),
                path("amostras/deletar/<int:id>/",views.deleta_amostras, name="deleta_amostras"),
                path("amostras/finalizar/<int:id>/", views.finaliza_amostra, name="finaliza_amostra"),

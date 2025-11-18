@@ -27,4 +27,38 @@
     </form>
     
 </div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+
+    $("#id_projeto").change(function() {
+        let projetoId = $(this).val();
+
+
+        if (!projetoId) {
+            $("#id_amostra").html('<option value="">Selecione um projeto primeiro</option>');
+            return;
+        }
+
+        $.ajax({
+            url: "{% url 'get_amostras_por_projeto' %}",
+            data: { projeto_id: projetoId },
+            success: function(amostras) {
+
+                let options = '<option value="">Selecione a amostra</option>';
+
+                amostras.forEach(function(a){
+                    options += `<option value="${a.id}">${a.nome}</option>`;
+                });
+
+                $("#id_amostra").html(options);
+            }
+        });
+    });
+
+});
+</script>
 {% endblock %}
