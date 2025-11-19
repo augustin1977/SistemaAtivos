@@ -364,11 +364,8 @@ def cadastra_etiquetas(request):
             )
 
             etiquetas_criadas.append(etiqueta)
-        Log.cadastramento(etiqueta,Usuario.objects.get(id=request.session.get("usuario")),'et')  
-        messages.success(
-            request,
-            f"{len(etiquetas_criadas)} etiqueta(s) criadas com sucesso!"
-        )
+            Log.cadastramento(etiqueta,Usuario.objects.get(id=request.session.get("usuario")),'et')  
+            messages.success(request,f"{len(etiquetas_criadas)} etiqueta(s) criadas com sucesso!")
         return redirect("exibe_etiquetas")
 
     else:
