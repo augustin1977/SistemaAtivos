@@ -14,6 +14,21 @@ import unicodedata
 from datetime import datetime
 from django.db import transaction
 
+def reduz_nome(nome_recebido: str, max_len: int) -> str:
+    """Reduz o nome para no máximo max_len caracteres, tentando manter palavras inteiras."""
+    nome=str(nome_recebido)
+    if len(nome) <= max_len:
+        return nome
+
+    palavras = nome.split()
+    resultado = palavras[0]
+    for palavra in palavras[1:-1]:
+        resultado+= ' ' + palavra[0].upper()
+    resultado+= ' ' + palavras[-1]
+    if len(resultado) <= max_len:
+        return resultado
+    resultado = palavras[0]+ ' ' + palavras[-1]
+    return resultado
 
 def gerar_codigo_limpo(nome_projeto: str) -> str:
 
@@ -144,9 +159,9 @@ def gerar_pdf_etiquetas(etiquetas, usuario=None):
 
         # Projeto e Amostra
         c.setFont("Helvetica", 8)
-        c.drawString(x + 5 * mm, y + altura_etiqueta - 13 * mm, f"Projeto: {etiqueta.amostra.projeto.nome}")
-        c.drawString(x + 5 * mm, y + altura_etiqueta - 15.5 * mm, f"Amostra: {etiqueta.amostra.nome}")
-        c.drawString(x + 5 * mm, y + altura_etiqueta - 18 * mm, f"Responsável: {etiqueta.amostra.projeto.responsavel}")
+        c.drawString(x + 5 * mm, y + altura_etiqueta - 13 * mm, f"Projeto: {reduz_nome(etiqueta.amostra.projeto.nome,30)}")
+        c.drawString(x + 5 * mm, y + altura_etiqueta - 15.5 * mm, f"Amostra: {reduz_nome(etiqueta.amostra.nome,28)}")
+        c.drawString(x + 5 * mm, y + altura_etiqueta - 18 * mm, f"Responsável: {reduz_nome(etiqueta.amostra.projeto.responsavel,25)}")
 
         # Código humano
         c.setFont("Helvetica-Bold", 10)
