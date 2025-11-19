@@ -624,7 +624,7 @@ def get_amostras_por_projeto(request):
 def relatorio_amostras_por_responsavel(request):
     responsavel_id = request.GET.get("responsavel")
 
-    responsaveis = Usuario.objects.all()
+    responsaveis = Usuario.objects.filter(projeto__isnull=False).distinct().order_by("nome")
 
     dados = None
     responsavel = None
