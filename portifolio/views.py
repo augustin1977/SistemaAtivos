@@ -365,7 +365,7 @@ def cadastra_etiquetas(request):
 
             etiquetas_criadas.append(etiqueta)
             Log.cadastramento(etiqueta,Usuario.objects.get(id=request.session.get("usuario")),'et')  
-            messages.success(request,"Etiqueta criadas com sucesso!")
+            messages.success(request,"Etiqueta criada com sucesso!")
         else:
             messages.error(request,"Falha na geração das etiquetas")
             print(form.errors)

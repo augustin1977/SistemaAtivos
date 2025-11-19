@@ -174,7 +174,13 @@ class EtiquetaForm(Form):
                 self.fields["amostra"].queryset = Amostra.objects.filter(
                     projeto=projeto, data_fim__isnull=True
                 )
-
+    def clean_massa(self):
+        massa = self.cleaned_data.get("massa")
+        if not massa:
+            return massa
+        if float(massa) <0:
+            raise forms.ValidationError("Massa não pode ser negativa.")
+        return massa
     def clean(self):
         cd = super().clean()
 
