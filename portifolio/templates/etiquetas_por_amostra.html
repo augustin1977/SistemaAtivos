@@ -8,13 +8,28 @@
   <h2 class="text-center mb-3">
     Etiquetas da Amostra: <strong>{{ amostra.nome }}</strong>
   </h2>
-  <h5 class="text-center text-muted mb-4">
-    Projeto: {{ amostra.projeto.nome }} — Responsável: {{ amostra.projeto.responsavel }}
-  </h5>
 
+  <!-- Linha com título central e botão à direita -->
+  <div class="row align-items-center mt-2">
+    
 
+    <div class="col-10">
+      <h5 class="text-center text-muted mb-0 mb-md-0">
+        Projeto: {{ amostra.projeto.nome }} — Responsável: {{ amostra.projeto.responsavel }}
+      </h5>
+    </div>
 
-  <table class="table table-hover table-striped text-center align-middle">
+    <div class="col-2 text-end">
+      <button 
+        type="button" 
+        class="btn btn-primary btn-sm"
+        onclick="window.location.href='{% url 'cadastra_etiquetas' %}'">
+          <i class="bi bi-plus-lg"></i> Adicionar Etiqueta
+      </button>
+    </div>
+  </div>
+
+  <table class="table table-hover table-striped text-center align-middle mt-3">
     <thead class="table-dark">
       <tr>
         <th>Código Humano</th>
@@ -36,17 +51,17 @@
         <td>{{ etiqueta.massa }}</td>
         <td>{{ etiqueta.data_criacao|date:"d/m/Y" }}</td>
         <td>
-            <a href="{% url 'edita_etiquetas' etiqueta.id %}" >
-                <i class="bi bi-pencil-square"></i>
-            </a>
-        </td>
-        <td>
-            <a href="{% url 'solicita_impressao_etiqueta' etiqueta.id %}">
-                <i class="bi bi-printer"></i>
+          <a href="{% url 'edita_etiquetas' etiqueta.id %}">
+            <i class="bi bi-pencil-square"></i>
           </a>
         </td>
         <td>
-          <a href="{% url 'deleta_etiquetas' etiqueta.id %}" >
+          <a href="{% url 'solicita_impressao_etiqueta' etiqueta.id %}">
+            <i class="bi bi-printer"></i>
+          </a>
+        </td>
+        <td>
+          <a href="{% url 'deleta_etiquetas' etiqueta.id %}">
             <i class="bi bi-trash text-danger"></i>
           </a>
         </td>

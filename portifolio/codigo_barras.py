@@ -159,18 +159,18 @@ def gerar_pdf_etiquetas(etiquetas, usuario=None):
 
         # Projeto e Amostra
         c.setFont("Helvetica", 8)
-        c.drawString(x + 5 * mm, y + altura_etiqueta - 13 * mm, f"Projeto: {reduz_nome(etiqueta.amostra.projeto.nome,30)}")
-        c.drawString(x + 5 * mm, y + altura_etiqueta - 15.5 * mm, f"Amostra: {reduz_nome(etiqueta.amostra.nome,28)}")
-        c.drawString(x + 5 * mm, y + altura_etiqueta - 18 * mm, f"Responsável: {reduz_nome(etiqueta.amostra.projeto.responsavel,25)}")
+        c.drawString(x + 5 * mm, y + altura_etiqueta - 13 * mm, f"Projeto: {reduz_nome(etiqueta.amostra.projeto.nome,35)}")
+        c.drawString(x + 5 * mm, y + altura_etiqueta - 15.5 * mm, f"Amostra: {reduz_nome(etiqueta.amostra.nome,35)}")
+        c.drawString(x + 5 * mm, y + altura_etiqueta - 18.2 * mm, f"Responsável: {reduz_nome(etiqueta.amostra.projeto.responsavel,35)}")
 
         # Código humano
-        c.setFont("Helvetica-Bold", 10)
+        c.setFont("Helvetica-Bold", 9)
         c.drawString(x + 5 * mm, y + altura_etiqueta - 22 * mm, f"{etiqueta.codigo_humano}")
 
         # Código de barras
-        barcode = code128.Code128(etiqueta.codigo_numerico, barHeight=15 * mm, barWidth=0.9)
+        barcode = code128.Code128(etiqueta.codigo_numerico, barHeight=12 * mm, barWidth=0.9)
         barcode_x = x + 51 * mm
-        barcode_y = y + 15 * mm
+        barcode_y = y + 12 * mm
         barcode.drawOn(c, barcode_x, barcode_y )
 
         # Código numérico impresso abaixo do código de barras
