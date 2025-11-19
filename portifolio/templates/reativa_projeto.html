@@ -6,9 +6,7 @@
 <div class="container mt-5">
     {% if messages %}
         {% for message in messages %}
-            <div class="alert alert-success" role="alert">
-                {{ message }}
-            </div>
+            <div class="alert alert-{{ message.tags|default:"info" }} mt-2">{{ message }}</div>
         {% endfor %}
     {% endif %}
     <h3 class="text-center">A cor "{{ projeto.cor.nome }}" já está sendo usada</h3>

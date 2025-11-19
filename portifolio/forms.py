@@ -117,6 +117,7 @@ class AmostraForm(Form):
 
 
 class EtiquetaForm(Form):
+
     id = CharField(widget=HiddenInput(), required=False)
 
     projeto = ModelChoiceField(
@@ -154,41 +155,57 @@ class EtiquetaForm(Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Quando estamos EDITANDO
-        if "initial" in kwargs:
-            initial = kwargs["initial"]
+        # SE FOR POST (CADASTRO OU EDIÇÃO)
+        if self.data and self.data.get("projeto"):
+            projeto_id = self.data.get("projeto")
+            self.fields["amostra"].queryset = Amostra.objects.filter(
+                projeto_id=projeto_id,
+                data_fim__isnull=True
+            )
+            return  # <-- importantíssimo, evita sobrescrever depois
 
+        # SE FOR EDIÇÃO (GET)
+        initial = kwargs.get("initial")
+        if initial:
             amostra = initial.get("amostra")
-
             if amostra:
                 projeto = amostra.projeto
-
-                # seta o projeto no form
-                self.fields['projeto'].initial = projeto
-
-                # carrega as amostras deste projeto
-                self.fields['amostra'].queryset = Amostra.objects.filter(
-                    projeto=projeto,
-                    projeto__ativo=True,
-                    data_fim__isnull=True
+                self.fields["projeto"].initial = projeto
+                self.fields["amostra"].queryset = Amostra.objects.filter(
+                    projeto=projeto, data_fim__isnull=True
                 )
-
 
     def clean(self):
         cd = super().clean()
+
+        projeto = cd.get("projeto")
         amostra = cd.get("amostra")
 
-        # Geração automática do código humano e numérico
-        if amostra:
-            projeto = amostra.projeto
+        if not projeto:
+            self.add_error("projeto", "Selecione um projeto.")
 
+        if not amostra:
+            self.add_error("amostra", "Selecione uma amostra.")
 
-            ultimo = Etiqueta.objects.filter(amostra__projeto=projeto).order_by('-id').first()
-            sequencia = 1 if not ultimo else int(ultimo.codigo_humano.split('-')[-1]) + 1
-            cd['codigo_humano'] = f"{gerar_codigo_limpo(projeto.nome)}-{gerar_codigo_limpo(amostra.nome)}-{sequencia:04d}"
+        # Se tiver erro, nem gera código
+        if self.errors:
+            return cd
 
-            ultimo_num = Etiqueta.objects.order_by('-id').first()
-            cd['codigo_numerico'] = f"{(ultimo_num.id + 1) if ultimo_num else 1:09d}"
-            cd['massa'] = cd.get('massa') or 0  # Define massa como - se não fornecida
+        # Geração automática
+        projeto = amostra.projeto
+
+        ultimo = Etiqueta.objects.filter(amostra__projeto=projeto).order_by("-id").first()
+        sequencia = 1 if not ultimo else int(ultimo.codigo_humano.split("-")[-1]) + 1
+
+        cd["codigo_humano"] = (
+            f"{gerar_codigo_limpo(projeto.nome)}-"
+            f"{gerar_codigo_limpo(amostra.nome)}-"
+            f"{sequencia:04d}"
+        )
+
+        ultimo_num = Etiqueta.objects.order_by("-id").first()
+        cd["codigo_numerico"] = f"{(ultimo_num.id + 1) if ultimo_num else 1:09d}"
+
+        cd["massa"] = cd.get("massa") or 0
 
         return cd
