@@ -173,5 +173,5 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Encerra sessão ao fechar o browser
 
 # Verificando ambiente de testes
 
-AMBIENTE_TESTE = 'teste' in BASE_DIR
+AMBIENTE_TESTE = 'teste' in str(BASE_DIR)
 
