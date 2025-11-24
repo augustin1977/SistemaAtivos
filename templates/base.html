@@ -43,12 +43,17 @@
         <a class="nav-link text-light" href="{% url 'sair' %}">Sair</a>
       </div>
     </nav>
-    {% if AMBIENTE_TESTE %}
-      <div class="watermark-teste">AMBIENTE DE TESTES
-    {% endif %}
-    </div>
+
+   
   
-    {% block 'conteudo' %} {% endblock %}
+    {% block 'conteudo' %} 
+        {% if AMBIENTE_TESTE %}
+      <div class="watermark-teste">AMBIENTE DE TESTES
+
+      </div>
+    {% endif %}
+    <br>
+    {% endblock %}
 
 
    
