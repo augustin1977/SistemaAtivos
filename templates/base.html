@@ -43,15 +43,15 @@
         <a class="nav-link text-light" href="{% url 'sair' %}">Sair</a>
       </div>
     </nav>
-
+ 
+      <div class="watermark-teste">AMBIENTE DE TESTES
+      </div>
+     {% if AMBIENTE_TESTE %}
+     {% endif %}
    
   
     {% block 'conteudo' %} 
-        {% if AMBIENTE_TESTE %}
-      <div class="watermark-teste">AMBIENTE DE TESTES
 
-      </div>
-    {% endif %}
     <br>
     {% endblock %}
 
