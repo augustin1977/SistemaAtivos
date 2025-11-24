@@ -28,8 +28,8 @@ def is_superuser(view_func):
             user= Usuario.objects.get(id=usuario)
             tiposuperuser=Tipo.objects.get(tipo="superuser")
             tipoadmin=Tipo.objects.get(tipo="admin")
-        if user.ativo==1 and (user.tipo==tipoadmin or user.tipo==tiposuperuser):
-            return view_func(request, *args, **kwargs)
+            if user.ativo==1 and (user.tipo==tipoadmin or user.tipo==tiposuperuser):
+                return view_func(request, *args, **kwargs)
         return redirect("/equipamentos/?status=50")  # Redireciona para uma página de login ou qualquer outra página apropriada
     return wrapper
 
@@ -42,7 +42,7 @@ def is_admin(view_func):
         if usuario:
             user= Usuario.objects.get(id=usuario)
             tipoadmin=Tipo.objects.get(tipo="admin")
-        if user.ativo==1 and (user.tipo==tipoadmin ):
-            return view_func(request, *args, **kwargs)
+            if user.ativo==1 and (user.tipo==tipoadmin ):
+                return view_func(request, *args, **kwargs)
         return redirect("/equipamentos/?status=50")  # Redireciona para uma página de login ou qualquer outra página apropriada
     return wrapper
