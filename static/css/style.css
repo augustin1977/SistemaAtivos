@@ -10,3 +10,15 @@ html {
   .menu-bloqueado {
     display: none !important;
   }
+.watermark-teste {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    font-size: 4rem;
+    font-weight: bold;
+    color: rgba(200, 0, 0, 0.25);
+    z-index: 99999;
+    pointer-events: none;
+    user-select: none;
+}

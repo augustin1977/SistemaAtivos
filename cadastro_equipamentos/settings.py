@@ -83,6 +83,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 'django.template.context_processors.media',
+                'cadastro_equipamentos.context_processors.ambiente_context',
                 
             ],
         },
@@ -170,5 +171,7 @@ SESSION_COOKIE_AGE = 14400 # 4 horas em segundos
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Encerra sessão ao fechar o browser
 
+# Verificando ambiente de testes
 
+AMBIENTE_TESTE = 'teste' in BASE_DIR
 
