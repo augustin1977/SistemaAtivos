@@ -1,3 +1,3 @@
 ########### Versão do sistema ##############
-versao="1.6"
-data_lancamento="30/11/2025"
+versao="1.6.1"
+data_lancamento="08/12/2025"
