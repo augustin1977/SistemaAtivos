@@ -54,7 +54,7 @@ class ProjetoForm(Form):
     )
 
     responsavel = ModelChoiceField(
-        queryset=Usuario.objects.filter(ativo=True),
+        queryset=Usuario.objects.filter(ativo=True).order_by('nome'),
         widget=Select(attrs={'class': 'form-control'}),
         empty_label="Selecione o responsável",
         required=True

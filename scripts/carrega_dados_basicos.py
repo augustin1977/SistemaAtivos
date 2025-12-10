@@ -144,12 +144,12 @@ def criar_cores_basicas():
     "Ciano":"#00FFFF",
     "Magenta":"#FF00FF",
     "Oliva":"#808000",
-    "Ouro":"#FFD700",
+    "Amarelo Ouro":"#FFD700",
     "Amarelo Claro":"#FFFF8E",
 }
     for nome, tonalidade in cores.items():
         cor, created = Cor.objects.get_or_create(
-            nome=nome, defaults={"tonalidade": tonalidade, "ativa": True}
+            nome=nome, defaults={"tonalidade": tonalidade, "ativa": False}
         )
         if created:
             print(f"→ Cor criada: {nome}")
