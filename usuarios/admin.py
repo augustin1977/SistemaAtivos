@@ -4,7 +4,9 @@ from .models import *
 
 
 
-@admin.register(Usuario)
-class UsuarioAdmin(admin.ModelAdmin):
-   readonly_fields=("nome","email","senha")
+# @admin.register(Usuario)
+# class UsuarioAdmin(admin.ModelAdmin):
+#    readonly_fields=("nome","email","senha")
+admin.site.register(Usuario)
 admin.site.register(Tipo)
+

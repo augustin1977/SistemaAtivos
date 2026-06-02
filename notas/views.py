@@ -159,12 +159,20 @@ def cadastrarNota(request):
 
 def get_modos_de_falha(request):
     equipamento_id = request.GET.get('equipamento_id')
-    modos_falha = Modo_falha_equipamento.objects.filter(equipamento_id=equipamento_id).values('id', 'modo_falha')
-    modos_falha=list(modos_falha)
-    
-    for modo_falha in modos_falha:
-        modo_falha['modo_falha']=str(Modo_Falha.objects.get(id=modo_falha['modo_falha'])) 
-    return JsonResponse(modos_falha, safe=False)
+
+    modos_falha = Modo_falha_equipamento.objects.filter(
+        equipamento_id=equipamento_id
+    ).select_related('modo_falha', 'modo_falha__disciplina')
+
+    data = [
+        {
+            'id': modo.id,
+            'modo_falha': str(modo.modo_falha)
+        }
+        for modo in modos_falha
+    ]
+
+    return JsonResponse(data, safe=False)
 
 def excluirDisciplina(request):
     usuario=Usuario.objects.get(id=request.session.get('usuario'))

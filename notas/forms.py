@@ -75,20 +75,29 @@ class CadastraNota_equipamentoForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if 'equipamento' in self.data:
-            equipamento_id = int(self.data.get('equipamento'))
-            self.fields['modo_Falha_equipamento'].queryset = Modo_falha_equipamento.objects.filter(equipamento_id=equipamento_id)
+            try:
+                equipamento_id = int(self.data.get('equipamento'))
+                self.fields['modo_Falha_equipamento'].queryset = (
+                    Modo_falha_equipamento.objects.filter(equipamento_id=equipamento_id)
+                )
+            except (ValueError, TypeError):
+                pass
         elif self.instance.pk:
-            self.fields['modo_Falha_equipamento'].queryset = self.instance.equipamento.modo_falha_equipamento_set.all()
+            self.fields['modo_Falha_equipamento'].queryset = (
+                Modo_falha_equipamento.objects.filter(equipamento=self.instance.equipamento)
+            )
 
     def clean(self):
-        super().clean()
-        cd=self.cleaned_data
+        
+        cd=super().clean()
+        if not cd:
+            return cd
         utc=pytz.timezone(TIME_ZONE)
         cd['data_cadastro']=utc.localize( datetime.datetime.now())
         if (cd['calibracao'] or cd['melhoria']):
                #print('equipamento',cd['equipamento'])
                equipamento=Equipamento.objects.get(id=cd['equipamento'].id)
-               equipamento.data_ultima_calibracao=utc.localize( datetime.datetime.now())
+               equipamento.data_ultima_atualizacao=utc.localize( datetime.datetime.now())
                equipamento.save()   
 
 class exibirDetalheNotaForm(ModelForm):

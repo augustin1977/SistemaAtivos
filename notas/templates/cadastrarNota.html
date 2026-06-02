@@ -20,32 +20,55 @@
         <button class="btn btn-primary">Enviar</button>
             </form>
             
-            <script type="text/javascript">
-                $(document).ready(function() {
-                  $('#id_equipamento').change(function() {
-             
-                    var equipamento_id = $(this).val();
-                    $.ajax(
-                    {
-                      url: '{% url "get_modos_de_falha" %}',
-                      data: {
-                        'equipamento_id': equipamento_id
-                      },
-                      dataType: 'json',
-                      success: function(data) {
-                        var modos_falha = $('#id_modo_Falha_equipamento');
-                        modos_falha.empty();
-                        $.each(data, function(i, item) {
-                          modos_falha.append($('<option>', {
-                            value: item.id,
-                            text: item.modo_falha
-                          }));
-                        });
-                      }
-                    });
-                  });
+           <script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Script carregado');
+
+    $('#id_equipamento').change(function() {
+        console.log('Equipamento mudou');
+
+        var equipamento_id = $(this).val();
+        console.log('ID equipamento:', equipamento_id);
+
+        $.ajax({
+            url: '{% url "get_modos_de_falha" %}',
+            data: {
+                equipamento_id: equipamento_id
+            },
+            dataType: 'json',
+
+            success: function(data) {
+                console.log('Dados recebidos:', data);
+
+                var modos_falha = $('#id_modo_Falha_equipamento');
+
+                console.log('Campo modo falha encontrado:', modos_falha.length);
+
+                modos_falha.empty();
+
+                modos_falha.append($('<option>', {
+                    value: '',
+                    text: 'Selecione um modo de falha'
+                }));
+
+                $.each(data, function(i, item) {
+                    modos_falha.append($('<option>', {
+                        value: item.id,
+                        text: item.modo_falha
+                    }));
                 });
-                </script>
+            },
+
+            error: function(xhr, status, error) {
+                console.log('Erro AJAX');
+                console.log('Status:', status);
+                console.log('Erro:', error);
+                console.log('Resposta:', xhr.responseText);
+            }
+        });
+    });
+});
+</script>
             </hr>
 </div>
 <div class='col-md-3'></div>
